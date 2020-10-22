@@ -1,0 +1,17 @@
+{
+  "logs": {
+    "force_flush_interval": 5,
+    "metrics_collected": {
+      "kubernetes": {
+        "metrics_collection_interval": 60
+      }
+    }
+  },
+  "metrics": {
+    "metrics_collected": {
+      "statsd": {
+        "service_address": ":8125"
+      }
+    }
+  }
+}
