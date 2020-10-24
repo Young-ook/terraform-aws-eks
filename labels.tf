@@ -1,6 +1,6 @@
 data "aws_partition" "current" {}
 
-resource "random_string" "suffix" {
+resource "random_string" "eks-suffix" {
   length  = 12
   upper   = false
   lower   = true
@@ -9,7 +9,7 @@ resource "random_string" "suffix" {
 }
 
 locals {
-  name = var.name == null ? join("-", ["eks", random_string.suffix.result]) : var.name
+  name = var.name == null ? join("-", ["eks", random_string.eks-suffix.result]) : var.name
   default-tags = merge(
     { "terraform.io" = "managed" },
     local.eks-owned-tag

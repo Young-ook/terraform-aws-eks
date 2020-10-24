@@ -6,7 +6,7 @@ data "aws_region" "current" {
   count = var.enabled ? 1 : 0
 }
 
-resource "random_string" "suffix" {
+resource "random_string" "appmesh-suffix" {
   count   = var.enabled ? 1 : 0
   length  = 5
   upper   = false
@@ -16,7 +16,7 @@ resource "random_string" "suffix" {
 }
 
 locals {
-  suffix = var.petname && var.enabled ? random_string.suffix.0.result : ""
+  suffix = var.petname && var.enabled ? random_string.appmesh-suffix.0.result : ""
   name   = join("-", compact([var.cluster_name, "app-mesh", local.suffix]))
   default-tags = merge(
     { "terraform.io" = "managed" },

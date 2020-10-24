@@ -1,4 +1,4 @@
-resource "random_string" "suffix" {
+resource "random_string" "autoscaler-suffix" {
   count   = var.enabled ? 1 : 0
   length  = 5
   upper   = false
@@ -8,7 +8,7 @@ resource "random_string" "suffix" {
 }
 
 locals {
-  suffix = var.petname && var.enabled ? random_string.suffix.0.result : ""
+  suffix = var.petname && var.enabled ? random_string.autoscaler-suffix.0.result : ""
   name   = join("-", compact([var.cluster_name, "cluster-autoscaler", local.suffix]))
   default-tags = merge(
     { "terraform.io" = "managed" },
