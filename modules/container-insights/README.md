@@ -3,10 +3,10 @@ Use [CloudWatch Container Insights](https://docs.aws.amazon.com/AmazonCloudWatch
 
 CloudWatch automatically collects metrics for many resources, such as CPU, memory, disk, and network. Container Insights also provides diagnostic information, such as container restart failures, to help you isolate issues and resolve them quickly. You can also set CloudWatch alarms on metrics that Container Insights collects.
 
-![Amazon CloudWatch Container Insights](images/cw-container-insights.png)
+![Amazon CloudWatch Container Insights](https://github.com/Young-ook/terraform-aws-eks/blob/main/modules/container-insights/images/cw-container-insights.png)
 
 ## Examples
-- [Complete Example](../../examples/complete/README.md)
+- [Quickstart Example](https://github.com/Young-ook/terraform-aws-eks/blob/main/modules/container-insights/README.md#quickstart)
 - [Amazon CloudWatch Container Insights for Amazon ECS](https://aws.amazon.com/blogs/mt/introducing-container-insights-for-amazon-ecs)
 
 ## Quickstart
