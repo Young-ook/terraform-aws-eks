@@ -1,7 +1,7 @@
-# Example of AWS EKS
+# Example
 
 ## Setup
-[This](main.tf) is the example of terraform configuration file to create a spinnaker managed EKS on your AWS account. Check out and apply it using terraform command.
+[This](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/complete/main.tf) is the example of terraform configuration file to create a spinnaker managed EKS on your AWS account. Check out and apply it using terraform command.
 
 Run terraform:
 ```
@@ -14,7 +14,7 @@ terraform plan -var-file=default.tfvars
 terraform apply -var-file=default.tfvars
 ```
 
-After then you will see the created EKS cluster and node groups and IAM role. For more information about configuration of service account mapping for IAM role in Kubernetes, please check out the [IAM Role for Service Accounts](../../modules/iam-role-for-serviceaccount/README.md)
+After then you will see the created EKS cluster and node groups and IAM role. For more information about configuration of service account mapping for IAM role in Kubernetes, please check out the [IAM Role for Service Accounts](https://github.com/Young-ook/terraform-aws-eks/tree/main/modules/iam-role-for-serviceaccount/README.md)
 
 ## Clean up
 
