@@ -22,13 +22,19 @@ variable "subnets" {
 variable "kubernetes_version" {
   description = "The target version of kubernetes"
   type        = string
-  default     = "1.14"
+  default     = "1.17"
 }
 
 variable "node_groups" {
   description = "Node groups definition"
   type        = map
-  default     = {}
+  default     = null
+}
+
+variable "managed_node_groups" {
+  description = "Amazon managed node groups definition"
+  type        = map
+  default     = null
 }
 
 ### description

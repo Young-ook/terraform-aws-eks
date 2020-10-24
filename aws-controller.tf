@@ -1,3 +1,13 @@
+resource "time_sleep" "wait" {
+  create_duration = "10s"
+  depends_on = [
+    aws_eks_cluster.cp,
+    aws_eks_node_group.ng,
+    aws_autoscaling_group.ng,
+    kubernetes_config_map.aws-auth,
+  ]
+}
+
 provider "helm" {
   alias = "aws-controller"
   kubernetes {
@@ -10,7 +20,7 @@ provider "helm" {
 
 module "alb-ingress" {
   source       = "./modules/alb-ingress"
-  depends_on   = [kubernetes_config_map.aws-auth]
+  depends_on   = [time_sleep.wait]
   providers    = { helm = helm.aws-controller }
   enabled      = local.node_groups_enabled
   cluster_name = aws_eks_cluster.cp.name
@@ -20,7 +30,7 @@ module "alb-ingress" {
 
 module "app-mesh" {
   source       = "./modules/app-mesh"
-  depends_on   = [kubernetes_config_map.aws-auth]
+  depends_on   = [time_sleep.wait]
   providers    = { helm = helm.aws-controller }
   enabled      = local.app_mesh_enabled
   cluster_name = aws_eks_cluster.cp.name
@@ -30,7 +40,7 @@ module "app-mesh" {
 
 module "cluster-autoscaler" {
   source       = "./modules/cluster-autoscaler"
-  depends_on   = [kubernetes_config_map.aws-auth]
+  depends_on   = [time_sleep.wait]
   providers    = { helm = helm.aws-controller }
   enabled      = local.node_groups_enabled
   cluster_name = aws_eks_cluster.cp.name
@@ -40,7 +50,7 @@ module "cluster-autoscaler" {
 
 module "container-insights" {
   source       = "./modules/container-insights"
-  depends_on   = [kubernetes_config_map.aws-auth]
+  depends_on   = [time_sleep.wait]
   providers    = { helm = helm.aws-controller }
   enabled      = local.container_insights_enabled
   cluster_name = aws_eks_cluster.cp.name

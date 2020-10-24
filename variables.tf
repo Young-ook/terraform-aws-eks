@@ -18,6 +18,12 @@ variable "node_groups" {
   default     = null
 }
 
+variable "managed_node_groups" {
+  description = "Amazon managed node groups definition"
+  type        = map
+  default     = null
+}
+
 ### feature
 variable "enabled_cluster_log_types" {
   description = "A list of the desired control plane logging to enable"
