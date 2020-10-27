@@ -2,9 +2,10 @@
 
 ## features
 locals {
-  node_groups_enabled        = (var.node_groups != null && length(var.node_groups) > 0) ? true : false
-  app_mesh_enabled           = (local.node_groups_enabled && var.app_mesh_enabled) ? true : false
-  container_insights_enabled = (local.node_groups_enabled && var.container_insights_enabled) ? true : false
+  node_groups_enabled         = (var.node_groups != null ? ((length(var.node_groups) > 0) ? true : false) : false)
+  managed_node_groups_enabled = (var.managed_node_groups != null ? ((length(var.managed_node_groups) > 0) ? true : false) : false)
+  app_mesh_enabled            = ((local.node_groups_enabled || local.managed_node_groups_enabled) && var.app_mesh_enabled) ? true : false
+  container_insights_enabled  = ((local.node_groups_enabled || local.managed_node_groups_enabled) && var.container_insights_enabled) ? true : false
 }
 
 ## control plane (cp)
@@ -59,7 +60,7 @@ data "aws_eks_cluster_auth" "cp" {
 ## node groups (ng)
 # security/policy
 resource "aws_iam_role" "ng" {
-  count = local.node_groups_enabled ? 1 : 0
+  count = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
   name  = format("%s-ng", local.name)
   tags  = merge(local.default-tags, var.tags)
   assume_role_policy = jsonencode({
@@ -81,19 +82,19 @@ resource "aws_iam_instance_profile" "ng" {
 }
 
 resource "aws_iam_role_policy_attachment" "eks-ng" {
-  count      = local.node_groups_enabled ? 1 : 0
+  count      = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
   policy_arn = format("arn:%s:iam::aws:policy/AmazonEKSWorkerNodePolicy", data.aws_partition.current.partition)
   role       = aws_iam_role.ng.0.name
 }
 
 resource "aws_iam_role_policy_attachment" "eks-cni" {
-  count      = local.node_groups_enabled ? 1 : 0
+  count      = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
   policy_arn = format("arn:%s:iam::aws:policy/AmazonEKS_CNI_Policy", data.aws_partition.current.partition)
   role       = aws_iam_role.ng.0.name
 }
 
 resource "aws_iam_role_policy_attachment" "ecr-read" {
-  count      = local.node_groups_enabled ? 1 : 0
+  count      = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
   policy_arn = format("arn:%s:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly", data.aws_partition.current.partition)
   role       = aws_iam_role.ng.0.name
 }
@@ -217,7 +218,12 @@ resource "aws_autoscaling_group" "ng" {
   }
 
   dynamic "tag" {
-    for_each = local.eks-tag
+    for_each = merge(
+      local.eks-tag,
+      {
+        "eks:nodegroup-name" = join("-", [aws_eks_cluster.cp.name, each.key])
+      }
+    )
     content {
       key                 = tag.key
       value               = tag.value
@@ -236,6 +242,37 @@ resource "aws_autoscaling_group" "ng" {
     aws_iam_role_policy_attachment.eks-cni,
     aws_iam_role_policy_attachment.ecr-read,
     aws_launch_template.ng,
+  ]
+}
+
+## managed node groups
+resource "aws_eks_node_group" "ng" {
+  for_each        = var.managed_node_groups != null ? var.managed_node_groups : {}
+  cluster_name    = aws_eks_cluster.cp.name
+  node_group_name = join("-", [aws_eks_cluster.cp.name, each.key])
+  node_role_arn   = aws_iam_role.ng.0.arn
+  subnet_ids      = local.subnet_ids
+  disk_size       = lookup(each.value, "disk_size", "20")
+  instance_types  = [lookup(each.value, "instance_type", "m5.xlarge")]
+  version         = aws_eks_cluster.cp.version
+  tags            = merge(local.default-tags, var.tags)
+
+  scaling_config {
+    max_size     = lookup(each.value, "max_size", 3)
+    min_size     = lookup(each.value, "min_size", 1)
+    desired_size = lookup(each.value, "desired_size", 1)
+  }
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = [scaling_config[0].desired_size]
+  }
+
+  depends_on = [
+    aws_iam_role.ng,
+    aws_iam_role_policy_attachment.eks-ng,
+    aws_iam_role_policy_attachment.eks-cni,
+    aws_iam_role_policy_attachment.ecr-read,
   ]
 }
 
@@ -260,7 +297,7 @@ provider "kubernetes" {
 }
 
 resource "kubernetes_config_map" "aws-auth" {
-  count      = local.node_groups_enabled ? 1 : 0
+  count      = (local.managed_node_groups_enabled ? 0 : (local.node_groups_enabled ? 1 : 0))
   depends_on = [aws_eks_cluster.cp, aws_autoscaling_group.ng]
   metadata {
     name      = "aws-auth"

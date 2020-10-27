@@ -5,8 +5,16 @@ tags = {
   test = "tc3"
 }
 kubernetes_version = "1.17"
-node_groups = {
+managed_node_groups = {
   default = {
+    min_size      = 1
+    max_size      = 3
+    desired_size  = 1
+    instance_type = "t3.large"
+  }
+}
+node_groups = {
+  spot = {
     min_size      = 1
     max_size      = 3
     desired_size  = 1

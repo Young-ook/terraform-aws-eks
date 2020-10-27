@@ -6,7 +6,7 @@ tags = {
 }
 kubernetes_version = "1.17"
 node_groups = {
-  default = {
+  mixed = {
     min_size      = 1
     max_size      = 3
     desired_size  = 2

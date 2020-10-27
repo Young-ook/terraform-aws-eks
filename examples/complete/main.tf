@@ -15,6 +15,7 @@ module "eks" {
   name                       = var.name
   tags                       = var.tags
   kubernetes_version         = var.kubernetes_version
+  managed_node_groups        = var.managed_node_groups
   node_groups                = var.node_groups
   container_insights_enabled = true
   app_mesh_enabled           = true

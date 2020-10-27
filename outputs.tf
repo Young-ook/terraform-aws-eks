@@ -1,53 +1,45 @@
 # output variables 
 
 output "name" {
-  value       = local.name
   description = "The EKS cluster name"
-}
-
-output "features" {
-  value = {
-    "app_mesh_enabled"           = local.app_mesh_enabled
-    "container_insights_enabled" = local.container_insights_enabled
-    "node_groups_enabled"        = local.node_groups_enabled
-  }
-  description = "Features configurations for the EKS "
+  value       = local.name
 }
 
 output "cluster" {
-  value       = aws_eks_cluster.cp
   description = "The EKS cluster attributes"
+  value       = aws_eks_cluster.cp
 }
 
 output "role" {
+  description = "The generated role of the EKS node group"
   value = (local.node_groups_enabled ? zipmap(
     ["name", "arn"],
     [aws_iam_role.ng.0.name, aws_iam_role.ng.0.arn]
   ) : null)
-  description = "The generated role of the EKS node group"
 }
 
 output "oidc" {
+  description = "The OIDC provider attributes for IAM Role for ServiceAccount"
   value = zipmap(
     ["url", "arn"],
     [local.oidc["url"], local.oidc["arn"]]
   )
-  description = "The OIDC provider attributes for IAM Role for ServiceAccount"
 }
 
 output "tags" {
+  description = "The generated tags for EKS integration"
   value = {
     "shared"       = local.eks-shared-tag
     "owned"        = local.eks-owned-tag
     "elb"          = local.eks-elb-tag
     "internal-elb" = local.eks-internal-elb-tag
   }
-  description = "The generated tags for EKS integration"
 }
 
 data "aws_region" "current" {}
 
 output "kubeconfig" {
+  description = "Bash script to update kubeconfig file"
   value = join(" ", [
     "bash -e",
     format("%s/script/update-kubeconfig.sh", path.module),
@@ -55,5 +47,14 @@ output "kubeconfig" {
     format("-n %s", aws_eks_cluster.cp.name),
     "-k kubeconfig",
   ])
-  description = "Bash script to update kubeconfig file"
+}
+
+output "features" {
+  description = "Features configurations for the EKS "
+  value = {
+    "app_mesh_enabled"            = local.app_mesh_enabled
+    "container_insights_enabled"  = local.container_insights_enabled
+    "managed_node_groups_enabled" = local.managed_node_groups_enabled
+    "node_groups_enabled"         = local.node_groups_enabled
+  }
 }
