@@ -11,30 +11,28 @@ CloudWatch automatically collects metrics for many resources, such as CPU, memor
 
 ## Quickstart
 ### Setup
-This is the Helm chart for container insights agents.
+This is a Helm chart for Container Insights agents.
 ```hcl
 module "eks" {
   source                     = "Young-ook/eks/aws"
   name                       = "eks"
-  container_insights_enabled = false
 }
 
-data "aws_eks_cluster_auth" "cp" {
+data "aws_eks_cluster_auth" "eks" {
   name = module.eks.cluster.name
 }
 
 provider "helm" {
   kubernetes {
     host                   = module.eks.cluster.endpoint
-    token                  = data.aws_eks_cluster_auth.cp.token
+    token                  = data.aws_eks_cluster_auth.eks.token
     cluster_ca_certificate = base64decode(module.eks.cluster.certificate_authority.0.data)
     load_config_file       = false
   }
 }
 
-module "cw" {
+module "container-insights" {
   source       = "Young-ook/eks/aws//modules/container-insights"
-  enabled      = true
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { "env" = "test" }
