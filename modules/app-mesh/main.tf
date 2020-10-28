@@ -23,8 +23,8 @@ module "irsa" {
 resource "helm_release" "appmesh" {
   count            = var.enabled ? 1 : 0
   name             = lookup(var.helm, "name", "eks-am")
-  chart            = lookup(var.helm, "chart")
-  repository       = lookup(var.helm, "repository")
+  chart            = lookup(var.helm, "chart", "appmesh-controller")
+  repository       = lookup(var.helm, "repository", "https://aws.github.io/eks-charts")
   namespace        = local.namespace
   create_namespace = true
   cleanup_on_fail  = lookup(var.helm, "cleanup_on_fail", true)

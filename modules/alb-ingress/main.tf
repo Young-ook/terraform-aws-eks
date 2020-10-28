@@ -2,7 +2,7 @@
 
 locals {
   namespace      = lookup(var.helm, "namespace", "kube-system")
-  serviceaccount = lookup(var.helm, "serviceaccount", "aws-alb-ingress-controller")
+  serviceaccount = lookup(var.helm, "serviceaccount", "eks-alb-aws-alb-ingress-controller")
 }
 
 module "irsa" {
@@ -111,8 +111,8 @@ resource "aws_iam_policy" "albingress" {
 resource "helm_release" "albingress" {
   count           = var.enabled ? 1 : 0
   name            = lookup(var.helm, "name", "eks-alb")
-  chart           = lookup(var.helm, "chart")
-  repository      = lookup(var.helm, "repository")
+  chart           = lookup(var.helm, "chart", "aws-alb-ingress-controller")
+  repository      = lookup(var.helm, "repository", "https://kubernetes-charts-incubator.storage.googleapis.com")
   namespace       = local.namespace
   cleanup_on_fail = lookup(var.helm, "cleanup_on_fail", true)
 
