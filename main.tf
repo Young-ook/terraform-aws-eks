@@ -4,8 +4,6 @@
 locals {
   node_groups_enabled         = (var.node_groups != null ? ((length(var.node_groups) > 0) ? true : false) : false)
   managed_node_groups_enabled = (var.managed_node_groups != null ? ((length(var.managed_node_groups) > 0) ? true : false) : false)
-  app_mesh_enabled            = ((local.node_groups_enabled || local.managed_node_groups_enabled) && var.app_mesh_enabled) ? true : false
-  container_insights_enabled  = ((local.node_groups_enabled || local.managed_node_groups_enabled) && var.container_insights_enabled) ? true : false
 }
 
 ## control plane (cp)
@@ -53,10 +51,6 @@ resource "aws_eks_cluster" "cp" {
   ]
 }
 
-data "aws_eks_cluster_auth" "cp" {
-  name = aws_eks_cluster.cp.name
-}
-
 ## node groups (ng)
 # security/policy
 resource "aws_iam_role" "ng" {
@@ -96,12 +90,6 @@ resource "aws_iam_role_policy_attachment" "eks-cni" {
 resource "aws_iam_role_policy_attachment" "ecr-read" {
   count      = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
   policy_arn = format("arn:%s:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly", data.aws_partition.current.partition)
-  role       = aws_iam_role.ng.0.name
-}
-
-resource "aws_iam_role_policy_attachment" "xray-write" {
-  count      = local.app_mesh_enabled ? 1 : 0
-  policy_arn = format("arn:%s:iam::aws:policy/AWSXRayDaemonWriteAccess", data.aws_partition.current.partition)
   role       = aws_iam_role.ng.0.name
 }
 
@@ -296,9 +284,17 @@ provider "kubernetes" {
   load_config_file       = false
 }
 
+resource "time_sleep" "wait" {
+  create_duration = "10s"
+  depends_on = [
+    aws_eks_cluster.cp,
+    aws_eks_node_group.ng,
+    aws_autoscaling_group.ng,
+  ]
+}
 resource "kubernetes_config_map" "aws-auth" {
   count      = (local.managed_node_groups_enabled ? 0 : (local.node_groups_enabled ? 1 : 0))
-  depends_on = [aws_eks_cluster.cp, aws_autoscaling_group.ng]
+  depends_on = [time_sleep.wait]
   metadata {
     name      = "aws-auth"
     namespace = "kube-system"
