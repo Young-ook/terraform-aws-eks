@@ -1,7 +1,7 @@
 variable "enabled" {
   description = "A conditional indicator to enable cluster-autoscale"
   type        = bool
-  default     = false
+  default     = true
 }
 
 ### helm
