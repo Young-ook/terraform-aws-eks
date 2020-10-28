@@ -52,7 +52,7 @@ resource "aws_iam_policy" "containerinsights" {
 resource "helm_release" "containerinsights" {
   count            = var.enabled ? 1 : 0
   name             = lookup(var.helm, "name", "eks-cw")
-  chart            = lookup(var.helm, "chart")
+  chart            = lookup(var.helm, "chart", "containerinsights")
   repository       = lookup(var.helm, "repository", join("/", [path.module, "charts"]))
   namespace        = local.namespace
   create_namespace = true

@@ -31,18 +31,6 @@ variable "enabled_cluster_log_types" {
   default     = []
 }
 
-variable "app_mesh_enabled" {
-  description = "A boolean variable indicating to enable AppMesh"
-  type        = bool
-  default     = false
-}
-
-variable "container_insights_enabled" {
-  description = "A boolean variable indicating to enable ContainerInsights"
-  type        = bool
-  default     = false
-}
-
 ### description
 variable "name" {
   description = "The logical name of the module instance"

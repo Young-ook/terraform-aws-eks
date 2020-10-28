@@ -1,10 +1,5 @@
 # output variables 
 
-output "name" {
-  description = "The EKS cluster name"
-  value       = local.name
-}
-
 output "cluster" {
   description = "The EKS cluster attributes"
   value       = aws_eks_cluster.cp
@@ -49,11 +44,23 @@ output "kubeconfig" {
   ])
 }
 
+data "aws_eks_cluster_auth" "cp" {
+  name = aws_eks_cluster.cp.name
+}
+
+output "helmconfig" {
+  description = "The configurations map for Helm provider"
+  sensitive   = true
+  value = {
+    host  = aws_eks_cluster.cp.endpoint
+    token = data.aws_eks_cluster_auth.cp.token
+    ca    = aws_eks_cluster.cp.certificate_authority.0.data
+  }
+}
+
 output "features" {
   description = "Features configurations for the EKS "
   value = {
-    "app_mesh_enabled"            = local.app_mesh_enabled
-    "container_insights_enabled"  = local.container_insights_enabled
     "managed_node_groups_enabled" = local.managed_node_groups_enabled
     "node_groups_enabled"         = local.node_groups_enabled
   }

@@ -13,7 +13,7 @@ variable "helm" {
     repository      = "https://kubernetes-charts-incubator.storage.googleapis.com"
     chart           = "aws-alb-ingress-controller"
     namespace       = "kube-system"
-    serviceaccount  = "aws-alb-ingress-controller"
+    serviceaccount  = "eks-alb-aws-alb-ingress-controller"
     cleanup_on_fail = true
   }
 }
