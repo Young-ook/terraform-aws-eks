@@ -3,6 +3,11 @@ output "eks" {
   value       = module.eks.cluster
 }
 
+output "role" {
+  description = "The generated role of the EKS node group"
+  value       = module.eks.role
+}
+
 output "kubeconfig" {
   description = "Bash script to update the kubeconfig file for the EKS cluster"
   value       = module.eks.kubeconfig
