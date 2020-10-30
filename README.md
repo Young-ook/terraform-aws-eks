@@ -14,16 +14,14 @@
 ```hcl
 module "eks" {
   source  = "Young-ook/eks/aws"
-  version = "~> 1.0"
-
   name    = "eks"
-  tags    = { "env" = "test" }
+  tags    = { env = "test" }
 }
 ```
 Run terraform:
 ```
-terraform init
-terraform apply
+$ terraform init
+$ terraform apply
 ```
 
 ### Generate kubernetes config

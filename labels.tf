@@ -16,7 +16,7 @@ locals {
   )
 }
 
-# kubernetes tags
+## kubernetes tags
 locals {
   eks-shared-tag = {
     format("kubernetes.io/cluster/%s", local.name) = "shared"

@@ -1,6 +1,6 @@
 ## virtual private cloud
 
-# vpc
+## default vpc
 data "aws_vpc" "default" {
   default = true
 }

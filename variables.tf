@@ -24,6 +24,12 @@ variable "managed_node_groups" {
   default     = null
 }
 
+variable "fargate_profiles" {
+  description = "Amazon Fargate for EKS profiles"
+  type        = map
+  default     = null
+}
+
 ### feature
 variable "enabled_cluster_log_types" {
   description = "A list of the desired control plane logging to enable"
