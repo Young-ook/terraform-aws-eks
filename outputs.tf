@@ -63,5 +63,6 @@ output "features" {
   value = {
     "managed_node_groups_enabled" = local.managed_node_groups_enabled
     "node_groups_enabled"         = local.node_groups_enabled
+    "fargate_enabled"             = local.fargate_enabled
   }
 }

@@ -16,15 +16,11 @@ module "eks" {
   name                       = "eks"
 }
 
-data "aws_eks_cluster_auth" "eks" {
-  name = module.eks.cluster.name
-}
-
 provider "helm" {
   kubernetes {
-    host                   = module.eks.cluster.endpoint
-    token                  = data.aws_eks_cluster_auth.eks.token
-    cluster_ca_certificate = base64decode(module.eks.cluster.certificate_authority.0.data)
+    host                   = module.eks.helmconfig.host
+    token                  = module.eks.helmconfig.token
+    cluster_ca_certificate = base64decode(module.eks.helmconfig.ca)
     load_config_file       = false
   }
 }
@@ -33,7 +29,7 @@ module "alb-ingress" {
   source       = "Young-ook/eks/aws//modules/alb-ingress"
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
-  tags         = { "env" = "test" }
+  tags         = { env = "test" }
 }
 ```
 Modify the terraform configuration file to deploy ALB Ingress controller. Run the terraform code to make a change on your environment.

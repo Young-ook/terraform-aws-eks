@@ -4,6 +4,7 @@
 locals {
   node_groups_enabled         = (var.node_groups != null ? ((length(var.node_groups) > 0) ? true : false) : false)
   managed_node_groups_enabled = (var.managed_node_groups != null ? ((length(var.managed_node_groups) > 0) ? true : false) : false)
+  fargate_enabled             = (var.fargate_profiles != null ? ((length(var.fargate_profiles) > 0) ? true : false) : false)
 }
 
 ## control plane (cp)
@@ -93,7 +94,7 @@ resource "aws_iam_role_policy_attachment" "ecr-read" {
   role       = aws_iam_role.ng.0.name
 }
 
-# eks-optimized linux
+## eks-optimized linux
 data "aws_ami" "eks" {
   count       = local.node_groups_enabled ? 1 : 0
   owners      = ["amazon"]
@@ -261,6 +262,49 @@ resource "aws_eks_node_group" "ng" {
     aws_iam_role_policy_attachment.eks-ng,
     aws_iam_role_policy_attachment.eks-cni,
     aws_iam_role_policy_attachment.ecr-read,
+  ]
+}
+
+## fargate
+# security/policy
+resource "aws_iam_role" "fargate" {
+  count = local.fargate_enabled ? 1 : 0
+  name  = format("%s-ng", local.name)
+  tags  = merge(local.default-tags, var.tags)
+  assume_role_policy = jsonencode({
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = [format("eks-fargate-pods.%s", data.aws_partition.current.dns_suffix)]
+      }
+    }]
+    Version = "2012-10-17"
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "eks-fargate" {
+  count      = local.fargate_enabled ? 1 : 0
+  policy_arn = format("arn:%s:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy", data.aws_partition.current.partition)
+  role       = aws_iam_role.fargate.0.name
+}
+
+resource "aws_eks_fargate_profile" "fargate" {
+  for_each               = var.fargate_profiles != null ? var.fargate_profiles : {}
+  cluster_name           = aws_eks_cluster.cp.name
+  fargate_profile_name   = each.key
+  pod_execution_role_arn = aws_iam_role.fargate.0.arn
+  subnet_ids             = local.subnet_ids
+  tags                   = merge(local.default-tags, var.tags)
+
+  selector {
+    namespace = lookup(each.value, "namespace", "default")
+    labels    = lookup(each.value, "labels", null)
+  }
+
+  depends_on = [
+    aws_iam_role.fargate,
+    aws_iam_role_policy_attachment.eks-fargate,
   ]
 }
 
