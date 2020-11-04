@@ -11,7 +11,7 @@ CloudWatch automatically collects metrics for many resources, such as CPU, memor
 
 ## Quickstart
 ### Setup
-This is a Helm chart for Container Insights agents.
+This is a terraform module to deploy Helm chart for Container Insights agents.
 ```hcl
 module "eks" {
   source                     = "Young-ook/eks/aws"

@@ -9,7 +9,7 @@ The [AWS load balancer controller](https://github.com/kubernetes-sigs/aws-load-b
 
 ## Quickstart
 ### Setup
-This is a Helm chart for ALB Ingress controller.
+This is a terraform module to deploy Helm chart for ALB Ingress controller.
 ```hcl
 module "eks" {
   source                     = "Young-ook/eks/aws"

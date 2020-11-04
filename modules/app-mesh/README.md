@@ -8,7 +8,7 @@
 
 ## Quickstart
 ### Setup
-This is a Helm chart for App Mesh controller.
+This is a terraform module to deploy Helm chart for App Mesh controller.
 ```hcl
 module "eks" {
   source                     = "Young-ook/eks/aws"
