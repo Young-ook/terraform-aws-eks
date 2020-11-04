@@ -16,5 +16,15 @@ node_groups = {
       on_demand_percentage_above_base_capacity = 50
       spot_allocation_strategy                 = "capacity-optimized"
     }
+    instances_override = [
+      {
+        instance_type     = "t3.small"
+        weighted_capacity = 2
+      },
+      {
+        instance_type     = "t3.large"
+        weighted_capacity = 1
+      }
+    ]
   }
 }

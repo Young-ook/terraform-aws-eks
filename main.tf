@@ -96,26 +96,26 @@ resource "aws_iam_role_policy_attachment" "ecr-read" {
 
 ## eks-optimized linux
 data "aws_ami" "eks" {
-  count       = local.node_groups_enabled ? 1 : 0
+  for_each    = (var.node_groups != null ? var.node_groups : {})
   owners      = ["amazon"]
   most_recent = true
 
   filter {
     name   = "name"
-    values = [format("amazon-eks-node-%s-*", var.kubernetes_version)]
+    values = [format("amazon-eks-*-%s-*", var.kubernetes_version)]
   }
   filter {
     name   = "architecture"
-    values = ["x86_64"]
+    values = [lookup(each.value, "arch", "x86_64")]
   }
 }
 
 data "template_file" "boot" {
-  count    = local.node_groups_enabled ? 1 : 0
+  for_each = (var.node_groups != null ? var.node_groups : {})
   template = <<EOT
 #!/bin/bash
 set -ex
-/etc/eks/bootstrap.sh ${aws_eks_cluster.cp.name} --kubelet-extra-args '--node-labels=eks.amazonaws.com/nodegroup-image=${data.aws_ami.eks.0.id},eks.amazonaws.com/nodegroup=${aws_eks_cluster.cp.name}' --b64-cluster-ca ${aws_eks_cluster.cp.certificate_authority.0.data} --apiserver-endpoint ${aws_eks_cluster.cp.endpoint}
+/etc/eks/bootstrap.sh ${aws_eks_cluster.cp.name} --kubelet-extra-args '--node-labels=eks.amazonaws.com/nodegroup-image=${data.aws_ami.eks[each.key].id},eks.amazonaws.com/nodegroup=${aws_eks_cluster.cp.name}' --b64-cluster-ca ${aws_eks_cluster.cp.certificate_authority.0.data} --apiserver-endpoint ${aws_eks_cluster.cp.endpoint}
 EOT
 }
 
@@ -123,8 +123,8 @@ resource "aws_launch_template" "ng" {
   for_each      = (var.node_groups != null ? var.node_groups : {})
   name          = format("eks-%s", uuid())
   tags          = merge(local.default-tags, local.eks-tag, var.tags)
-  image_id      = data.aws_ami.eks.0.id
-  user_data     = base64encode(data.template_file.boot.0.rendered)
+  image_id      = data.aws_ami.eks[each.key].id
+  user_data     = base64encode(data.template_file.boot[each.key].rendered)
   instance_type = lookup(each.value, "instance_type", "t3.medium")
 
   iam_instance_profile {
@@ -185,7 +185,7 @@ resource "aws_autoscaling_group" "ng" {
       }
 
       dynamic "override" {
-        for_each = lookup(each.value, "launch_override", [])
+        for_each = lookup(each.value, "instances_override", [])
         content {
           instance_type     = lookup(override.value, "instance_type", null)
           weighted_capacity = lookup(override.value, "weighted_capacity", null)

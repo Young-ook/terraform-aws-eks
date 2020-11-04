@@ -22,17 +22,7 @@ node_groups = {
     instance_type = "t3.large"
     instances_distribution = {
       spot_allocation_strategy = "lowest-price"
-      spot_max_price           = "0.03"
+      spot_max_price           = "0.07"
     }
-    launch_override = [
-      {
-        instance_type     = "t3.small"
-        weighted_capacity = 3
-      },
-      {
-        instance_type     = "t3.medium"
-        weighted_capacity = 2
-      }
-    ]
   }
 }
