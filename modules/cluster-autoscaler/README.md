@@ -10,7 +10,7 @@ On AWS, Cluster Autoscaler utilizes Amazon EC2 Auto Scaling Groups to manage nod
 
 ## Quickstart
 ### Setup
-This is a Helm chart for cluster autoscaler controller.
+This is a terraform module to deploy Helm chart for Cluster Autoscaler controller.
 ```hcl
 module "eks" {
   source                     = "Young-ook/eks/aws"
