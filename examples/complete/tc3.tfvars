@@ -14,8 +14,8 @@ managed_node_groups = {
     instance_type = "t3.large"
   }
 }
-node_groups = {
-  spot = {
+node_groups = [
+  {
     min_size      = 1
     max_size      = 3
     desired_size  = 1
@@ -25,4 +25,4 @@ node_groups = {
       spot_max_price           = "0.07"
     }
   }
-}
+]
