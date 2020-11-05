@@ -1,9 +1,10 @@
 aws_region = "us-west-2"
 azs        = ["us-west-2a", "us-west-2b", "us-west-2c"]
-name       = "eks-tc6"
+name       = "eks-arm64-tc1"
 tags = {
   env  = "dev"
-  test = "tc6"
+  arch = "arm64"
+  test = "tc1"
 }
 kubernetes_version = "1.17"
 node_groups = [
