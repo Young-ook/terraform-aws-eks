@@ -6,12 +6,12 @@ tags = {
   test = "tc6"
 }
 kubernetes_version = "1.17"
-node_groups = {
-  arm64 = {
+node_groups = [
+  {
     min_size      = 1
     max_size      = 3
     desired_size  = 1
     arch          = "arm64"
     instance_type = "m6g.medium"
   }
-}
+]

@@ -96,7 +96,7 @@ resource "aws_iam_role_policy_attachment" "ecr-read" {
 
 ## eks-optimized linux
 data "aws_ami" "eks" {
-  for_each    = (var.node_groups != null ? var.node_groups : {})
+  for_each    = { for key, val in var.node_groups : key => val }
   owners      = ["amazon"]
   most_recent = true
 
@@ -111,7 +111,7 @@ data "aws_ami" "eks" {
 }
 
 data "template_file" "boot" {
-  for_each = (var.node_groups != null ? var.node_groups : {})
+  for_each = { for key, val in var.node_groups : key => val }
   template = <<EOT
 #!/bin/bash
 set -ex
@@ -120,7 +120,7 @@ EOT
 }
 
 resource "aws_launch_template" "ng" {
-  for_each      = (var.node_groups != null ? var.node_groups : {})
+  for_each      = { for key, val in var.node_groups : key => val }
   name          = format("eks-%s", uuid())
   tags          = merge(local.default-tags, local.eks-tag, var.tags)
   image_id      = data.aws_ami.eks[each.key].id
@@ -157,7 +157,7 @@ resource "aws_launch_template" "ng" {
 }
 
 resource "aws_autoscaling_group" "ng" {
-  for_each              = (var.node_groups != null ? var.node_groups : {})
+  for_each              = { for key, val in var.node_groups : key => val }
   name                  = format("eks-%s", uuid())
   vpc_zone_identifier   = local.subnet_ids
   max_size              = lookup(each.value, "max_size", 3)

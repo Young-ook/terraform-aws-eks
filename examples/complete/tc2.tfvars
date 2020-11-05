@@ -6,8 +6,8 @@ tags = {
   test = "tc2"
 }
 kubernetes_version = "1.17"
-node_groups = {
-  mixed = {
+node_groups = [
+  {
     min_size      = 1
     max_size      = 3
     desired_size  = 2
@@ -26,5 +26,11 @@ node_groups = {
         weighted_capacity = 1
       }
     ]
+  },
+  {
+    min_size      = 1
+    max_size      = 3
+    desired_size  = 1
+    instance_type = "t3.large"
   }
-}
+]

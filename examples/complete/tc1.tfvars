@@ -6,8 +6,8 @@ tags = {
   test = "tc1"
 }
 kubernetes_version = "1.17"
-node_groups = {
-  default = {
+node_groups = [
+  {
     min_size      = 1
     max_size      = 3
     desired_size  = 1
@@ -16,4 +16,4 @@ node_groups = {
       spot_allocation_strategy = "capacity-optimized"
     }
   }
-}
+]
