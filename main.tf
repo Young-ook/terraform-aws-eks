@@ -235,12 +235,14 @@ resource "aws_autoscaling_group" "ng" {
 }
 
 ## managed node groups
+
 resource "aws_eks_node_group" "ng" {
   for_each        = var.managed_node_groups != null ? var.managed_node_groups : {}
   cluster_name    = aws_eks_cluster.cp.name
   node_group_name = join("-", [aws_eks_cluster.cp.name, each.key])
   node_role_arn   = aws_iam_role.ng.0.arn
   subnet_ids      = local.subnet_ids
+  ami_type        = lookup(each.value, "ami_type", "AL2_x86_64") # available values ["AL2_x86_64", "AL2_x86_64_GPU", "AL2_ARM_64"]
   disk_size       = lookup(each.value, "disk_size", "20")
   instance_types  = [lookup(each.value, "instance_type", "m5.xlarge")]
   version         = aws_eks_cluster.cp.version

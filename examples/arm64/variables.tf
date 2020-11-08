@@ -36,6 +36,12 @@ variable "node_groups" {
   default     = []
 }
 
+variable "managed_node_groups" {
+  description = "Amazon managed node groups definition"
+  type        = map
+  default     = null
+}
+
 ### description
 variable "name" {
   description = "The logical name of the module instance"
