@@ -11,9 +11,10 @@ provider "aws" {
 
 # eks
 module "eks" {
-  source             = "Young-ook/eks/aws"
-  name               = var.name
-  tags               = var.tags
-  kubernetes_version = var.kubernetes_version
-  node_groups        = var.node_groups
+  source              = "Young-ook/eks/aws"
+  name                = var.name
+  tags                = var.tags
+  kubernetes_version  = var.kubernetes_version
+  managed_node_groups = var.managed_node_groups
+  node_groups         = var.node_groups
 }
