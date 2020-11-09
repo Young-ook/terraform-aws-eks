@@ -237,7 +237,7 @@ resource "aws_autoscaling_group" "ng" {
 ## managed node groups
 
 resource "aws_eks_node_group" "ng" {
-  for_each        = var.managed_node_groups != null ? var.managed_node_groups : {}
+  for_each        = { for key, val in var.managed_node_groups : key => val }
   cluster_name    = aws_eks_cluster.cp.name
   node_group_name = join("-", [aws_eks_cluster.cp.name, each.key])
   node_role_arn   = aws_iam_role.ng.0.arn
@@ -292,7 +292,7 @@ resource "aws_iam_role_policy_attachment" "eks-fargate" {
 }
 
 resource "aws_eks_fargate_profile" "fargate" {
-  for_each               = var.fargate_profiles != null ? var.fargate_profiles : {}
+  for_each               = { for key, val in var.fargate_profiles : key => val }
   cluster_name           = aws_eks_cluster.cp.name
   fargate_profile_name   = each.key
   pod_execution_role_arn = aws_iam_role.fargate.0.arn
@@ -339,7 +339,7 @@ resource "time_sleep" "wait" {
   ]
 }
 resource "kubernetes_config_map" "aws-auth" {
-  count      = (local.managed_node_groups_enabled ? 0 : (local.node_groups_enabled ? 1 : 0))
+  count      = ((local.managed_node_groups_enabled || local.fargate_enabled) ? 0 : (local.node_groups_enabled ? 1 : 0))
   depends_on = [time_sleep.wait]
   metadata {
     name      = "aws-auth"
