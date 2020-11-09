@@ -50,7 +50,15 @@ module "irsa" {
   tags = var.tags
 }
 
-# utility
+# conditions
+locals {
+  node_groups_enabled         = (var.node_groups != null ? ((length(var.node_groups) > 0) ? true : false) : false)
+  managed_node_groups_enabled = (var.managed_node_groups != null ? ((length(var.managed_node_groups) > 0) ? true : false) : false)
+  fargate_enabled             = (var.fargate_profiles != null ? ((length(var.fargate_profiles) > 0) ? true : false) : false)
+  fargate_only                = (! local.node_groups_enabled && ! local.managed_node_groups_enabled && local.fargate_enabled)
+}
+
+# utilities
 provider "helm" {
   kubernetes {
     host                   = module.eks.helmconfig.host
@@ -62,6 +70,7 @@ provider "helm" {
 
 module "alb-ingress" {
   source       = "Young-ook/eks/aws//modules/alb-ingress"
+  enabled      = ! local.fargate_only
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
@@ -69,6 +78,7 @@ module "alb-ingress" {
 
 module "app-mesh" {
   source       = "Young-ook/eks/aws//modules/app-mesh"
+  enabled      = ! local.fargate_only
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
@@ -76,6 +86,7 @@ module "app-mesh" {
 
 module "cluster-autoscaler" {
   source       = "Young-ook/eks/aws//modules/cluster-autoscaler"
+  enabled      = ! local.fargate_only
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
@@ -83,6 +94,7 @@ module "cluster-autoscaler" {
 
 module "container-insights" {
   source       = "Young-ook/eks/aws//modules/container-insights"
+  enabled      = ! local.fargate_only
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
@@ -90,6 +102,7 @@ module "container-insights" {
 
 module "metrics-server" {
   source       = "Young-ook/eks/aws//modules/metrics-server"
+  enabled      = ! local.fargate_only
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }

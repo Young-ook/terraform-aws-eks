@@ -6,8 +6,7 @@ tags = {
   test = "tc4"
 }
 kubernetes_version = "1.17"
-fargate_profiles = {
-  default = {
-    namespace = "default"
-  }
-}
+fargate_profiles = [
+  { namespace = "default" },
+  { namespace = "hello" },
+]
