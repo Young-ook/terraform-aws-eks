@@ -9,6 +9,7 @@ tags = {
 kubernetes_version = "1.17"
 managed_node_groups = [
   {
+    name          = "arm64"
     min_size      = 1
     max_size      = 3
     desired_size  = 1
@@ -18,6 +19,7 @@ managed_node_groups = [
 ]
 node_groups = [
   {
+    name          = "arm64"
     min_size      = 1
     max_size      = 3
     desired_size  = 1
