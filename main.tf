@@ -331,13 +331,14 @@ provider "kubernetes" {
 }
 
 resource "time_sleep" "wait" {
-  create_duration = "10s"
+  create_duration = "300s"
   depends_on = [
     aws_eks_cluster.cp,
     aws_eks_node_group.ng,
     aws_autoscaling_group.ng,
   ]
 }
+
 resource "kubernetes_config_map" "aws-auth" {
   count      = ((local.managed_node_groups_enabled || local.fargate_enabled) ? 0 : (local.node_groups_enabled ? 1 : 0))
   depends_on = [time_sleep.wait]
