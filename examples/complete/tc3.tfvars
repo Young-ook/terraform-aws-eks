@@ -8,6 +8,7 @@ tags = {
 kubernetes_version = "1.17"
 managed_node_groups = [
   {
+    name          = "default"
     min_size      = 1
     max_size      = 3
     desired_size  = 1
@@ -16,6 +17,7 @@ managed_node_groups = [
 ]
 node_groups = [
   {
+    name          = "spot"
     min_size      = 1
     max_size      = 3
     desired_size  = 1

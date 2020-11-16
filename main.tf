@@ -96,7 +96,7 @@ resource "aws_iam_role_policy_attachment" "ecr-read" {
 
 ## eks-optimized linux
 data "aws_ami" "eks" {
-  for_each    = { for key, val in var.node_groups : key => val }
+  for_each    = { for ng in var.node_groups : ng.name => ng }
   owners      = ["amazon"]
   most_recent = true
 
@@ -111,7 +111,7 @@ data "aws_ami" "eks" {
 }
 
 data "template_file" "boot" {
-  for_each = { for key, val in var.node_groups : key => val }
+  for_each = { for ng in var.node_groups : ng.name => ng }
   template = <<EOT
 #!/bin/bash
 set -ex
@@ -120,7 +120,7 @@ EOT
 }
 
 resource "aws_launch_template" "ng" {
-  for_each      = { for key, val in var.node_groups : key => val }
+  for_each      = { for ng in var.node_groups : ng.name => ng }
   name          = format("eks-%s", uuid())
   tags          = merge(local.default-tags, local.eks-tag, var.tags)
   image_id      = data.aws_ami.eks[each.key].id
@@ -157,7 +157,7 @@ resource "aws_launch_template" "ng" {
 }
 
 resource "aws_autoscaling_group" "ng" {
-  for_each              = { for key, val in var.node_groups : key => val }
+  for_each              = { for ng in var.node_groups : ng.name => ng }
   name                  = format("eks-%s", uuid())
   vpc_zone_identifier   = local.subnet_ids
   max_size              = lookup(each.value, "max_size", 3)
@@ -237,7 +237,7 @@ resource "aws_autoscaling_group" "ng" {
 ## managed node groups
 
 resource "aws_eks_node_group" "ng" {
-  for_each        = { for key, val in var.managed_node_groups : key => val }
+  for_each        = { for ng in var.managed_node_groups : ng.name => ng }
   cluster_name    = aws_eks_cluster.cp.name
   node_group_name = join("-", [aws_eks_cluster.cp.name, each.key])
   node_role_arn   = aws_iam_role.ng.0.arn
@@ -292,7 +292,7 @@ resource "aws_iam_role_policy_attachment" "eks-fargate" {
 }
 
 resource "aws_eks_fargate_profile" "fargate" {
-  for_each               = { for key, val in var.fargate_profiles : key => val }
+  for_each               = { for ng in var.fargate_profiles : ng.name => ng }
   cluster_name           = aws_eks_cluster.cp.name
   fargate_profile_name   = each.key
   pod_execution_role_arn = aws_iam_role.fargate.0.arn
