@@ -7,6 +7,8 @@ tags = {
 }
 kubernetes_version = "1.17"
 fargate_profiles = [
-  { namespace = "default" },
-  { namespace = "hello" },
+  {
+    name      = "hello"
+    namespace = "hello"
+  },
 ]
