@@ -44,6 +44,7 @@ resource "helm_release" "autoscaler" {
   count           = var.enabled ? 1 : 0
   name            = lookup(var.helm, "name", "eks-as")
   chart           = lookup(var.helm, "chart", "cluster-autoscaler-chart")
+  version         = lookup(var.helm, "version", null)
   repository      = lookup(var.helm, "repository", "https://kubernetes.github.io/autoscaler")
   namespace       = local.namespace
   cleanup_on_fail = lookup(var.helm, "cleanup_on_fail", true)

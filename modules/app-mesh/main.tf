@@ -24,6 +24,7 @@ resource "helm_release" "appmesh" {
   count            = var.enabled ? 1 : 0
   name             = lookup(var.helm, "name", "eks-am")
   chart            = lookup(var.helm, "chart", "appmesh-controller")
+  version          = lookup(var.helm, "version", null)
   repository       = lookup(var.helm, "repository", "https://aws.github.io/eks-charts")
   namespace        = local.namespace
   create_namespace = true

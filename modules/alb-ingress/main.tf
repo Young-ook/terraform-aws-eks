@@ -112,6 +112,7 @@ resource "helm_release" "albingress" {
   count           = var.enabled ? 1 : 0
   name            = lookup(var.helm, "name", "eks-alb")
   chart           = lookup(var.helm, "chart", "aws-alb-ingress-controller")
+  version         = lookup(var.helm, "version", null)
   repository      = lookup(var.helm, "repository", "https://kubernetes-charts-incubator.storage.googleapis.com")
   namespace       = local.namespace
   cleanup_on_fail = lookup(var.helm, "cleanup_on_fail", true)
