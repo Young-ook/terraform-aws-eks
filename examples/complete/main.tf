@@ -74,6 +74,9 @@ module "alb-ingress" {
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
+  helm = {
+    version = "1.0.3"
+  }
 }
 
 module "app-mesh" {
@@ -82,6 +85,9 @@ module "app-mesh" {
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
+  helm = {
+    version = "1.2.0"
+  }
 }
 
 module "cluster-autoscaler" {
@@ -90,6 +96,9 @@ module "cluster-autoscaler" {
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
+  helm = {
+    version = "1.1.1"
+  }
 }
 
 module "container-insights" {
@@ -106,4 +115,8 @@ module "metrics-server" {
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
+  helm = {
+    repository = "https://olemarkus.github.io/metrics-server"
+    version    = "2.11.2"
+  }
 }
