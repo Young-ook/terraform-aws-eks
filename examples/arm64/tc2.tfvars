@@ -20,6 +20,6 @@ node_groups = [
     min_size      = 1
     max_size      = 3
     desired_size  = 1
-    instance_type = "m5.large"
+    instance_type = "t3.small"
   }
 ]
