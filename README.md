@@ -6,8 +6,9 @@
 * This module has several sub-modules to deploy kubernetes controllers and utilities using helm provider.
 
 ## Examples
-- [Quickstart Example](https://github.com/Young-ook/terraform-aws-eks/blob/main/README.md#quickstart)
-- [Complete Example](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/complete/README.md#example)
+- [Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/complete/README.md)
+- [Amazon EKS on AWS Fargate](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/fargate/README.md)
+- [Amazon EKS on AWS Graviton](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/arm64/README.md)
 
 ## Quickstart
 ### Setup
