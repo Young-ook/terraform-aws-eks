@@ -7,3 +7,6 @@
 
 # User kubernetes cluster configs
 kubeconfig
+
+# Local .DS_Store
+**/.DS_Store
