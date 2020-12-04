@@ -6,9 +6,12 @@ tags = {
   test = "tc4"
 }
 kubernetes_version = "1.17"
-fargate_profiles = [
+managed_node_groups = [
   {
-    name      = "hello"
-    namespace = "hello"
-  },
+    name          = "default"
+    min_size      = 1
+    max_size      = 3
+    desired_size  = 1
+    instance_type = "t3.large"
+  }
 ]
