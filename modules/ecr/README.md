@@ -16,7 +16,7 @@ terraform apply
 ```
 
 ## Pushing a Docker image
-Follow the instructions from [this](https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html)
+Follow [these](https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html) instructions
 
 ## Pushing a Helm chart
-Follow the instructions from [this](https://docs.aws.amazon.com/AmazonECR/latest/userguide/push-oci-artifact.html)
+Follow [these](https://docs.aws.amazon.com/AmazonECR/latest/userguide/push-oci-artifact.html) instructions
