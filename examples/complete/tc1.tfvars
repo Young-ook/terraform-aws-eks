@@ -6,15 +6,21 @@ tags = {
   test = "tc1"
 }
 kubernetes_version = "1.17"
+managed_node_groups = [
+  {
+    name          = "default"
+    min_size      = 1
+    max_size      = 3
+    desired_size  = 1
+    instance_type = "t3.large"
+  }
+]
 node_groups = [
   {
     name          = "default"
     min_size      = 1
     max_size      = 3
     desired_size  = 1
-    instance_type = "t3.medium"
-    instances_distribution = {
-      spot_allocation_strategy = "capacity-optimized"
-    }
+    instance_type = "t3.large"
   }
 ]
