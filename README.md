@@ -9,6 +9,7 @@
 - [Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/complete)
 - [Amazon EKS on AWS Fargate](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/fargate)
 - [Amazon EKS on AWS Graviton](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/arm64)
+- [Amazon EKS with Spot Instances](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/spot)
 - [Amazon ECR](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/ecr)
 
 ## Quickstart
