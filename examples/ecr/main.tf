@@ -32,7 +32,7 @@ module "vpc" {
   # the com.amazonaws.region.ecr.dkr Amazon ECR VPC endpoint and the Amazon S3 gateway endpoints.
   #
   # Amazon ECS tasks using the Fargate launch type and platform version 1.4.0 or later require both
-  # the com.amazonaws.region.ecr.dkr and com.amazonaws.region.ecr.api Amazon ECR VPC endpoints and 
+  # the com.amazonaws.region.ecr.dkr and com.amazonaws.region.ecr.api Amazon ECR VPC endpoints and
   # the Amazon S3 gateway endpoints.
   #
   # For more default, please visit the https://docs.aws.amazon.com/AmazonECR/latest/userguide/vpc-endpoints.html
