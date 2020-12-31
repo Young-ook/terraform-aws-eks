@@ -13,7 +13,7 @@ $ terraform plan -var-file=default.tfvars
 $ terraform apply -var-file=default.tfvars
 ```
 
-After then you will see the created EKS cluster and node groups and IAM role. For more information about configuration of service account mapping for IAM role in Kubernetes, please check out the [IAM Role for Service Accounts](https://github.com/Young-ook/terraform-aws-eks/tree/main/modules/iam-role-for-serviceaccount/README.md)
+After then you will see the created EKS cluster and node groups. For more information about configuration of service account mapping for IAM role in Kubernetes, please check out the [IRSA](https://github.com/Young-ook/terraform-aws-eks/tree/main/modules/iam-role-for-serviceaccount/)
 
 ## Clean up
 Run terraform:
