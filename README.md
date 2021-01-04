@@ -36,7 +36,7 @@ After then you will see the created EKS cluster and node groups and IAM role. Fo
 
 # Known Issues
 ## Unauthorized
-You might get an error message when this module tries to create a `aws-auth` configuration map for a new EKS cluster. When prompted, reapply the terraform composition. Here is an example error message:
+You might get an error message when this module tries to create a `aws-auth` configuration map for a new EKS cluster. When prompted, reapply the terraform configuration. Here is an example error message:
 ```
 module.eks.kubernetes_config_map.aws-auth[0]: Creating...
 
