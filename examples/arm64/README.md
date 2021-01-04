@@ -1,4 +1,4 @@
-# Amazon EKS on Graviton
+# Amazon EKS on AWS Graviton
 ## Setup
 [This](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/arm64/main.tf) is the example of terraform configuration file to create a managed EKS with ARM64 architecture based node groups on your AWS account. Check out and apply it using terraform command.
 
