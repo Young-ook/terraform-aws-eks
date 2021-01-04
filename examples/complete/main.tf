@@ -64,7 +64,6 @@ provider "helm" {
     host                   = module.eks.helmconfig.host
     token                  = module.eks.helmconfig.token
     cluster_ca_certificate = base64decode(module.eks.helmconfig.ca)
-    load_config_file       = false
   }
 }
 
@@ -76,17 +75,6 @@ module "alb-ingress" {
   tags         = { env = "test" }
   helm = {
     version = "1.0.3"
-  }
-}
-
-module "app-mesh" {
-  source       = "Young-ook/eks/aws//modules/app-mesh"
-  enabled      = ! local.fargate_only
-  cluster_name = module.eks.cluster.name
-  oidc         = module.eks.oidc
-  tags         = { env = "test" }
-  helm = {
-    version = "1.2.0"
   }
 }
 
