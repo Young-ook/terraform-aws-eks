@@ -10,7 +10,7 @@ variable "helm" {
   type        = map
   default = {
     name            = "metrics-server"
-    repository      = "https://kubernetes-charts.storage.googleapis.com"
+    repository      = "https://charts.helm.sh/stable"
     chart           = "metrics-server"
     namespace       = "kube-system"
     cleanup_on_fail = true
