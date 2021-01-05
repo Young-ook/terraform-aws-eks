@@ -13,11 +13,6 @@ output "kubeconfig" {
   value       = module.eks.kubeconfig
 }
 
-output "kubecli" {
-  description = "The kubectl command to attach annotations of IAM role for service account"
-  value       = module.irsa.kubecli
-}
-
 output "features" {
   description = "Features configurations of the AWS EKS cluster"
   value       = module.eks.features
