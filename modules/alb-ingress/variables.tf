@@ -10,7 +10,7 @@ variable "helm" {
   type        = map
   default = {
     name            = "eks-alb"
-    repository      = "https://kubernetes-charts-incubator.storage.googleapis.com"
+    repository      = "https://charts.helm.sh/incubator"
     chart           = "aws-alb-ingress-controller"
     namespace       = "kube-system"
     serviceaccount  = "eks-alb-aws-alb-ingress-controller"
