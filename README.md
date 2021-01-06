@@ -36,7 +36,7 @@ After then you will see the created EKS cluster and node groups and IAM role. Fo
 
 # Known Issues
 ## Unauthorized
-You might get an error message when this module tries to create a `aws-auth` configuration map for a new EKS cluster. When prompted, reapply the terraform configuration. Here is an example error message:
+You might get an error message when this module tries to create a `aws-auth` configuration map for a new EKS cluster. When prompted, re-apply the terraform configuration. Here is an example error message:
 ```
 module.eks.kubernetes_config_map.aws-auth[0]: Creating...
 
@@ -44,4 +44,15 @@ Error: Unauthorized
 
   on .terraform/modules/eks/main.tf line 341, in resource "kubernetes_config_map" "aws-auth":
  341: resource "kubernetes_config_map" "aws-auth" {
+```
+
+## Configmap already exist
+If you are trying to replace a managed nodegroup with a (self-managed) nodegroup, you may get an error message as this module tries to generate the `aws-auth` config map. This is because the managed nodegroup resource does not delete the `aws-auth` configmap when it is removed, but the self-managed nodegroup needs the `aws-auth` configmap for node registration, which causes a conflict. When prompted, delete exsiting `aws-auth` configmap using kubectl and retry the terraform apply command. Here is an example error message:
+```
+module.eks.kubernetes_config_map.aws-auth[0]: Creating...
+
+Error: configmaps "aws-auth" already exists
+
+  on .terraform/modules/eks/main.tf line 343, in resource "kubernetes_config_map" "aws-auth":
+ 343: resource "kubernetes_config_map" "aws-auth" {
 ```
