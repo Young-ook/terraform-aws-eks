@@ -13,7 +13,7 @@ $ terraform plan -var-file default.tfvars
 $ terraform apply -var-file default.tfvars
 ```
 
-## Horizontal Pod Autoscaler
+## Horizontal Pod Autoscaler (HPA)
 The [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) automatically scales the number of Pods in a replication controller, deployment, replica set or stateful set based on observed CPU utilization.
 
 This example requires a running Kubernetes cluster and kubectl. [Metrics server](https://github.com/kubernetes-sigs/metrics-server) monitoring needs to be deployed in the cluster to provide metrics through the [Metrics API](https://github.com/kubernetes/metrics). Horizontal Pod Autoscaler uses this API to collect metrics. To learn how to deploy the metrics-server, see the metrics-server documentation.

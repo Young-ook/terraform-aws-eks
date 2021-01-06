@@ -30,7 +30,7 @@ provider "helm" {
 
 module "alb-ingress" {
   source       = "Young-ook/eks/aws//modules/alb-ingress"
-  enabled      = true
+  enabled      = false
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
@@ -38,18 +38,15 @@ module "alb-ingress" {
 
 module "cluster-autoscaler" {
   source       = "Young-ook/eks/aws//modules/cluster-autoscaler"
-  enabled      = true
+  enabled      = false
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
-  helm = {
-    version = "1.1.1"
-  }
 }
 
 module "container-insights" {
   source       = "Young-ook/eks/aws//modules/container-insights"
-  enabled      = true
+  enabled      = false
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
