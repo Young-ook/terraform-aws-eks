@@ -1,6 +1,6 @@
 # Autoscaling
 ## Setup
-[This](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/complete/main.tf) is the example of terraform configuration file to create a managed EKS on your AWS account. Check out and apply it using terraform command.
+[This](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/autoscaling/main.tf) is the example of terraform configuration file to create a managed EKS on your AWS account. Check out and apply it using terraform command.
 
 Run terraform:
 ```
