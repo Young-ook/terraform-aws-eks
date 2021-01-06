@@ -10,7 +10,7 @@ variable "helm" {
   type        = map
   default = {
     name            = "eks-cw"
-    chart           = "containerinsights"
+    chart           = "container-insights"
     namespace       = "amazon-cloudwatch"
     serviceaccount  = "aws-container-insights"
     cleanup_on_fail = true
