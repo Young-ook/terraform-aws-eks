@@ -1,6 +1,6 @@
 aws_region = "ap-northeast-1"
 azs        = ["ap-northeast-1a", "ap-northeast-1c", "ap-northeast-1d"]
-name       = "eks-tc2"
+name       = "eks-autoscaling-tc2"
 tags = {
   env  = "dev"
   test = "tc2"
@@ -12,6 +12,6 @@ managed_node_groups = [
     min_size      = 1
     max_size      = 3
     desired_size  = 1
-    instance_type = "t3.large"
+    instance_type = "t3.small"
   }
 ]

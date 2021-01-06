@@ -6,7 +6,7 @@
 * This module has several sub-modules to deploy kubernetes controllers and utilities using helm provider.
 
 ## Examples
-- [Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/complete)
+- [Amazon EKS Autoscaling](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/autoscaling)
 - [Amazon EKS on AWS Fargate](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/fargate)
 - [Amazon EKS on AWS Graviton](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/arm64)
 - [Amazon EKS with Spot Instances](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/spot)
