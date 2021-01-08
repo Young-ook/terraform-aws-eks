@@ -10,8 +10,7 @@ variable "helm" {
   type        = map
   default = {
     name            = "eks-as"
-    repository      = "https://kubernetes.github.io/autoscaler"
-    chart           = "cluster-autoscaler-chart"
+    chart           = "cluster-autoscaler"
     namespace       = "kube-system"
     serviceaccount  = "cluster-autoscaler"
     cleanup_on_fail = true

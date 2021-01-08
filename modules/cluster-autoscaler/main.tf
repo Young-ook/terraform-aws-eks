@@ -41,19 +41,20 @@ resource "aws_iam_policy" "autoscaler" {
 }
 
 resource "helm_release" "autoscaler" {
-  count           = var.enabled ? 1 : 0
-  name            = lookup(var.helm, "name", "eks-as")
-  chart           = lookup(var.helm, "chart", "cluster-autoscaler-chart")
-  version         = lookup(var.helm, "version", null)
-  repository      = lookup(var.helm, "repository", "https://kubernetes.github.io/autoscaler")
-  namespace       = local.namespace
-  cleanup_on_fail = lookup(var.helm, "cleanup_on_fail", true)
+  count            = var.enabled ? 1 : 0
+  name             = lookup(var.helm, "name", "eks-as")
+  chart            = lookup(var.helm, "chart", "cluster-autoscaler")
+  version          = lookup(var.helm, "version", null)
+  repository       = lookup(var.helm, "repository", join("/", [path.module, "charts"]))
+  namespace        = local.namespace
+  create_namespace = true
+  cleanup_on_fail  = lookup(var.helm, "cleanup_on_fail", true)
 
   dynamic "set" {
     for_each = {
-      "autoDiscovery.clusterName"                                      = var.cluster_name
-      "rbac.serviceAccount.name"                                       = local.serviceaccount
-      "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn[0]
+      "autoDiscovery.clusterName"                                 = var.cluster_name
+      "serviceAccount.name"                                       = local.serviceaccount
+      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn[0]
     }
     content {
       name  = set.key
