@@ -117,7 +117,7 @@ $ kubectl apply -f https://k8s.io/examples/application/php-apache.yaml
 ```
 ### Scale out the application
 ```
-$ kubectl scale --replicas=3 deployment/php-apache
+$ kubectl scale --replicas=10 deployment/php-apache
 $ kubectl get po -o wide -w
 NAME                          READY   STATUS    RESTARTS   AGE   IP              NODE                                               NOMINATED NODE   READINESS GATES
 php-apache-79544xxxxx-9lbhz   1/1     Running   0          41h   172.31.36.219   ip-172-31-38-165.ap-northeast-2.compute.internal   <none>           <none>
