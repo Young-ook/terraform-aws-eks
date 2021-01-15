@@ -19,12 +19,10 @@ The [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application
 This example requires a running Kubernetes cluster and kubectl. [Metrics server](https://github.com/kubernetes-sigs/metrics-server) monitoring needs to be deployed in the cluster to provide metrics through the [Metrics API](https://github.com/kubernetes/metrics). Horizontal Pod Autoscaler uses this API to collect metrics. To learn how to deploy the metrics-server, see the metrics-server documentation.
 
 ### PHP application
-First, we will start a deployment running the image and expose it as a service.
-Run the following command:
+First, we will start a deployment running the image and expose it as a service. Run the following command:
 ```
 $ kubectl apply -f https://k8s.io/examples/application/php-apache.yaml
 ```
-
 Here is the details of `php-apache.yaml` file to deploy web application. This manifest creates a simple PHP-based web server and Kubernetes service. It will listen for http requests on port 80.
 ```
 apiVersion: apps/v1
@@ -103,6 +101,32 @@ php-apache-79544xxxxx-mtbll   1/1     Running   0          56s
 php-apache-79544xxxxx-rj8hj   1/1     Running   0          41s
 php-apache-79544xxxxx-rj9p6   1/1     Running   0          6m27s
 php-apache-79544xxxxx-ts5d2   1/1     Running   0          56s
+```
+
+## Cluster Autoscaler (CA)
+### Before you begin
+If you have tested the Horizontal Pod Autoscaler (HPA), you need to reset the configuration of php-apache application. You need to remove and redeploy the php-apache application or you need to adjust the desired capacity of the EC2 autoscaling group to 1. This is important because you want to see that the cluster autoscaling processing is working properly to automatically increase instance capacity when there is no space to launch the reserved container.
+
+### Verify
+To check the latest update of cluster autoscaler in the EKS clsuter, please refer to [this](https://github.com/Young-ook/terraform-aws-eks/blob/main/modules/cluster-autoscaler) for more details.
+
+### PHP application
+First, we will start a deployment running the nginx container. Run the following command:
+```
+$ kubectl apply -f https://k8s.io/examples/application/php-apache.yaml
+```
+### Scale out the application
+```
+$ kubectl scale --replicas=3 deployment/php-apache
+$ kubectl get po -o wide -w
+NAME                          READY   STATUS    RESTARTS   AGE   IP              NODE                                               NOMINATED NODE   READINESS GATES
+php-apache-79544xxxxx-9lbhz   1/1     Running   0          41h   172.31.36.219   ip-172-31-38-165.ap-northeast-2.compute.internal   <none>           <none>
+php-apache-79544xxxxx-r64b2   1/1     Running   0          71s   172.31.32.31    ip-172-31-38-165.ap-northeast-2.compute.internal   <none>           <none>
+php-apache-79544xxxxx-ws6qw   0/1     Pending   0          71s   <none>          <none>                                             <none>           <none>
+php-apache-79544xxxxx-ws6qw   0/1     Pending   0          2m13s   <none>          <none>                                             <none>           <none>
+php-apache-79544xxxxx-ws6qw   0/1     Pending   0          2m45s   <none>          ip-172-31-54-84.ap-northeast-2.compute.internal    <none>           <none>
+php-apache-79544xxxxx-ws6qw   0/1     ContainerCreating   0          2m45s   <none>          ip-172-31-54-84.ap-northeast-2.compute.internal    <none>           <none>
+php-apache-79544xxxxx-ws6qw   1/1     Running             0          2m55s   172.31.60.13    ip-172-31-54-84.ap-northeast-2.compute.internal    <none>           <none>
 ```
 
 ## Clean up
