@@ -2,7 +2,7 @@
 
 locals {
   namespace      = lookup(var.helm, "namespace", "kube-system")
-  serviceaccount = lookup(var.helm, "serviceaccount", "eks-alb-aws-alb-ingress-controller")
+  serviceaccount = lookup(var.helm, "serviceaccount", "metrics-server")
 }
 
 resource "helm_release" "metrics" {
