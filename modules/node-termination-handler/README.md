@@ -1,14 +1,12 @@
-# App Mesh for Amazon EKS
-[AWS App Mesh](https://aws.amazon.com/app-mesh) is a service mesh that provides application-level networking to make it easy for your services to communicate with each other across multiple types of compute infrastructure. App Mesh standardizes how your services communicate, giving you end-to-end visibility and ensuring high-availability for your applications.
+# AWS Node Termination Handler
+[AWS Node Termination Handler](https://github.com/aws/aws-node-termination-handler) is a project ensures that the Kubernetes control plane responds appropriately to events that can cause your EC2 instance to become unavailable, such as EC2 maintenance events, EC2 Spot interruptions, ASG Scale-In, ASG AZ Rebalance, and EC2 Instance Termination via the API or Console.
 
 ## Examples
-- [Quickstart Example](https://github.com/Young-ook/terraform-aws-eks/blob/main/modules/app-mesh/README.md#quickstart)
-- [Learning AWS App Mesh](https://aws.amazon.com/blogs/compute/learning-aws-app-mesh/)
-- [AWS App Mesh Examples](https://github.com/aws/aws-app-mesh-examples)
+- [Cost Optimization and Resilience EKS with Spot Instances](https://aws.amazon.com/blogs/compute/cost-optimization-and-resilience-eks-with-spot-instances/)
 
 ## Quickstart
 ### Setup
-This is a terraform module to deploy Helm chart for App Mesh controller.
+This is a terraform module to deploy Helm chart for Node Termination handler.
 ```hcl
 module "eks" {
   source                     = "Young-ook/eks/aws"
@@ -20,47 +18,82 @@ provider "helm" {
     host                   = module.eks.helmconfig.host
     token                  = module.eks.helmconfig.token
     cluster_ca_certificate = base64decode(module.eks.helmconfig.ca)
-    load_config_file       = false
   }
 }
 
-module "app-mesh" {
-  source       = "Young-ook/eks/aws//modules/app-mesh"
+module "node-termination-handler" {
+  source       = "Young-ook/eks/aws//modules/node-termination-handler"
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
 }
 ```
-Modify the terraform configuration file to deploy App Mesh controller. Run the terraform code to make a change on your environment.
+Modify the terraform configuration file to deploy AWS Node Termination handler. Run the terraform code to make a change on your environment.
 ```
 terraform init
 terraform apply
 ```
 
 ### Verify
-All steps are finished, check that there are pods that are `Ready` in `appmesh-system` namespace:
-Ensure the `eks-am-appmesh-controller` pod is generated and running:
+All steps are finished, check that the pod is `Ready` in `kube-system` namespace. Ensure the `eks-spot-aws-node-termination-hander` pod is generated and running:
 ```
-$ kubectl -n appmesh-system get all
-NAME                                            READY   STATUS    RESTARTS   AGE
-pod/eks-am-appmesh-controller-db5547998-82gbl   1/1     Running   0          10h
-
-NAME                                                TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
-service/eks-am-appmesh-controller-webhook-service   ClusterIP   10.100.9.216   <none>        443/TCP   10h
-
-NAME                                        READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/eks-am-appmesh-controller   1/1     1            1           10h
-
-NAME                                                  DESIRED   CURRENT   READY   AGE
-replicaset.apps/eks-am-appmesh-controller-db5547998   1         1         1       10h
+$ kubectl -n kube-system get po
+NAME                                          READY   STATUS    RESTARTS   AGE
+aws-node-xxxxx                                1/1     Running   0          19h
+coredns-xxxxxxxxx-fc9mr                       1/1     Running   0          19h
+coredns-xxxxxxxxx-k4h2b                       1/1     Running   0          19h
+eks-spot-aws-node-termination-handler-xxxxx   1/1     Running   0          19h
+kube-proxy-xxxxx                              1/1     Running   0          19h
+metrics-server-xxxxxxxxx-rh6v8                1/1     Running   0          19h
+$kubectl -n kube-system get ds
+NAME                                    DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+aws-node                                1         1         1       1            1           <none>                   19h
+eks-spot-aws-node-termination-handler   1         1         1       1            1           kubernetes.io/os=linux   19h
+kube-proxy                              1         1         1       1            1           <none>                   19h
 ```
-And you can list the all CRD(Custom Resource Definition)s for App Mesh integration.
+
+And also, you can see the logs from pod to check working well:
 ```
-$ kubectl get crds | grep appmesh
-gatewayroutes.appmesh.k8s.aws
-meshes.appmesh.k8s.aws
-virtualgateways.appmesh.k8s.aws
-virtualnodes.appmesh.k8s.aws
-virtualrouters.appmesh.k8s.aws
-virtualservices.appmesh.k8s.aws
+$ kubectl -n kube-system logs -f eks-spot-aws-node-termination-handler-xxxxx
+2021/01/17 08:14:11 ??? Trying to get token from IMDSv2
+2021/01/17 08:14:11 ??? Got token from IMDSv2
+2021/01/17 08:14:11 ??? Startup Metadata Retrieved metadata={"accountId":"xxxxxxxxxxxx","availabilityZone":"ap-northeast-2c","instanceId":"i-0dd84c15xxxxe411c","instanceType":"t3.large","localHostname":"ip-172-31-xxx-xxx.ap-northeast-2.compute.internal","privateIp":"172.31.xxx.xxx","publicHostname":"ec2-13-xxx-xxx-xxx.ap-northeast-2.compute.amazonaws.com","publicIp":"13.xxx.xxx.xxx","region":"ap-northeast-2"}
+2021/01/17 08:14:11 ??? aws-node-termination-handler arguments:
+	dry-run: false,
+	node-name: ip-172-31-xxx-xxx.ap-northeast-2.compute.internal,
+	metadata-url: http://169.254.169.254,
+	kubernetes-service-host: 10.xxx.xxx.xxx,
+	kubernetes-service-port: 443,
+	delete-local-data: true,
+	ignore-daemon-sets: true,
+	pod-termination-grace-period: -1,
+	node-termination-grace-period: 120,
+	enable-scheduled-event-draining: false,
+	enable-spot-interruption-draining: true,
+	enable-sqs-termination-draining: false,
+	enable-rebalance-monitoring: false,
+	metadata-tries: 3,
+	cordon-only: false,
+	taint-node: false,
+	json-logging: false,
+	log-level: info,
+	webhook-proxy: ,
+	webhook-headers: <not-displayed>,
+	webhook-url: ,
+	webhook-template: <not-displayed>,
+	uptime-from-file: ,
+	enable-prometheus-server: false,
+	prometheus-server-port: 9092,
+	aws-region: ap-northeast-2,
+	queue-url: ,
+	check-asg-tag-before-draining: true,
+	managed-asg-tag: aws-node-termination-handler/managed,
+	aws-endpoint: ,
+
+2021/01/17 08:14:11 ??? Started watching for interruption events
+2021/01/17 08:14:11 ??? Kubernetes AWS Node Termination Handler has started successfully!
+2021/01/17 08:14:11 ??? Started watching for event cancellations
+2021/01/17 08:14:11 ??? Started monitoring for events event_type=SPOT_ITN
+2021/01/17 09:13:59 ??? Trying to get token from IMDSv2
+2021/01/17 09:13:59 ??? Got token from IMDSv2
 ```
