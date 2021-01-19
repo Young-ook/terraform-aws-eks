@@ -1,6 +1,6 @@
 aws_region = "ap-northeast-2"
 azs        = ["ap-northeast-2a", "ap-northeast-2b", "ap-northeast-2c"]
-name       = "eks-tc1"
+name       = "eks-spot-tc1"
 tags = {
   env  = "dev"
   test = "tc1"
@@ -15,7 +15,7 @@ node_groups = [
     instance_type = "t3.large"
     instances_distribution = {
       spot_allocation_strategy = "lowest-price"
-      spot_max_price           = "0.07"
+      spot_max_price           = "0.036"
     }
   }
 ]
