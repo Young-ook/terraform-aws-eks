@@ -1,11 +1,3 @@
-data "aws_partition" "current" {
-  count = var.enabled ? 1 : 0
-}
-
-data "aws_region" "current" {
-  count = var.enabled ? 1 : 0
-}
-
 resource "random_string" "node-termination-handler-suffix" {
   count   = var.enabled ? 1 : 0
   length  = 5

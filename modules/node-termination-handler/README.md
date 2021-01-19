@@ -41,10 +41,10 @@ $ kubectl -n kube-system get po
 NAME                                          READY   STATUS    RESTARTS   AGE
 aws-node-xxxxx                                1/1     Running   0          19h
 aws-node-termination-handler-xxxxx            1/1     Running   0          19h
-coredns-xxxxxxxxx-fc9mr                       1/1     Running   0          19h
-coredns-xxxxxxxxx-k4h2b                       1/1     Running   0          19h
+coredns-xxxxxxxxx-xxxxx                       1/1     Running   0          19h
+coredns-xxxxxxxxx-yyyyy                       1/1     Running   0          19h
 kube-proxy-xxxxx                              1/1     Running   0          19h
-metrics-server-xxxxxxxxx-rh6v8                1/1     Running   0          19h
+metrics-server-xxxxxxxxx-xxxxx                1/1     Running   0          19h
 $kubectl -n kube-system get ds
 NAME                                    DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
 aws-node                                1         1         1       1            1           <none>                   19h
