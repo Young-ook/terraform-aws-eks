@@ -59,3 +59,17 @@ module "metrics-server" {
   oidc         = module.eks.oidc
   tags         = { env = "test" }
 }
+
+module "prometheus" {
+  source       = "../../modules/prometheus"
+  enabled      = false
+  cluster_name = module.eks.cluster.name
+  oidc         = module.eks.oidc
+  tags         = { env = "test" }
+  helm = {
+    values = {
+      "alertmanager.persistentVolume.storageClass" = "gp2"
+      "server.persistentVolume.storageClass"       = "gp2"
+    }
+  }
+}
