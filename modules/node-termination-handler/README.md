@@ -40,21 +40,21 @@ All steps are finished, check that the pod is `Ready` in `kube-system` namespace
 $ kubectl -n kube-system get po
 NAME                                          READY   STATUS    RESTARTS   AGE
 aws-node-xxxxx                                1/1     Running   0          19h
+aws-node-termination-handler-xxxxx            1/1     Running   0          19h
 coredns-xxxxxxxxx-fc9mr                       1/1     Running   0          19h
 coredns-xxxxxxxxx-k4h2b                       1/1     Running   0          19h
-eks-spot-aws-node-termination-handler-xxxxx   1/1     Running   0          19h
 kube-proxy-xxxxx                              1/1     Running   0          19h
 metrics-server-xxxxxxxxx-rh6v8                1/1     Running   0          19h
 $kubectl -n kube-system get ds
 NAME                                    DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
 aws-node                                1         1         1       1            1           <none>                   19h
-eks-spot-aws-node-termination-handler   1         1         1       1            1           kubernetes.io/os=linux   19h
+aws-node-termination-handler            1         1         1       1            1           kubernetes.io/os=linux   19h
 kube-proxy                              1         1         1       1            1           <none>                   19h
 ```
 
 And also, you can see the logs from pod to check working well:
 ```
-$ kubectl -n kube-system logs -f eks-spot-aws-node-termination-handler-xxxxx
+$ kubectl -n kube-system logs -f aws-node-termination-handler-xxxxx
 2021/01/17 08:14:11 ??? Trying to get token from IMDSv2
 2021/01/17 08:14:11 ??? Got token from IMDSv2
 2021/01/17 08:14:11 ??? Startup Metadata Retrieved metadata={"accountId":"xxxxxxxxxxxx","availabilityZone":"ap-northeast-2c","instanceId":"i-0dd84c15xxxxe411c","instanceType":"t3.large","localHostname":"ip-172-31-xxx-xxx.ap-northeast-2.compute.internal","privateIp":"172.31.xxx.xxx","publicHostname":"ec2-13-xxx-xxx-xxx.ap-northeast-2.compute.amazonaws.com","publicIp":"13.xxx.xxx.xxx","region":"ap-northeast-2"}

@@ -8,7 +8,7 @@ variable "enabled" {
 variable "helm" {
   description = "The helm release configuration"
   default = {
-    name            = "eks-spot"
+    name            = "aws-node-termination-handler"
     repository      = "https://aws.github.io/eks-charts"
     chart           = "aws-node-termination-handler"
     namespace       = "kube-system"
