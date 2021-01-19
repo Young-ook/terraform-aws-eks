@@ -2,7 +2,7 @@
 
 ### aws credential
 variable "aws_account_id" {
-  description = "The aws account id for the tf backend creation (e.g. 857026751867)"
+  description = "The aws account id for the example (e.g. 857026751867)"
 }
 
 ### network
