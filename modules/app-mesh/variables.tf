@@ -9,7 +9,7 @@ variable "helm" {
   description = "The helm release configuration"
   type        = map
   default = {
-    name            = "eks-am"
+    name            = "appmesh-controller"
     repository      = "https://aws.github.io/eks-charts"
     chart           = "appmesh-controller"
     namespace       = "appmesh-system"
