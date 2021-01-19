@@ -15,7 +15,7 @@ node_groups = [
     instance_type = "t3.large"
     instances_distribution = {
       spot_allocation_strategy = "lowest-price"
-      spot_max_price           = "0.04"
+      spot_max_price           = "0.036"
     }
   }
 ]
