@@ -327,7 +327,6 @@ provider "kubernetes" {
   host                   = aws_eks_cluster.cp.endpoint
   token                  = data.aws_eks_cluster_auth.cp.token
   cluster_ca_certificate = base64decode(aws_eks_cluster.cp.certificate_authority.0.data)
-  load_config_file       = false
 }
 
 resource "time_sleep" "wait" {
