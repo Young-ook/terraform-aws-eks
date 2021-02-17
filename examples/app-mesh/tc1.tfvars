@@ -5,7 +5,7 @@ tags = {
   env  = "dev"
   test = "tc1"
 }
-kubernetes_version = "1.18"
+kubernetes_version = "1.19"
 managed_node_groups = [
   {
     name          = "default"
