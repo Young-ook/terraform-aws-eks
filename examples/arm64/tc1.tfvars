@@ -6,7 +6,7 @@ tags = {
   arch = "arm64"
   test = "tc1"
 }
-kubernetes_version = "1.17"
+kubernetes_version = "1.19"
 managed_node_groups = [
   {
     name          = "arm64"

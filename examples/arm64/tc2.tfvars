@@ -5,7 +5,7 @@ tags = {
   env  = "dev"
   test = "tc2"
 }
-kubernetes_version = "1.17"
+kubernetes_version = "1.19"
 node_groups = [
   {
     name          = "arm64"

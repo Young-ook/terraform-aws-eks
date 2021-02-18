@@ -9,7 +9,7 @@ variable "subnets" {
 variable "kubernetes_version" {
   description = "The target version of kubernetes"
   type        = string
-  default     = "1.17"
+  default     = "1.19"
 }
 
 variable "node_groups" {

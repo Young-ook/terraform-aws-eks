@@ -6,7 +6,7 @@ tags = {
   platform = "fargate"
   test     = "tc1"
 }
-kubernetes_version = "1.17"
+kubernetes_version = "1.19"
 fargate_profiles = [
   {
     name      = "hello"
