@@ -1,4 +1,9 @@
 # Amazon EKS on AWS Graviton
+## Getting started
+[AWS Graviton](https://aws.amazon.com/ec2/graviton/) processors are custom built by Amazon Web Services using 64-bit ARM Neoverse cores to deliver the best price performance for you cloud workloads running on Amazon EC2. The new general purpose (M6g), compute-optimized (C6g), and memory-optimized (R6g) instances deliver up to 40% better price/performance over comparable current generation x86-based instances for scale-out and Arm-based applications such as web servers, containerized microservices, caching fleets, and distributed data stores that are supported by the extensive Arm ecosystem. You can mix x86 and Arm based EC2 instances within a cluster, and easily evaluate Arm-based application in existing environments.
+
+[Here](https://github.com/aws/aws-graviton-getting-started) is a github repository for a guide to getting started with AWS Graviton. You can find out more details about how to build, run and optimize your application for AWS Graviton processors.
+
 ## Setup
 [This](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/arm64/main.tf) is the example of terraform configuration file to create a managed EKS with ARM64 architecture based node groups on your AWS account. Check out and apply it using terraform command.
 
@@ -27,11 +32,7 @@ System Info:
 ```
 
 ## Application deployment for Hybrid-Architecture node groups
-Amazon EKS customers can now run production workloads using Arm-based instances including the recently launched Amazon EC2 M6g, C6g, and R6g instances powered by AWS Graviton2 processors. [AWS Graviton](https://aws.amazon.com/ec2/graviton/) processors are custom built by Amazon Web Services using 64-bit ARM Neoverse cores to deliver the best price performance for you cloud workloads running on Amazon EC2.
-
-The new general purpose (M6g), compute-optimized (C6g), and memory-optimized (R6g) instances deliver up to 40% better price/performance over comparable current generation x86-based instances for scale-out and Arm-based applications such as web servers, containerized microservices, caching fleets, and distributed data stores that are supported by the extensive Arm ecosystem. You can mix x86 and Arm based EC2 instances within a cluster, and easily evaluate Arm-based application in existing environments.
-
-Create an EKS cluster with a mixed architecture based node groups. And run the command that you can see on the terraform output to get a kubeconfig file for cluster access. It should look like this: `bash -e .terraform/modules/eks/script/update-kubeconfig.sh -r us-west-2 -n eks-x86-arm64-tc2 -k kubeconfig`. For more detail of the script, please refer to the [Generate kubernetes config](https://github.com/Young-ook/terraform-aws-eks/blob/main/README.md#generate-kubernetes-config)
+Amazon EKS customers can now run production workloads using Arm-based instances including the recently launched Amazon EC2 M6g, C6g, and R6g instances powered by AWS Graviton2 processors. Create an EKS cluster with a mixed architecture based node groups. And run the command that you can see on the terraform output to get a kubeconfig file for cluster access. It should look like this: `bash -e .terraform/modules/eks/script/update-kubeconfig.sh -r us-west-2 -n eks-x86-arm64-tc2 -k kubeconfig`. For more detail of the script, please refer to the [Generate kubernetes config](https://github.com/Young-ook/terraform-aws-eks/blob/main/README.md#generate-kubernetes-config)
 
 ```
 $ terraform apply -var-file tc2.tfvars
@@ -134,3 +135,7 @@ Don't forget you have to use the `-var-file` option when you run terraform destr
 ```
 $ terraform destroy -var-file=default.tfvars
 ```
+
+## Additional Resources
+* [Amazon's Arm-based Graviton2 Against AMD and Intel](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd)
+* [Graviton2 Single Threaded Performance](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd/5)
