@@ -13,40 +13,8 @@ module "irsa" {
   serviceaccount = local.serviceaccount
   oidc_url       = var.oidc.url
   oidc_arn       = var.oidc.arn
-  policy_arns    = [aws_iam_policy.containerinsights.0.arn]
+  policy_arns    = ["arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"]
   tags           = var.tags
-}
-
-resource "aws_iam_policy" "containerinsights" {
-  count       = var.enabled ? 1 : 0
-  name        = local.name
-  description = format("Allow cloudwatch-agent to manage AWS CloudWatch logs for ContainerInsights")
-  path        = "/"
-  policy = jsonencode({
-    Statement = [
-      {
-        Action = [
-          "logs:CreateLogGroup",
-          "logs:CreateLogStream",
-          "logs:PutLogEvents",
-          "logs:DescribeLogGroups",
-          "logs:DescribeLogStreams"
-        ]
-        Effect   = "Allow"
-        Resource = [format("arn:${data.aws_partition.current.0.partition}:logs:*:*:*")]
-      },
-      {
-        Action = [
-          "ec2:DescribeInstances",
-          "ec2:DescribeTags",
-          "ec2:DescribeVolumes",
-        ]
-        Effect   = "Allow"
-        Resource = ["*"]
-      }
-    ]
-    Version = "2012-10-17"
-  })
 }
 
 resource "helm_release" "containerinsights" {
