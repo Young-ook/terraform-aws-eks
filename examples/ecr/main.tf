@@ -35,7 +35,7 @@ module "vpc" {
   # the com.amazonaws.region.ecr.dkr and com.amazonaws.region.ecr.api Amazon ECR VPC endpoints and
   # the Amazon S3 gateway endpoints.
   #
-  # For more default, please visit the https://docs.aws.amazon.com/AmazonECR/latest/userguide/vpc-endpoints.html
+  # For more details, please visit the https://docs.aws.amazon.com/AmazonECR/latest/userguide/vpc-endpoints.html
 
   # enable dns support
   enable_dns_hostnames = true
