@@ -9,7 +9,7 @@ variable "helm" {
   description = "The helm release configuration"
   type        = map
   default = {
-    name            = "eks-alb"
+    name            = "aws-alb-ingress-controller"
     repository      = "https://charts.helm.sh/incubator"
     chart           = "aws-alb-ingress-controller"
     namespace       = "kube-system"

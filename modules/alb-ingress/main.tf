@@ -110,7 +110,7 @@ resource "aws_iam_policy" "albingress" {
 
 resource "helm_release" "albingress" {
   count           = var.enabled ? 1 : 0
-  name            = lookup(var.helm, "name", "eks-alb")
+  name            = lookup(var.helm, "name", "aws-alb-ingress-controller")
   chart           = lookup(var.helm, "chart", "aws-alb-ingress-controller")
   version         = lookup(var.helm, "version", null)
   repository      = lookup(var.helm, "repository", "https://charts.helm.sh/incubator")
