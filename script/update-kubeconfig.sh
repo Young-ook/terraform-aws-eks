@@ -6,7 +6,7 @@ CURDIR=`dirname $0`
 EKS_NAME=eks
 SPINNAKER_MANAGED=false
 
-export AWS_DEFAULT_REGION=us-east-1
+export AWS_REGION=us-east-1
 export KUBECONFIG=$CURDIR/kubeconfig
 
 function print_usage() {
@@ -23,7 +23,7 @@ function process_args() {
     case $opt in
       n) EKS_NAME="$OPTARG"
       ;;
-      r) AWS_DEFAULT_REGION="$OPTARG"
+      r) AWS_REGION="$OPTARG"
       ;;
       k) KUBECONFIG="$OPTARG"
       ;;
@@ -42,7 +42,7 @@ function init() {
   fi
 
   # update kubeconfig
-  aws eks update-kubeconfig --name $EKS_NAME
+  aws eks update-kubeconfig --name $EKS_NAME --region $AWS_REGION
 
   if [ $SPINNAKER_MANAGED = "true" ]; then
     local namespace=$EKS_NAME
@@ -114,5 +114,5 @@ function minify () {
 process_args "$@"
 init
 
-unset AWS_DEFAULT_REGION
+unset AWS_REGION
 unset KUBECONFIG
