@@ -2,7 +2,7 @@
 
 locals {
   namespace      = lookup(var.helm, "namespace", "kube-system")
-  serviceaccount = lookup(var.helm, "serviceaccount", "eks-alb-aws-alb-ingress-controller")
+  serviceaccount = lookup(var.helm, "serviceaccount", "aws-alb-ingress-controller")
 }
 
 module "irsa" {
