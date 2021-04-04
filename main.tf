@@ -94,6 +94,12 @@ resource "aws_iam_role_policy_attachment" "ecr-read" {
   role       = aws_iam_role.ng.0.name
 }
 
+resource "aws_iam_role_policy_attachment" "extra" {
+  for_each   = { for key, val in var.policy_arns : key => val }
+  policy_arn = each.value
+  role       = aws_iam_role.ng[0].name
+}
+
 ## eks-optimized linux
 data "aws_ami" "eks" {
   for_each    = { for ng in var.node_groups : ng.name => ng }
