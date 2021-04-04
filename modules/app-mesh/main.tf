@@ -16,7 +16,6 @@ module "irsa" {
   policy_arns = [
     format("arn:%s:iam::aws:policy/AWSCloudMapFullAccess", data.aws_partition.current.0.partition),
     format("arn:%s:iam::aws:policy/AWSAppMeshFullAccess", data.aws_partition.current.0.partition),
-    format("arn:%s:iam::aws:policy/AWSXRayDaemonWriteAccess", data.aws_partition.current.0.partition),
   ]
   tags = var.tags
 }
