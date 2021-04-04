@@ -13,7 +13,6 @@ variable "helm" {
     repository      = "https://charts.helm.sh/incubator"
     chart           = "aws-alb-ingress-controller"
     namespace       = "kube-system"
-    serviceaccount  = "eks-alb-aws-alb-ingress-controller"
     cleanup_on_fail = true
   }
 }
