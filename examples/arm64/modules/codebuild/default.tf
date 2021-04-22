@@ -1,0 +1,3 @@
+# default variables
+
+locals {}

@@ -5,8 +5,22 @@ terraform {
 }
 
 provider "aws" {
+  alias               = "codebuild"
+  region              = "ap-northeast-1"
+  allowed_account_ids = [var.aws_account_id]
+}
+
+provider "aws" {
   region              = var.aws_region
   allowed_account_ids = [var.aws_account_id]
+}
+
+# build container image
+module "codebuild" {
+  providers = { aws = aws.codebuild }
+  source    = "./modules/codebuild"
+  name      = var.name
+  tags      = var.tags
 }
 
 # eks

@@ -1,0 +1,23 @@
+version: 0.2
+# Based on the Docker documentation, must include the DOCKER_CLI_EXPERIMENTAL environment variable
+# https://docs.docker.com/engine/reference/commandline/manifest/
+
+phases:
+  install:
+    commands:
+      - yum update -y
+  pre_build:
+    commands:
+      - cd examples/arm64/modules/codebuild/app/
+      - $(aws ecr get-login --no-include-email)
+      - echo $TAG
+  build:
+    commands:
+      - export DOCKER_CLI_EXPERIMENTAL=enabled
+      - docker manifest create $REPOSITORY_URI $REPOSITORY_URI:arm64 $REPOSITORY_URI:amd64
+      - docker manifest annotate --arch arm64 $REPOSITORY_URI $REPOSITORY_URI:arm64
+      - docker manifest annotate --arch amd64 $REPOSITORY_URI $REPOSITORY_URI:amd64
+  post_build:
+    commands:
+      - docker manifest push $REPOSITORY_URI
+      - docker manifest inspect $REPOSITORY_URI
