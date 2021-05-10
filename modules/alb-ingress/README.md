@@ -5,7 +5,7 @@ The [AWS load balancer controller](https://github.com/kubernetes-sigs/aws-load-b
 
 ## Examples
 - [Quickstart Example](https://github.com/Young-ook/terraform-aws-eks/blob/main/modules/alb-ingress/README.md#quickstart)
-- [Kubernetes Ingress with AWS ALB Ingress Controller](https://aws.amazon.com/blogs/opensource/kubernetes-ingress-aws-alb-ingress-controller/a)
+- [Kubernetes Ingress with AWS ALB Ingress Controller](https://aws.amazon.com/blogs/opensource/kubernetes-ingress-aws-alb-ingress-controller)
 
 ## Quickstart
 ### Setup
