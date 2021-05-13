@@ -1,15 +1,16 @@
 # Variables for providing to module fixture codes
 
-### aws credential
-variable "aws_account_id" {
-  description = "The aws account id for the tf backend creation (e.g. 857026751867)"
-}
-
 ### network
 variable "aws_region" {
   description = "The aws region to deploy"
   type        = string
   default     = "us-east-1"
+}
+
+variable "cidr" {
+  description = "The vpc CIDR (e.g. 10.0.0.0/16)"
+  type        = string
+  default     = "10.0.0.0/16"
 }
 
 variable "azs" {
@@ -22,6 +23,24 @@ variable "subnets" {
   description = "The list of subnets to deploy an eks cluster"
   type        = list(string)
   default     = null
+}
+
+variable "enable_igw" {
+  description = "Should be true if you want to provision Internet Gateway for internet facing communication"
+  type        = bool
+  default     = true
+}
+
+variable "enable_ngw" {
+  description = "Should be true if you want to provision NAT Gateway(s) across all of private networks"
+  type        = bool
+  default     = false
+}
+
+variable "single_ngw" {
+  description = "Should be true if you want to provision a single shared NAT Gateway across all of private networks"
+  type        = bool
+  default     = false
 }
 
 ### kubernetes cluster

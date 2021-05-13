@@ -5,19 +5,29 @@ terraform {
 }
 
 provider "aws" {
-  region              = var.aws_region
-  allowed_account_ids = [var.aws_account_id]
+  region = var.aws_region
+}
+
+# vpc
+module "vpc" {
+  source     = "Young-ook/spinnaker/aws//modules/spinnaker-aware-aws-vpc"
+  name       = var.name
+  tags       = merge(var.tags, module.eks.tags.shared)
+  azs        = var.azs
+  cidr       = var.cidr
+  enable_igw = var.enable_igw
+  enable_ngw = var.enable_ngw
+  single_ngw = var.single_ngw
 }
 
 # eks
 module "eks" {
-  source              = "Young-ook/eks/aws"
-  name                = var.name
-  tags                = var.tags
-  kubernetes_version  = var.kubernetes_version
-  managed_node_groups = var.managed_node_groups
-  node_groups         = var.node_groups
-  fargate_profiles    = var.fargate_profiles
+  source             = "Young-ook/eks/aws"
+  name               = var.name
+  tags               = var.tags
+  subnets            = values(module.vpc.subnets["private"])
+  kubernetes_version = var.kubernetes_version
+  fargate_profiles   = var.fargate_profiles
 }
 
 module "irsa" {
