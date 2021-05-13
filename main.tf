@@ -1,5 +1,7 @@
 ## managed kubernetes cluster
 
+data "aws_partition" "current" {}
+
 ## features
 locals {
   node_groups_enabled         = (var.node_groups != null ? ((length(var.node_groups) > 0) ? true : false) : false)
