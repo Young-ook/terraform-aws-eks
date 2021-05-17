@@ -9,8 +9,8 @@ $ terraform apply
 ```
 Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
 ```
-$ terraform plan -var-file default.tfvars
-$ terraform apply -var-file default.tfvars
+$ terraform plan -var-file tc1.tfvars
+$ terraform apply -var-file tc1.tfvars
 ```
 
 ## IAM Role for Service Accounts
@@ -23,5 +23,5 @@ $ terraform destroy
 ```
 Don't forget you have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
 ```
-$ terraform destroy -var-file default.tfvars
+$ terraform destroy -var-file tc1.tfvars
 ```
