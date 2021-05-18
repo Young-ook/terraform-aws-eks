@@ -12,7 +12,7 @@ single_ngw         = true
 kubernetes_version = "1.19"
 fargate_profiles = [
   {
-    name      = "hello"
-    namespace = "hello"
+    name      = "default"
+    namespace = "default"
   },
 ]
