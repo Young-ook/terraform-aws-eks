@@ -64,5 +64,6 @@ output "features" {
     "managed_node_groups_enabled" = local.managed_node_groups_enabled
     "node_groups_enabled"         = local.node_groups_enabled
     "fargate_enabled"             = local.fargate_enabled
+    "ssm_enabled"                 = var.enable_ssm
   }
 }

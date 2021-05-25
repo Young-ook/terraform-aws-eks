@@ -73,7 +73,7 @@ resource "aws_iam_role" "ng" {
 }
 
 resource "aws_iam_instance_profile" "ng" {
-  count = local.node_groups_enabled ? 1 : 0
+  count = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
   name  = format("%s-ng", local.name)
   role  = aws_iam_role.ng.0.name
 }
@@ -96,13 +96,20 @@ resource "aws_iam_role_policy_attachment" "ecr-read" {
   role       = aws_iam_role.ng.0.name
 }
 
+resource "aws_iam_role_policy_attachment" "ssm-managed" {
+  count      = var.enable_ssm ? 1 : 0
+  policy_arn = format("arn:%s:iam::aws:policy/AmazonSSMManagedInstanceCore", data.aws_partition.current.partition)
+  role       = aws_iam_role.ng.0.name
+}
+
 resource "aws_iam_role_policy_attachment" "extra" {
   for_each   = { for key, val in var.policy_arns : key => val }
   policy_arn = each.value
   role       = aws_iam_role.ng[0].name
 }
 
-## eks-optimized linux
+## self-managed node groups
+
 data "aws_ami" "eks" {
   for_each    = { for ng in var.node_groups : ng.name => ng }
   owners      = ["amazon"]
@@ -118,13 +125,27 @@ data "aws_ami" "eks" {
   }
 }
 
-data "template_file" "boot" {
-  for_each = { for ng in var.node_groups : ng.name => ng }
-  template = <<EOT
-#!/bin/bash
-set -ex
-/etc/eks/bootstrap.sh ${aws_eks_cluster.cp.name} --kubelet-extra-args '--node-labels=eks.amazonaws.com/nodegroup-image=${data.aws_ami.eks[each.key].id},eks.amazonaws.com/nodegroup=${aws_eks_cluster.cp.name}' --b64-cluster-ca ${aws_eks_cluster.cp.certificate_authority.0.data} --apiserver-endpoint ${aws_eks_cluster.cp.endpoint}
-EOT
+data "template_cloudinit_config" "ng" {
+  for_each      = { for ng in var.node_groups : ng.name => ng }
+  base64_encode = true
+  gzip          = false
+
+  part {
+    content_type = "text/x-shellscript"
+    content      = <<-EOT
+    #!/bin/bash
+    ${var.enable_ssm ? "yum install -y amazon-ssm-agent\nsystemctl enable amazon-ssm-agent\nsystemctl start amazon-ssm-agent" : ""}
+    EOT
+  }
+
+  part {
+    content_type = "text/x-shellscript"
+    content      = <<-EOT
+    #!/bin/bash
+    set -ex
+    /etc/eks/bootstrap.sh ${aws_eks_cluster.cp.name} --kubelet-extra-args '--node-labels=eks.amazonaws.com/nodegroup-image=${data.aws_ami.eks[each.key].id},eks.amazonaws.com/nodegroup=${join("-", [aws_eks_cluster.cp.name, each.key])}' --b64-cluster-ca ${aws_eks_cluster.cp.certificate_authority.0.data} --apiserver-endpoint ${aws_eks_cluster.cp.endpoint}
+    EOT
+  }
 }
 
 resource "aws_launch_template" "ng" {
@@ -132,7 +153,7 @@ resource "aws_launch_template" "ng" {
   name          = format("eks-%s", uuid())
   tags          = merge(local.default-tags, local.eks-tag, var.tags)
   image_id      = data.aws_ami.eks[each.key].id
-  user_data     = base64encode(data.template_file.boot[each.key].rendered)
+  user_data     = base64encode(data.template_cloudinit_config.ng[each.key].rendered)
   instance_type = lookup(each.value, "instance_type", "t3.medium")
 
   iam_instance_profile {
@@ -244,6 +265,49 @@ resource "aws_autoscaling_group" "ng" {
 
 ## managed node groups
 
+# Render a multi-part cloud-init config making use of the part
+# above, and other source files
+data "template_cloudinit_config" "mng" {
+  for_each      = { for ng in var.managed_node_groups : ng.name => ng }
+  base64_encode = true
+  gzip          = false
+
+  # Main cloud-config configuration file.
+  part {
+    content_type = "text/x-shellscript"
+    content      = <<-EOT
+    #!/bin/bash
+    ${var.enable_ssm ? "yum install -y amazon-ssm-agent\nsystemctl enable amazon-ssm-agent\nsystemctl start amazon-ssm-agent" : ""}
+    EOT
+  }
+}
+
+resource "aws_launch_template" "mng" {
+  for_each  = { for ng in var.managed_node_groups : ng.name => ng }
+  name      = format("eks-%s", uuid())
+  tags      = merge(local.default-tags, local.eks-tag, var.tags)
+  user_data = data.template_cloudinit_config.mng[each.key].rendered
+
+  block_device_mappings {
+    device_name = "/dev/xvda"
+    ebs {
+      volume_size           = lookup(each.value, "disk_size", "20")
+      volume_type           = "gp2"
+      delete_on_termination = true
+    }
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags          = merge(local.eks-owned-tag, var.tags)
+  }
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = [name]
+  }
+}
+
 resource "aws_eks_node_group" "ng" {
   for_each        = { for ng in var.managed_node_groups : ng.name => ng }
   cluster_name    = aws_eks_cluster.cp.name
@@ -251,7 +315,6 @@ resource "aws_eks_node_group" "ng" {
   node_role_arn   = aws_iam_role.ng.0.arn
   subnet_ids      = local.subnet_ids
   ami_type        = lookup(each.value, "ami_type", "AL2_x86_64") # available values ["AL2_x86_64", "AL2_x86_64_GPU", "AL2_ARM_64"]
-  disk_size       = lookup(each.value, "disk_size", "20")
   instance_types  = [lookup(each.value, "instance_type", "m5.xlarge")]
   version         = aws_eks_cluster.cp.version
   tags            = merge(local.default-tags, var.tags)
@@ -260,6 +323,11 @@ resource "aws_eks_node_group" "ng" {
     max_size     = lookup(each.value, "max_size", 3)
     min_size     = lookup(each.value, "min_size", 1)
     desired_size = lookup(each.value, "desired_size", 1)
+  }
+
+  launch_template {
+    id      = aws_launch_template.mng[each.key].id
+    version = aws_launch_template.mng[each.key].latest_version
   }
 
   lifecycle {
