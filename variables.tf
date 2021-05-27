@@ -34,6 +34,12 @@ variable "enabled_cluster_log_types" {
   default     = []
 }
 
+variable "enable_ssm" {
+  description = "Allow ssh access using session manager"
+  type        = bool
+  default     = false
+}
+
 ### security
 variable "policy_arns" {
   description = "A list of policy ARNs to attach the node groups role"

@@ -1,12 +1,11 @@
-# Complete example
+# Autoscaling example
 
 terraform {
   required_version = "0.13.5"
 }
 
 provider "aws" {
-  region              = var.aws_region
-  allowed_account_ids = [var.aws_account_id]
+  region = var.aws_region
 }
 
 # eks
@@ -18,6 +17,7 @@ module "eks" {
   managed_node_groups = var.managed_node_groups
   node_groups         = var.node_groups
   fargate_profiles    = var.fargate_profiles
+  enable_ssm          = var.enable_ssm
 }
 
 provider "helm" {
