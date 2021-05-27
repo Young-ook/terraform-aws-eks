@@ -97,7 +97,7 @@ resource "aws_iam_role_policy_attachment" "ecr-read" {
 }
 
 resource "aws_iam_role_policy_attachment" "ssm-managed" {
-  count      = var.enable_ssm ? 1 : 0
+  count      = (local.node_groups_enabled || local.managed_node_groups_enabled) && var.enable_ssm ? 1 : 0
   policy_arn = format("arn:%s:iam::aws:policy/AmazonSSMManagedInstanceCore", data.aws_partition.current.partition)
   role       = aws_iam_role.ng.0.name
 }
