@@ -347,7 +347,7 @@ resource "aws_eks_node_group" "ng" {
 # security/policy
 resource "aws_iam_role" "fargate" {
   count = local.fargate_enabled ? 1 : 0
-  name  = format("%s-ng", local.name)
+  name  = format("%s-fargate", local.name)
   tags  = merge(local.default-tags, var.tags)
   assume_role_policy = jsonencode({
     Statement = [{
