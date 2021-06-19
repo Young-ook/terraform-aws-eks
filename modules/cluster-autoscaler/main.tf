@@ -42,7 +42,7 @@ resource "aws_iam_policy" "autoscaler" {
 
 resource "helm_release" "autoscaler" {
   count            = var.enabled ? 1 : 0
-  name             = lookup(var.helm, "name", "eks-as")
+  name             = lookup(var.helm, "name", "cluster-autoscaler")
   chart            = lookup(var.helm, "chart", "cluster-autoscaler")
   version          = lookup(var.helm, "version", null)
   repository       = lookup(var.helm, "repository", join("/", [path.module, "charts"]))
