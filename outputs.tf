@@ -2,7 +2,15 @@
 
 output "cluster" {
   description = "The EKS cluster attributes"
-  value       = aws_eks_cluster.cp
+  value = {
+    name          = aws_eks_cluster.cp.name
+    control_plane = aws_eks_cluster.cp
+    data_plane = {
+      node_groups         = local.node_groups_enabled ? aws_autoscaling_group.ng : null
+      managed_node_groups = local.managed_node_groups_enabled ? aws_eks_node_group.ng : null
+      fargate             = local.fargate_enabled ? aws_eks_fargate_profile.fargate : null
+    }
+  }
 }
 
 output "role" {
