@@ -46,11 +46,11 @@ Ensure the `containerinsights` pods are generated and they are running:
 
 ```
 $ kubectl -n amazon-cloudwatch get all
-NAME                                         READY   STATUS    RESTARTS   AGE
-pod/eks-cw-containerinsights-logs-757m9      1/1     Running   0          75s
-pod/eks-cw-containerinsights-metrics-6d779   1/1     Running   1          75s
+NAME                                  READY   STATUS    RESTARTS   AGE
+pod/containerinsights-logs-757m9      1/1     Running   0          75s
+pod/containerinsights-metrics-6d779   1/1     Running   1          75s
 
-NAME                                              DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-daemonset.apps/eks-cw-containerinsights-logs      1         1         1       1            1           <none>          75s
-daemonset.apps/eks-cw-containerinsights-metrics   1         1         1       1            1           <none>          75s
+NAME                                       DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/containerinsights-logs      1         1         1       1            1           <none>          75s
+daemonset.apps/containerinsights-metrics   1         1         1       1            1           <none>          75s
 ```
