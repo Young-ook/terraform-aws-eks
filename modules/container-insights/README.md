@@ -3,7 +3,7 @@ Use [CloudWatch Container Insights](https://docs.aws.amazon.com/AmazonCloudWatch
 
 CloudWatch automatically collects metrics for many resources, such as CPU, memory, disk, and network. Container Insights also provides diagnostic information, such as container restart failures, to help you isolate issues and resolve them quickly. You can also set CloudWatch alarms on metrics that Container Insights collects.
 
-![Amazon CloudWatch Container Insights](https://github.com/Young-ook/terraform-aws-eks/blob/main/modules/container-insights/images/cw-container-insights.png)
+![aws-cw-container-insights](../../images/aws-cw-container-insights.png)
 
 ## Examples
 - [Quickstart Example](https://github.com/Young-ook/terraform-aws-eks/blob/main/modules/container-insights/README.md#quickstart)
@@ -23,7 +23,6 @@ provider "helm" {
     host                   = module.eks.helmconfig.host
     token                  = module.eks.helmconfig.token
     cluster_ca_certificate = base64decode(module.eks.helmconfig.ca)
-    load_config_file       = false
   }
 }
 
@@ -46,11 +45,11 @@ Ensure the `containerinsights` pods are generated and they are running:
 
 ```
 $ kubectl -n amazon-cloudwatch get all
-NAME                                         READY   STATUS    RESTARTS   AGE
-pod/eks-cw-containerinsights-logs-757m9      1/1     Running   0          75s
-pod/eks-cw-containerinsights-metrics-6d779   1/1     Running   1          75s
+NAME                                  READY   STATUS    RESTARTS   AGE
+pod/containerinsights-logs-757m9      1/1     Running   0          75s
+pod/containerinsights-metrics-6d779   1/1     Running   1          75s
 
-NAME                                              DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-daemonset.apps/eks-cw-containerinsights-logs      1         1         1       1            1           <none>          75s
-daemonset.apps/eks-cw-containerinsights-metrics   1         1         1       1            1           <none>          75s
+NAME                                       DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+daemonset.apps/containerinsights-logs      1         1         1       1            1           <none>          75s
+daemonset.apps/containerinsights-metrics   1         1         1       1            1           <none>          75s
 ```
