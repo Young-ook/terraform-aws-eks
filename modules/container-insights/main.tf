@@ -65,6 +65,7 @@ resource "helm_release" "logs" {
     for_each = {
       "cloudWatch.enabled"                                        = true
       "cloudWatch.region"                                         = data.aws_region.current.0.name
+      "cloudWatch.logGroupName"                                   = format("/aws/containerinsights/%s/application", var.cluster_name)
       "firehose.enabled"                                          = false
       "kinesis.enabled"                                           = false
       "elasticsearch.enabled"                                     = false
