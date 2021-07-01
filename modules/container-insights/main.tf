@@ -1,10 +1,5 @@
 ## kubernetes container-insights
 
-locals {
-  namespace      = lookup(var.helm, "namespace", "amazon-cloudwatch")
-  serviceaccount = lookup(var.helm, "serviceaccount", "aws-container-insights")
-}
-
 module "irsa-metrics" {
   source         = "../iam-role-for-serviceaccount"
   count          = var.enabled ? 1 : 0
