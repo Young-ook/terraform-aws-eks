@@ -40,8 +40,8 @@ module "eks" {
     {
       name          = "sockshop"
       min_size      = 2
-      max_size      = 2
-      desired_size  = 6
+      max_size      = 6
+      desired_size  = 2
       instance_type = "t3.small"
     }
   ]
