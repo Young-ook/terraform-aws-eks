@@ -7,8 +7,7 @@
         "ec2-instances": {
             "resourceType": "aws:ec2:instance",
             "resourceTags": {
-                "env": "prod",
-                "Name": "${asg}"
+                "env": "prod"
             },
             "filters": [
                 {
