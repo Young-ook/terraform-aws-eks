@@ -19,6 +19,9 @@ To implement Chaos Engineering, one should follow the scientific method to imple
 ## Setup
 [This](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/fis/main.tf) is an example of terraform configuration file to create AWS Fault Injection Simulator experiments for chaos engineering. Check out and apply it using terraform command.
 
+If you don't have the terraform and kubernetes tools in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
+
+## Create Cluster
 Run terraform:
 ```
 terraform init
@@ -35,7 +38,7 @@ Run script
 ```
 ./fis-create-experiment-templates.sh
 ```
-This script creates fault injection simulator experiment templates on the AWS account. Move to the AWS FIS service page on the AWS Management Conosol and select Experiment templates menu on the left. Then users will see the created experiment templates for chaos engineering.
+This script creates fault injection simulator experiment templates on the AWS account. Move to the AWS FIS service page on the AWS Management Conosol and select Experiment templates menu on the left. Then you will see the created experiment templates for chaos engineering.
 
 ![aws-fis-experiment-templates](../../images/aws-fis-experiment-templates.png)
 
@@ -48,7 +51,7 @@ AWS FIS allows you to test resilience of EKS cluster node groups. See what happe
 #### Update kubeconfig
 Update and download kubernetes config file to local. You can see the bash command like below after terraform apply is complete. Copy this and run it to save the kubernetes configuration file to your local workspace. And export it as an environment variable to apply to the terminal.
 ```
-bash -e .terraform/modules/eks/script/update-kubeconfig.sh -r ap-northeast-2 -n ssm-fis -k kubeconfig
+bash -e .terraform/modules/eks/script/update-kubeconfig.sh -r ap-northeast-2 -n eks-fis -k kubeconfig
 export KUBECONFIG=kubeconfig
 ```
 
@@ -108,7 +111,7 @@ Let’s go ahead and explore Sock Shop application. Some things to try out:
 1. Check out items
 
 #### Run Experiment
-Go to the AWS FIS service page and select `TerminateEKSNodes` from the list of experiment templates. Then use the on-screen `Actions` button to start the experiment. AWS FIS shuts down EKS nodes for up to 70% of currently running instances. In this experiment, this value is 30% and it is configured in the experiment template. You can edit this value in the target selection mode configuration if you want to change the number of EKS nodes to shut down You can see the terminated instances on the EC2 service page, and the new instances will appear shortly after the EKS node is shut down.
+Make sure that all your EKS node group instances are running. Go to the AWS FIS service page and select `TerminateEKSNodes` from the list of experiment templates. Then use the on-screen `Actions` button to start the experiment. AWS FIS shuts down EKS nodes for up to 70% of currently running instances. In this experiment, this value is 30% and it is configured in the experiment template. You can edit this value in the target selection mode configuration if you want to change the number of EKS nodes to shut down You can see the terminated instances on the EC2 service page, and the new instances will appear shortly after the EKS node is shut down.
 
 ![aws-fis-terminate-eks-nodes](../../images/aws-fis-terminate-eks-nodes.png)
 
