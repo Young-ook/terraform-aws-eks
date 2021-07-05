@@ -61,7 +61,7 @@ kubectl apply -f manifests/sockshop-complete-demo.yaml
 ```
 Verify that the pod came up fine (ensure nothing else is running on port 8079):
 ```
-kubectl -n sock-shop get pod -l name=front-end
+kubectl -n sockshop get pod -l name=front-end
 ```
 The output will be something like this:
 ```
@@ -72,14 +72,14 @@ front-end-7b8bcd59cb-wd527   1/1     Running   0          9s
 ##### Local Workspace
 In your local workspace, connect through a proxy to access your application's endpoint.
 ```
-kubectl -n sock-shop port-forward svc/front-end 8080:80
+kubectl -n sockshop port-forward svc/front-end 8080:80
 ```
 Open `http://localhost:8080` on your web browser. This shows the Sock Shop main page.
 
 ##### Cloud9
 In your Cloud9 IDE, run the application.
 ```
-kubectl -n sock-shop port-forward svc/front-end 8080:80
+kubectl -n sockshop port-forward svc/front-end 8080:80
 ```
 Click `Preview` and `Preview Running Application`. This opens up a preview tab and shows the Sock Shop main page.
 
