@@ -19,6 +19,9 @@ To implement Chaos Engineering, one should follow the scientific method to imple
 ## Setup
 [This](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/fis/main.tf) is an example of terraform configuration file to create AWS Fault Injection Simulator experiments for chaos engineering. Check out and apply it using terraform command.
 
+If you don't have the terraform and kubernetes tools in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
+
+## Create Cluster
 Run terraform:
 ```
 terraform init
@@ -35,7 +38,7 @@ Run script
 ```
 ./fis-create-experiment-templates.sh
 ```
-This script creates fault injection simulator experiment templates on the AWS account. Move to the AWS FIS service page on the AWS Management Conosol and select Experiment templates menu on the left. Then users will see the created experiment templates for chaos engineering.
+This script creates fault injection simulator experiment templates on the AWS account. Move to the AWS FIS service page on the AWS Management Conosol and select Experiment templates menu on the left. Then you will see the created experiment templates for chaos engineering.
 
 ![aws-fis-experiment-templates](../../images/aws-fis-experiment-templates.png)
 
