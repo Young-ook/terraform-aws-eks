@@ -1,12 +1,18 @@
-# Fargate node groups example
+# App Mesh example
 
 terraform {
   required_version = "0.13.5"
 }
 
 provider "aws" {
-  region              = var.aws_region
-  allowed_account_ids = [var.aws_account_id]
+  region = var.aws_region
+}
+
+# build container image
+module "codebuild" {
+  source = "./modules/codebuild"
+  name   = var.name
+  tags   = var.tags
 }
 
 # eks
@@ -39,4 +45,3 @@ module "app-mesh" {
     version = "1.2.0"
   }
 }
-
