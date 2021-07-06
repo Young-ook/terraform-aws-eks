@@ -2,13 +2,13 @@
     "tags": {
         "Name": "TerminateEKSNodes"
     },
-    "description": "Terminate all EKS nodes with the tag env=prod",
+    "description": "Terminate EKS nodes",
     "targets": {
         "eks-nodes": {
             "resourceType": "aws:eks:nodegroup",
-            "resourceTags": {
-                "env": "prod"
-            },
+            "resourceArns": [
+                "${nodegroup}"
+            ],
             "selectionMode": "ALL"
         }
     },

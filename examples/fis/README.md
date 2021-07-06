@@ -117,7 +117,24 @@ Make sure that all your EKS node group instances are running. Go to the AWS FIS 
 
 ![aws-fis-terminate-eks-nodes-action-complete](../../images/aws-fis-terminate-eks-nodes-action-complete.png)
 
+You can see the nodes being shut down in the cluster:
+```
+kubectl -n sockshop get no -w
+NAME                                            STATUS   ROLES    AGE     VERSION
+ip-10-1-1-205.ap-northeast-2.compute.internal   Ready    <none>   21m     v1.20.4-eks-6b7464
+ip-10-1-9-221.ap-northeast-2.compute.internal   Ready    <none>   4m40s   v1.20.4-eks-6b7464
+ip-10-1-9-221.ap-northeast-2.compute.internal   NotReady   <none>   4m40s   v1.20.4-eks-6b7464
+ip-10-1-9-221.ap-northeast-2.compute.internal   NotReady   <none>   4m40s   v1.20.4-eks-6b7464
+```
+
 #### Architecture Improvements
+Cluster Autoscaler provides integration with Auto Scaling groups. Cluster Autoscaler will attempt to determine the CPU, memory, and GPU resources provided by an EC2 Auto Scaling Group based on the instance type specified in its Launch Configuration or Launch Template. Click [here](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws) for more information.
+
+Watch the logs to verify cluster autoscaler is installed properly. If everything looks good, we are now ready to scale our cluster.
+```
+kubectl -n kube-system logs -f deployment/cluster-autoscaler
+```
+
 Scale out pods for high availability.
 ```
 kubectl -n sockshop scale --replicas=3 \
