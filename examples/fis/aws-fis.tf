@@ -29,6 +29,7 @@ locals {
   target_vpc           = module.vpc.vpc.id
   target_role          = module.eks.role.arn
   target_asg           = module.eks.cluster.data_plane.managed_node_groups.sockshop.resources.0.autoscaling_groups.0.name
+  target_eks_nodes     = module.eks.cluster.data_plane.managed_node_groups.sockshop.arn
   stop_condition_alarm = aws_cloudwatch_metric_alarm.cpu.arn
 }
 
@@ -69,10 +70,11 @@ resource "local_file" "throttle-ec2-api" {
 
 resource "local_file" "terminate-eks-nodes" {
   content = templatefile("${path.module}/templates/terminate-eks-nodes.tpl", {
-    az    = var.azs[random_integer.az.result]
-    vpc   = local.target_vpc
-    alarm = local.stop_condition_alarm
-    role  = aws_iam_role.fis-run.arn
+    az        = var.azs[random_integer.az.result]
+    vpc       = local.target_vpc
+    nodegroup = local.target_eks_nodes
+    alarm     = local.stop_condition_alarm
+    role      = aws_iam_role.fis-run.arn
   })
   filename        = "${path.cwd}/terminate-eks-nodes.json"
   file_permission = "0600"
