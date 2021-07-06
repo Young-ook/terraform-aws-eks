@@ -84,7 +84,7 @@ resource "local_file" "create-templates" {
     "OUTPUT='.fis_cli_result'",
     "TEMPLATES=('cpu-stress.json' 'network-latency.json' 'throttle-ec2-api.json' 'terminate-eks-nodes.json')",
     "for template in $${TEMPLATES[@]}; do",
-    "  aws fis create-experiment-template --cli-input-json file://$${template} --output text --query 'experimentTemplate.id' 2>&1 | tee -a $${OUTPUT}",
+    "  aws fis create-experiment-template --region ${var.aws_region} --cli-input-json file://$${template} --output text --query 'experimentTemplate.id' 2>&1 | tee -a $${OUTPUT}",
     "done",
     ]
   )
@@ -97,7 +97,7 @@ resource "local_file" "delete-templates" {
     "#!/bin/bash -ex",
     "OUTPUT='.fis_cli_result'",
     "while read id; do",
-    "  aws fis delete-experiment-template --id $${id} --output text --query 'experimentTemplate.id' 2>&1 > /dev/null",
+    "  aws fis delete-experiment-template --region ${var.aws_region} --id $${id} --output text --query 'experimentTemplate.id' 2>&1 > /dev/null",
     "done < $${OUTPUT}",
     "rm $${OUTPUT}",
     ]
