@@ -21,19 +21,21 @@ There is another important configuration for build project. We have to set compu
 
 Run terraform:
 ```
-$ terraform init
-$ terraform apply
+terraform init
+terraform apply
 ```
 Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
 ```
-$ terraform plan -var-file default.tfvars
-$ terraform apply -var-file default.tfvars
+terraform plan -var-file default.tfvars
+terraform apply -var-file default.tfvars
 ```
 
 ## Verify
 After provisioning of EKS cluster, you can describe nodes using kubectl and check out your node groups are running on ARM64 architecture.
 ```
-$ kubectl describe no
+kubectl describe node
+```
+```
 System Info:
   OS Image:                   Amazon Linux 2
   Operating System:           linux
@@ -50,7 +52,7 @@ Amazon EKS customers can now run production workloads using Arm-based instances 
 Apply the artifact from codebuild project for multi-arch container image build
 
 ```
-$ kubectl apply -f hello-nodejs.yaml
+kubectl apply -f hello-nodejs.yaml
 ```
 
 ### Deploy Nginx from Public Registry
@@ -91,14 +93,18 @@ spec:
         - containerPort: 80
 ```
 ```
-$ kubectl apply -f nginx.yaml
+kubectl apply -f nginx.yaml
+```
+```
 service/my-nginx-svc created
 deployment.apps/my-nginx created
 ```
 
 To verify that the nginx pods are running properly on the multiple architecture node groups, run describe command.
 ```
-$ kubectl describe nodes
+kubectl describe nodes
+```
+```
 Name:               ip-172-xx-yx-xxx.us-west-2.compute.internal
                     beta.kubernetes.io/instance-type=m6g.medium
                     eks.amazonaws.com/nodegroup=eks-x86-arm64-tc2
@@ -146,11 +152,11 @@ Events:                       <none>
 ## Clean up
 Run terraform:
 ```
-$ terraform destroy
+terraform destroy
 ```
 Don't forget you have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
 ```
-$ terraform destroy -var-file default.tfvars
+terraform destroy -var-file default.tfvars
 ```
 
 ## Additional Resources

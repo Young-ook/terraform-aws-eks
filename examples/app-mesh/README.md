@@ -12,13 +12,13 @@ cd terraform-aws-eks/examples/app-mesh
 
 Run terraform:
 ```
-$ terraform init
-$ terraform apply
+terraform init
+terraform apply
 ```
 Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
 ```
-$ terraform plan -var-file default.tfvars
-$ terraform apply -var-file default.tfvars
+terraform plan -var-file default.tfvars
+terraform apply -var-file default.tfvars
 ```
 
 ## AWS App Mesh
@@ -26,7 +26,9 @@ $ terraform apply -var-file default.tfvars
 
 Run terraform. After provisioning of EKS cluster, you can check the helm chart deployment using kubectl.
 ```
-$ kubectl -n appmesh-system get all
+kubectl -n appmesh-system get all
+```
+```
 NAME                                             READY   STATUS    RESTARTS   AGE
 pod/eks-am-appmesh-controller-656d6d6c48-h2zhv   1/1     Running   0          18m
 
@@ -44,13 +46,13 @@ replicaset.apps/eks-am-appmesh-controller-656d6d6c48   1         1         1    
 
 Run terraform:
 ```
-$ terraform destroy
+terraform destroy
 ```
 Or if you only want to remove all resources of App Mesh Controller from the EKS clsuter, you can run terraform destroy command with `-target` option:
 ```
-$ terraform destroy -target module.app-mesh
+terraform destroy -target module.app-mesh
 ```
 Don't forget you have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
 ```
-$ terraform destroy -var-file default.tfvars
+terraform destroy -var-file default.tfvars
 ```

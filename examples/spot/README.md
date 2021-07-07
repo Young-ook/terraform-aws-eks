@@ -14,21 +14,21 @@ cd terraform-aws-eks/examples/spot
 
 Run terraform:
 ```
-$ terraform init
-$ terraform apply
+terraform init
+terraform apply
 ```
 Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
 ```
-$ terraform plan -var-file default.tfvars
-$ terraform apply -var-file default.tfvars
+terraform plan -var-file default.tfvars
+terraform apply -var-file default.tfvars
 ```
 
 ## Clean up
 Run terraform:
 ```
-$ terraform destroy
+terraform destroy
 ```
 Don't forget you have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
 ```
-$ terraform destroy -var-file default.tfvars
+terraform destroy -var-file default.tfvars
 ```
