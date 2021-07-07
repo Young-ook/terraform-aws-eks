@@ -5,6 +5,13 @@
 ## Getting started
 [Here](https://github.com/aws/aws-graviton-getting-started) is a github repository for a guide to getting started with AWS Graviton. You can find out more details about how to build, run and optimize your application for AWS Graviton processors.
 
+## Download example
+Download this example on your workspace
+```sh
+git clone https://github.com/Young-ook/terraform-aws-eks
+cd terraform-aws-eks/examples/arm64
+```
+
 ## Setup
 [This](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/arm64/main.tf) is the example of terraform configuration file to create a managed EKS with ARM64 architecture based node groups on your AWS account. And also, it creates AWS CodeBuild project to build an application based on ARM64 architecture linux container. Check out and apply it using terraform command.
 

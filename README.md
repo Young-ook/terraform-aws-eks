@@ -23,9 +23,9 @@ Follow the official guide to install and configure profiles.
 ### Terraform
 Infrastructure Engineering team is using terraform to build and manage infrastucure for DevOps. And we have a plan to migrate cloudformation termplate to terraform.
 
-To install Terraform, find the appropriate package (https://www.terraform.io/downloads.html) for your system and download it. Terraform is packaged as a zip archive and distributed as a single binary. Install Terraform by unzipping it and moving it to a directory included in your system's `PATH`.
+To install Terraform, find the appropriate package (https://www.terraform.io/downloads.html) for your system and download it. Terraform is packaged as a zip archive and distributed as a single binary. Install Terraform by unzipping it and moving it to a directory included in your system's `PATH`. The [tfenv](https://github.com/tfutils/tfenv) is very useful solution.
 
-And there is an another option for easy install. The [tfenv](https://github.com/tfutils/tfenv) is very useful solution.
+And there is an another option for easy install.
 ```
 brew install tfenv
 ```

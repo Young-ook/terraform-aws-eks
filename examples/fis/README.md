@@ -16,6 +16,13 @@ To implement Chaos Engineering, one should follow the scientific method to imple
 1. Expand Scope and Re-Test
 1. Share Results
 
+## Download example
+Download this example on your workspace
+```sh
+git clone https://github.com/Young-ook/terraform-aws-eks
+cd terraform-aws-eks/examples/fis
+```
+
 ## Setup
 [This](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/fis/main.tf) is an example of terraform configuration file to create AWS Fault Injection Simulator experiments for chaos engineering. Check out and apply it using terraform command.
 
