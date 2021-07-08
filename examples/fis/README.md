@@ -146,8 +146,8 @@ Back to the AWS FIS service page, and rerun the terminate eks nodes experiment a
 #### Remove Application
 Delete all kubernetes resources.
 ```
-kubectl apply -f manifests/sockshop-complete-demo.yaml
-kubectl apply -f manifests/sockshop-loadtest.yaml
+kubectl delete -f manifests/sockshop-demo-ha.yaml
+kubectl delete -f manifests/sockshop-loadtest.yaml
 ```
 
 ## Clean up
