@@ -3,7 +3,7 @@
 module "irsa-metrics" {
   source         = "../iam-role-for-serviceaccount"
   count          = var.enabled ? 1 : 0
-  name           = join("-", ["irsa", "amazon-cloudwatch"])
+  name           = join("-", compact(["irsa", var.cluster_name, "amazon-cloudwatch", local.suffix]))
   namespace      = "amazon-cloudwatch"
   serviceaccount = "amazon-cloudwatch"
   oidc_url       = var.oidc.url
@@ -38,7 +38,7 @@ resource "helm_release" "metrics" {
 module "irsa-logs" {
   source         = "../iam-role-for-serviceaccount"
   count          = var.enabled ? 1 : 0
-  name           = join("-", ["irsa", "aws-for-fluent-bit"])
+  name           = join("-", compact(["irsa", var.cluster_name, "aws-for-fluent-bit", local.suffix]))
   namespace      = "kube-system"
   serviceaccount = "aws-for-fluent-bit"
   oidc_url       = var.oidc.url

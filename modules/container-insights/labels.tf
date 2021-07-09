@@ -17,9 +17,7 @@ resource "random_string" "containerinsights-suffix" {
 
 locals {
   suffix = var.petname && var.enabled ? random_string.containerinsights-suffix.0.result : ""
-  name   = join("-", compact([var.cluster_name, "container-insights", local.suffix]))
   default-tags = merge(
     { "terraform.io" = "managed" },
-    { "Name" = local.name },
   )
 }
