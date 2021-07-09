@@ -17,7 +17,7 @@
             "actionId": "aws:eks:terminate-nodegroup-instances",
             "description": "terminate the node instances",
             "parameters": {
-                "instanceTerminationPercentage": "30"
+                "instanceTerminationPercentage": "40"
             },
             "targets": {
                 "Nodegroups": "eks-nodes"

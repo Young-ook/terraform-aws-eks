@@ -60,7 +60,7 @@ For this lab, we picked up the Sock Shop application. Sock Shop is a microservic
 
 Create the namespace and deploy application.
 ```
-kubectl apply -f manifests/sockshop-complete-demo.yaml
+kubectl apply -f manifests/sockshop-demo.yaml
 ```
 Verify that the pod came up fine (ensure nothing else is running on port 8079):
 ```
@@ -111,7 +111,7 @@ Let’s go ahead and explore Sock Shop application. Some things to try out:
 1. Check out items
 
 #### Run Experiment
-Make sure that all your EKS node group instances are running. Go to the AWS FIS service page and select `TerminateEKSNodes` from the list of experiment templates. Then use the on-screen `Actions` button to start the experiment. AWS FIS shuts down EKS nodes for up to 70% of currently running instances. In this experiment, this value is 30% and it is configured in the experiment template. You can edit this value in the target selection mode configuration if you want to change the number of EKS nodes to shut down You can see the terminated instances on the EC2 service page, and the new instances will appear shortly after the EKS node is shut down.
+Make sure that all your EKS node group instances are running. Go to the AWS FIS service page and select `TerminateEKSNodes` from the list of experiment templates. Then use the on-screen `Actions` button to start the experiment. AWS FIS shuts down EKS nodes for up to 70% of currently running instances. In this experiment, this value is 40% and it is configured in the experiment template. You can edit this value in the target selection mode configuration if you want to change the number of EKS nodes to shut down You can see the terminated instances on the EC2 service page, and the new instances will appear shortly after the EKS node is shut down.
 
 ![aws-fis-terminate-eks-nodes](../../images/aws-fis-terminate-eks-nodes.png)
 
@@ -119,7 +119,7 @@ Make sure that all your EKS node group instances are running. Go to the AWS FIS 
 
 You can see the nodes being shut down in the cluster:
 ```
-kubectl -n sockshop get no -w
+kubectl -n sockshop get node -w
 NAME                                            STATUS   ROLES    AGE     VERSION
 ip-10-1-1-205.ap-northeast-2.compute.internal   Ready    <none>   21m     v1.20.4-eks-6b7464
 ip-10-1-9-221.ap-northeast-2.compute.internal   Ready    <none>   4m40s   v1.20.4-eks-6b7464
@@ -137,10 +137,7 @@ kubectl -n kube-system logs -f deployment/cluster-autoscaler
 
 Scale out pods for high availability.
 ```
-kubectl -n sockshop scale --replicas=3 \
-  deployment/front-end deployment/carts deployment/catalogue \
-  deployment/orders deployment/payment deployment/shipping \
-  deployment/user
+kubectl apply -f manifests/sockshop-demo-ha.yaml
 ```
 
 #### Rerun Experiment
@@ -149,8 +146,8 @@ Back to the AWS FIS service page, and rerun the terminate eks nodes experiment a
 #### Remove Application
 Delete all kubernetes resources.
 ```
-kubectl apply -f manifests/sockshop-complete-demo.yaml
-kubectl apply -f manifests/sockshop-loadtest.yaml
+kubectl delete -f manifests/sockshop-demo-ha.yaml
+kubectl delete -f manifests/sockshop-loadtest.yaml
 ```
 
 ## Clean up
