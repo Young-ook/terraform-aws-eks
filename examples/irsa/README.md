@@ -1,16 +1,24 @@
 # IAM Role for Service Account (IRSA)
+
+## Download example
+Download this example on your workspace
+```sh
+git clone https://github.com/Young-ook/terraform-aws-eks
+cd terraform-aws-eks/examples/irsa
+```
+
 ## Setup
 [This](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/irsa/main.tf) is the example of terraform configuration file to create a managed EKS on your AWS account. Check out and apply it using terraform command.
 
 Run terraform:
 ```
-$ terraform init
-$ terraform apply
+terraform init
+terraform apply
 ```
 Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
 ```
-$ terraform plan -var-file tc1.tfvars
-$ terraform apply -var-file tc1.tfvars
+terraform plan -var-file tc1.tfvars
+terraform apply -var-file tc1.tfvars
 ```
 
 ## Generate kubernetes config
@@ -38,7 +46,9 @@ kubecli = kubectl -n default create sa s3-readonly && kubectl -n default annotat
 ```
 Copy and run:
 ```
-$ kubectl -n default create sa s3-readonly && kubectl -n default annotate sa s3-readonly eks.amazonaws.com/role-arn=arn:aws:iam::12xxxxxxxx87:role/irsa-eks-irsa-s3-readonly
+kubectl -n default create sa s3-readonly && kubectl -n default annotate sa s3-readonly eks.amazonaws.com/role-arn=arn:aws:iam::12xxxxxxxx87:role/irsa-eks-irsa-s3-readonly
+```
+```
 serviceaccount/s3-readonly created
 serviceaccount/s3-readonly annotated
 ```
@@ -69,29 +79,31 @@ EOF
 ### Check nodes are ready
 All previous steps are finished, check if a node is `Ready`:
 ```
-$ kubectl get nodes
+kubectl get nodes
+```
+```
 NAME                                                   STATUS   ROLES    AGE   VERSION
 fargate-ip-10-1-1-48.ap-northeast-2.compute.internal   Ready    <none>   30s   v1.19.6-eks-e91815
 ```
 
 Get into the pod and run aws-cli to see if retrives list of Amazon S3 buckets:
 ```
-$ kubectl logs -l app=aws-cli
+kubectl logs -l app=aws-cli
 ```
 
 ## Clean up
 ### Remove test application
 Remove the running pods from kubernetes nodes.
 ```
-$ kubectl delete deployment aws-cli
+kubectl delete deployment aws-cli
 ```
 
 ### Delete infrastructure
 Run terraform:
 ```
-$ terraform destroy
+terraform destroy
 ```
 Don't forget you have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
 ```
-$ terraform destroy -var-file tc1.tfvars
+terraform destroy -var-file tc1.tfvars
 ```
