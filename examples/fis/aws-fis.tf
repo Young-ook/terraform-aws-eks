@@ -39,7 +39,7 @@ resource "local_file" "cpu-stress" {
     alarm  = local.stop_condition_alarm
     role   = aws_iam_role.fis-run.arn
   })
-  filename        = "${path.cwd}/cpu-stress.json"
+  filename        = "${path.module}/cpu-stress.json"
   file_permission = "0600"
 }
 
@@ -49,7 +49,7 @@ resource "local_file" "network-latency" {
     alarm  = local.stop_condition_alarm
     role   = aws_iam_role.fis-run.arn
   })
-  filename        = "${path.cwd}/network-latency.json"
+  filename        = "${path.module}/network-latency.json"
   file_permission = "0600"
 }
 
@@ -64,7 +64,7 @@ resource "local_file" "throttle-ec2-api" {
     alarm    = local.stop_condition_alarm
     role     = aws_iam_role.fis-run.arn
   })
-  filename        = "${path.cwd}/throttle-ec2-api.json"
+  filename        = "${path.module}/throttle-ec2-api.json"
   file_permission = "0600"
 }
 
@@ -76,7 +76,7 @@ resource "local_file" "terminate-eks-nodes" {
     alarm     = local.stop_condition_alarm
     role      = aws_iam_role.fis-run.arn
   })
-  filename        = "${path.cwd}/terminate-eks-nodes.json"
+  filename        = "${path.module}/terminate-eks-nodes.json"
   file_permission = "0600"
 }
 
@@ -90,8 +90,22 @@ resource "local_file" "create-templates" {
     "done",
     ]
   )
-  filename        = "${path.cwd}/fis-create-experiment-templates.sh"
-  file_permission = "0700"
+  filename        = "${path.module}/fis-create-experiment-templates.sh"
+  file_permission = "0600"
+}
+
+resource "null_resource" "create-templates" {
+  depends_on = [
+    local_file.cpu-stress,
+    local_file.network-latency,
+    local_file.throttle-ec2-api,
+    local_file.terminate-eks-nodes,
+    local_file.create-templates,
+  ]
+  provisioner "local-exec" {
+    when    = create
+    command = "bash ${path.module}/fis-create-experiment-templates.sh"
+  }
 }
 
 resource "local_file" "delete-templates" {
@@ -104,6 +118,21 @@ resource "local_file" "delete-templates" {
     "rm $${OUTPUT}",
     ]
   )
-  filename        = "${path.cwd}/fis-delete-experiment-templates.sh"
-  file_permission = "0700"
+  filename        = "${path.module}/fis-delete-experiment-templates.sh"
+  file_permission = "0600"
+}
+
+resource "null_resource" "delete-templates" {
+  depends_on = [
+    local_file.cpu-stress,
+    local_file.network-latency,
+    local_file.throttle-ec2-api,
+    local_file.terminate-eks-nodes,
+    local_file.delete-templates,
+  ]
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "bash ${path.module}/fis-delete-experiment-templates.sh"
+  }
 }

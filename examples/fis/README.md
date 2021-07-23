@@ -40,12 +40,8 @@ terraform plan -var-file tc1.tfvars
 terraform apply -var-file tc1.tfvars
 ```
 
-## Create Experiment Templates
-Run script
-```
-./fis-create-experiment-templates.sh
-```
-This script creates fault injection simulator experiment templates on the AWS account. Move to the AWS FIS service page on the AWS Management Conosol and select Experiment templates menu on the left. Then you will see the created experiment templates for chaos engineering.
+## Experiment Templates
+This module creates fault injection simulator experiment templates when creating. Move to the AWS FIS service page on the AWS Management Conosol and select Experiment templates menu on the left. Then you will see the created experiment templates for chaos engineering.
 
 ![aws-fis-experiment-templates](../../images/aws-fis-experiment-templates.png)
 
@@ -162,13 +158,6 @@ kubectl delete -f manifests/sockshop-loadtest.yaml
 ```
 
 ## Clean up
-### Delete experiment templates
-Run script
-```
-./fis-delete-experiment-templates.sh
-```
-
-### Delete infrastructure
 Run terraform:
 ```
 terraform destroy
