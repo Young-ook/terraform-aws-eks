@@ -1,0 +1,15 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - cd examples/app-mesh/modules/codebuild/app/
+      - $(aws ecr get-login --no-include-email)
+      - echo $TAG
+      - IMAGE_URI="$REPOSITORY_URI:$TAG"
+  build:
+    commands:
+      - echo Build a container image started on `date`
+      - docker build --tag "$IMAGE_URI" .
+  post_build:
+    commands:
+      - docker push "$IMAGE_URI"

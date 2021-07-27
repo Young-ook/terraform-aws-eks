@@ -1,9 +1,8 @@
-aws_region = "ap-northeast-1"
-azs        = ["ap-northeast-1a", "ap-northeast-1c", "ap-northeast-1d"]
-name       = "eks-appmesh-tc1"
+aws_region = "ap-northeast-2"
+azs        = ["ap-northeast-2a", "ap-northeast-2c", "ap-northeast-2d"]
+name       = "eks-appmesh"
 tags = {
-  env  = "dev"
-  test = "tc1"
+  env = "dev"
 }
 kubernetes_version = "1.20"
 managed_node_groups = [

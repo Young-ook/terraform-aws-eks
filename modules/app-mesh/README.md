@@ -19,7 +19,6 @@ provider "helm" {
     host                   = module.eks.helmconfig.host
     token                  = module.eks.helmconfig.token
     cluster_ca_certificate = base64decode(module.eks.helmconfig.ca)
-    load_config_file       = false
   }
 }
 
