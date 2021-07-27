@@ -18,6 +18,7 @@ spec:
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
+  namespace: yelb
   name: yelb-db
 spec:
   awsName: yelb-db-virtual-node
@@ -36,6 +37,7 @@ spec:
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
 metadata:
+  namespace: yelb
   name: yelb-db
 spec:
   awsName: yelb-db
@@ -47,6 +49,7 @@ spec:
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
+  namespace: yelb
   name: redis-server
 spec:
   awsName: redis-server-virtual-node
@@ -65,6 +68,7 @@ spec:
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
 metadata:
+  namespace: yelb
   name: redis-server
 spec:
   awsName: redis-server
@@ -76,6 +80,7 @@ spec:
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
+  namespace: yelb
   name: yelb-ui
 spec:
   awsName: yelb-ui-virtual-node
@@ -98,6 +103,7 @@ spec:
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
 metadata:
+  namespace: yelb
   name: yelb-ui
 spec:
   awsName: yelb-ui
@@ -109,6 +115,7 @@ spec:
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
+  namespace: yelb
   name: yelb-appserver
 spec:
   awsName: yelb-appserver-virtual-node
@@ -134,6 +141,7 @@ spec:
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualRouter
 metadata:
+  namespace: yelb
   name: yelb-appserver
 spec:
   awsName: yelb-appserver-virtual-router
@@ -164,6 +172,7 @@ spec:
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualService
 metadata:
+  namespace: yelb
   name: yelb-appserver
 spec:
   awsName: yelb-appserver
@@ -175,6 +184,7 @@ spec:
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualNode
 metadata:
+  namespace: yelb
   name: yelb-appserver-v2
 spec:
   awsName: yelb-appserver-virtual-node-v2
@@ -200,6 +210,7 @@ spec:
 apiVersion: appmesh.k8s.aws/v1beta2
 kind: VirtualRouter
 metadata:
+  namespace: yelb
   name: yelb-appserver
 spec:
   awsName: yelb-appserver-virtual-router
@@ -233,6 +244,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: yelb
   name: redis-server
   labels:
     app: redis-server
@@ -248,6 +260,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: yelb
   name: yelb-db
   labels:
     app: yelb-db
@@ -263,6 +276,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: yelb
   name: yelb-appserver
   labels:
     app: yelb-appserver
@@ -278,6 +292,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: yelb
   name: yelb-ui
   labels:
     app: yelb-ui
@@ -291,29 +306,10 @@ spec:
     app: yelb-ui
     tier: frontend
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: yelb-ingress
-  annotations:
-    kubernetes.io/ingress.class: alb
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /*
-            pathType: Prefix
-            backend:
-              service:
-                name: yelb-ui
-                port:
-                  number: 80
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: yelb
   name: yelb-ui
 spec:
   replicas: 1
@@ -336,6 +332,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: yelb
   name: redis-server
 spec:
   selector:
@@ -358,6 +355,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: yelb
   name: yelb-db
 spec:
   replicas: 1
@@ -380,6 +378,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: yelb
   name: yelb-appserver
 spec:
   replicas: 1
@@ -402,6 +401,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: yelb
   name: yelb-appserver-v2
   labels:
     app: yelb-appserver-v2
@@ -417,6 +417,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: yelb
   name: yelb-appserver-v2
 spec:
   replicas: 1
