@@ -38,6 +38,8 @@ kubectl -n appmesh-system get all
 ```
 
 ### App Mesh example
+![aws-am-yelb-architecture](../../images/aws-am-yelb-architecture.png)
+
 #### Deploy
 ```sh
 kubectl apply -f yelb.yaml
@@ -57,6 +59,8 @@ In your Cloud9 IDE, run the application.
 kubectl -n yelb port-forward svc/yelb-ui 8080:80
 ```
 Click `Preview` and `Preview Running Application`. This opens up a preview tab and shows the application main page.
+
+![aws-am-yelb-screenshot](../../images/aws-am-yelb-screenshot.png)
 
 ### Delete
 ```sh
