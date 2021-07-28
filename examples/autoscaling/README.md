@@ -17,8 +17,8 @@ terraform apply
 ```
 Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
 ```
-terraform plan -var-file default.tfvars
-terraform apply -var-file default.tfvars
+terraform plan -var-file tc1.tfvars
+terraform apply -var-file tc1.tfvars
 ```
 
 ## Horizontal Pod Autoscaler (HPA)
@@ -69,12 +69,25 @@ spec:
   - port: 80
   selector:
     run: php-apache
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: php-apache
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: php-apache
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
 ```
 
 ### Create Horizontal Pod Autoscaler
 Now that the server is running, we will create the autoscaler using kubectl autoscale. The following command will create a Horizontal Pod Autoscaler that maintains between 1 and 10 replicas of the Pods controlled by the php-apache deployment we created in the first step of these instructions.
 
-:warning: (Autoscaling resource is already created in your Kubernetes cluster if you applied `manifests/php-apache.yaml` configuration in the previous step for deploying your application. Skip)
+:warning: Autoscaling resource is already created in your Kubernetes cluster if you applied `manifests/php-apache.yaml` configuration in the previous step for deploying your application. Skip.
 ```sh
 kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
 ```
@@ -93,6 +106,12 @@ Now, we will see how the autoscaler reacts to increased load. We will start a co
 ```sh
 kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"
 ```
+You will see a message like the one below.
+```sh
+If you don't see a command prompt, try pressing enter.
+OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK!OK
+```
+
 Within a minute or so, we should see the higher CPU load by executing:
 ```sh
 kubectl get hpa
@@ -130,15 +149,20 @@ php-apache-79544xxxxx-ts5d2   1/1     Running   0          56s
 
 ## Cluster Autoscaler (CA)
 ### Before you begin
-If you have tested the Horizontal Pod Autoscaler (HPA), you need to reset the configuration of php-apache application. You need to remove and redeploy the php-apache application or you need to adjust the desired capacity of the EC2 autoscaling group to 1. This is important because you want to see that the cluster autoscaling processing is working properly to automatically increase instance capacity when there is no space to launch the reserved container.
+If you have tested the Horizontal Pod Autoscaler (HPA), you need to reset the configuration of php-apache application. You need to remove and redeploy the php-apache application and you need to adjust the desired capacity of the EC2 autoscaling group (EKS nodes) to 1. This is important because you want to see that the cluster autoscaling processing is working properly to automatically increase instance capacity when there is no space to launch the reserved container.
+
+Run command to clear the resources created in the previous step.
+```sh
+kubectl delete -f manifests/php-apache.yaml
+```
 
 ### Verify
 To check the latest update of cluster autoscaler in the EKS clsuter, please refer to [this](https://github.com/Young-ook/terraform-aws-eks/blob/main/modules/cluster-autoscaler) for more details.
 
 ### PHP application
-First, we will start a deployment running the nginx container. Run the following command:
+First, we will start a deployment running the php-apache container. Run the following command:
 ```sh
-kubectl apply -f https://k8s.io/examples/application/php-apache.yaml
+kubectl apply -f manifests/php-apache.yaml
 ```
 ### Scale out the application
 ```sh
