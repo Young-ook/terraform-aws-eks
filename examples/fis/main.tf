@@ -67,6 +67,12 @@ module "cluster-autoscaler" {
   oidc         = module.eks.oidc
 }
 
+module "metrics-server" {
+  source       = "Young-ook/eks/aws//modules/metrics-server"
+  cluster_name = module.eks.cluster.name
+  oidc         = module.eks.oidc
+}
+
 ### application/monitoring
 resource "aws_cloudwatch_metric_alarm" "cpu" {
   alarm_name                = local.cw_cpu_alarm_name
