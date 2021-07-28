@@ -6,7 +6,7 @@ tags = {
   test = "tc1"
 }
 kubernetes_version = "1.20"
-enable_ssm = true
+enable_ssm         = true
 node_groups = [
   {
     name          = "default"

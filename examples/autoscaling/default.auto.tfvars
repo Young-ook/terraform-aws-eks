@@ -4,7 +4,12 @@ name       = "eks-autoscaling"
 tags = {
   env = "dev"
 }
-kubernetes_version  = "1.20"
-managed_node_groups = []
-node_groups         = []
-fargate_profiles    = []
+kubernetes_version = "1.20"
+managed_node_groups = [
+  {
+    name          = "default"
+    instance_type = "t3.small"
+  }
+]
+node_groups      = []
+fargate_profiles = []
