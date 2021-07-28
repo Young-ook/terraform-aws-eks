@@ -20,6 +20,7 @@ Also you can use the `-var-file` option for customized paramters when you run th
 terraform plan -var-file tc1.tfvars
 terraform apply -var-file tc1.tfvars
 ```
+
 ### Update kubeconfig
 Update and download kubernetes config file to local. You can see the bash command like below after terraform apply is complete. The output looks like below. Copy and run it to save the kubernetes configuration file to your local workspace. And export it as an environment variable to apply to the terminal.
 ```sh
