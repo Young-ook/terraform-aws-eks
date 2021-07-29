@@ -20,6 +20,7 @@ Also you can use the `-var-file` option for customized paramters when you run th
 terraform plan -var-file tc1.tfvars
 terraform apply -var-file tc1.tfvars
 ```
+
 ### Update kubeconfig
 Update and download kubernetes config file to local. You can see the bash command like below after terraform apply is complete. The output looks like below. Copy and run it to save the kubernetes configuration file to your local workspace. And export it as an environment variable to apply to the terminal.
 ```sh
@@ -37,6 +38,8 @@ kubectl -n appmesh-system get all
 ```
 
 ### App Mesh example
+![aws-am-yelb-architecture](../../images/aws-am-yelb-architecture.png)
+
 #### Deploy
 ```sh
 kubectl apply -f yelb.yaml
@@ -56,6 +59,8 @@ In your Cloud9 IDE, run the application.
 kubectl -n yelb port-forward svc/yelb-ui 8080:80
 ```
 Click `Preview` and `Preview Running Application`. This opens up a preview tab and shows the application main page.
+
+![aws-am-yelb-screenshot](../../images/aws-am-yelb-screenshot.png)
 
 ### Delete
 ```sh
