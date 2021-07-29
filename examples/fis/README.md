@@ -28,7 +28,7 @@ cd terraform-aws-eks/examples/fis
 
 If you don't have the terraform and kubernetes tools in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
 
-## Create Cluster
+### Create Cluster
 Run terraform:
 ```
 terraform init
@@ -39,26 +39,14 @@ Also you can use the `-var-file` option for customized paramters when you run th
 terraform plan -var-file tc1.tfvars
 terraform apply -var-file tc1.tfvars
 ```
-
-## Experiment Templates
-This module creates fault injection simulator experiment templates when creating. Move to the AWS FIS service page on the AWS Management Conosol and select Experiment templates menu on the left. Then you will see the created experiment templates for chaos engineering.
-
-![aws-fis-experiment-templates](../../images/aws-fis-experiment-templates.png)
-
-## Run Experiments
-To test your environment, select a experiment template that you want to run and click the `Actions` button on the right top on the screen. You will see `Start experiment` in the middle of poped up menu and select it. And follow the instructions.
-
-### Terminate EKS Nodes
-AWS FIS allows you to test resilience of EKS cluster node groups. See what happens if you shut down some ec2 nodes for kubernetes pods or services within a certain percentage. This test verifies that the EKS managed node group launches new instances to meet the defined desired capacity and ensures that the application containers continues to run well. Also, this test will help you understand what happens to your application when you upgrade your cluster. At this time, in order to satisfy both resiliency and ease of cluster upgrade, the container should be designed so that it can be moved easily. This makes it easy to move containers running on the failed node to another node to continue working. This is an important part of a cloud-native architecture.
-
-#### Update kubeconfig
+### Update kubeconfig
 Update and download kubernetes config file to local. You can see the bash command like below after terraform apply is complete. The output looks like below. Copy and run it to save the kubernetes configuration file to your local workspace. And export it as an environment variable to apply to the terminal.
 ```
 bash -e .terraform/modules/eks/script/update-kubeconfig.sh -r ap-northeast-2 -n eks-fis -k kubeconfig
 export KUBECONFIG=kubeconfig
 ```
 
-#### Microservices Architecture Application
+### Microservices Architecture Application
 For this lab, we picked up the Sock Shop application. Sock Shop is a microservices architecture sample application that Weaveworks initially developed. They made it open source so it can be used by other organizations for learning and demonstration purposes.
 
 Create the namespace and deploy application.
@@ -75,14 +63,14 @@ NAME                         READY   STATUS    RESTARTS   AGE
 front-end-7b8bcd59cb-wd527   1/1     Running   0          9s
 ```
 
-##### Local Workspace
+#### Local Workspace
 In your local workspace, connect through a proxy to access your application's endpoint.
 ```
 kubectl -n sockshop port-forward svc/front-end 8080:80
 ```
 Open `http://localhost:8080` on your web browser. This shows the Sock Shop main page.
 
-##### Cloud9
+#### Cloud9
 In your Cloud9 IDE, run the application.
 ```
 kubectl -n sockshop port-forward svc/front-end 8080:80
@@ -93,11 +81,19 @@ Click `Preview` and `Preview Running Application`. This opens up a preview tab a
 
 🎉 Congrats, you’ve deployed the sample application on your cluster.
 
-#### Run Load Generator
+### Run Load Generator
 Run load generator inside kubernetes
 ```
 kubectl apply -f manifests/sockshop-loadtest.yaml
 ```
+
+## Fault Injection Experiments
+This module creates fault injection simulator experiment templates when creating. Move to the AWS FIS service page on the AWS Management Conosol and select Experiment templates menu on the left. Then you will see the created experiment templates for chaos engineering. To test your environment, select a experiment template that you want to run and click the `Actions` button on the right top on the screen. You will see `Start experiment` in the middle of poped up menu and select it. And follow the instructions.
+
+![aws-fis-experiment-templates](../../images/aws-fis-experiment-templates.png)
+
+### Terminate EKS Nodes
+AWS FIS allows you to test resiliency of EKS cluster node groups. See what happens if you shut down some ec2 nodes for kubernetes pods or services within a certain percentage. This test verifies that the EKS managed node group launches new instances to meet the defined desired capacity and ensures that the application containers continues to run well. Also, this test will help you understand what happens to your application when you upgrade your cluster. At this time, in order to satisfy both resiliency and ease of cluster upgrade, the container should be designed so that it can be moved easily. This makes it easy to move containers running on the failed node to another node to continue working. This is an important part of a cloud-native architecture.
 
 #### Define Steady State
 Before we begin a failure experiment, we need to validate the user experience and revise the dashboard and metrics to understand that the systems are working under normal state, in other words, steady state.
@@ -116,9 +112,9 @@ Let’s go ahead and explore Sock Shop application. Some things to try out:
 #### Run Experiment
 Make sure that all your EKS node group instances are running. Go to the AWS FIS service page and select `TerminateEKSNodes` from the list of experiment templates. Then use the on-screen `Actions` button to start the experiment. AWS FIS shuts down EKS nodes for up to 70% of currently running instances. In this experiment, this value is 40% and it is configured in the experiment template. You can edit this value in the target selection mode configuration if you want to change the number of EKS nodes to shut down You can see the terminated instances on the EC2 service page, and the new instances will appear shortly after the EKS node is shut down.
 
-![aws-fis-terminate-eks-nodes](../../images/aws-fis-terminate-eks-nodes.png)
-
 ![aws-fis-terminate-eks-nodes-action-complete](../../images/aws-fis-terminate-eks-nodes-action-complete.png)
+
+![aws-fis-terminate-eks-nodes](../../images/aws-fis-terminate-eks-nodes.png)
 
 You can see the nodes being shut down in the cluster:
 ```
@@ -150,14 +146,26 @@ kubectl apply -f manifests/sockshop-demo-ha.yaml
 #### Rerun Experiment
 Back to the AWS FIS service page, and rerun the terminate eks nodes experiment against the target to ensure that the microservices application is working in the previously assumed steady state.
 
-#### Remove Application
+### CPU Stress
+AWS FIS allows you to test resiliency of EKS cluster node groups. See what happens on your application when your EKS nodes (ec2 instances) has very high CPU utilization. This test verifies that the application on the EKS managed node group works properly even with increased CPU utilization.
+
+#### Run Experiment
+Make sure that all your EKS node group instances are running. Go to the AWS FIS service page and select `CPUStress` from the list of experiment templates. Then use the on-screen `Actions` button to start the experiment. In this experiment, AWS FIS increases CPU utilization for half of the ec2 instances with the env=prod tag. You can change the target percentage of an experiment in the experiment template. To change the number of EKS nodes to which the CPU stress experiment will be applied, edit the filter or tag values in the target selection mode configuration in the template. After starting the experiment, you can see the CPU utilization increase on the EC2 service page or the CloudWatch service page.
+
+![aws-fis-cpu-stress-eks-nodes-action-complete](../../images/aws-fis-cpu-stress-eks-nodes-action-complete.png)
+
+![aws-cw-container-insights-cpu](../../images/aws-cw-container-insights-cpu.png)
+
+![aws-cw-cpu-alarm](../../images/aws-cw-cpu-alarm.png)
+
+## Clean up
+### Remove Application
 Delete all kubernetes resources.
 ```
 kubectl delete -f manifests/sockshop-demo-ha.yaml
 kubectl delete -f manifests/sockshop-loadtest.yaml
 ```
-
-## Clean up
+### Remove Infrastructure
 Run terraform:
 ```
 terraform destroy
