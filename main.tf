@@ -117,11 +117,11 @@ data "aws_ami" "eks" {
 
   filter {
     name   = "name"
-    values = [format("amazon-eks-*-%s-*", var.kubernetes_version)]
+    values = [format(length(regexall("ARM|GPU$", lookup(each.value, "ami_type", "AL2_x86_64"))) > 0 ? "amazon-eks-*-node-%s-*" : "amazon-eks-node-%s-*", var.kubernetes_version)]
   }
   filter {
     name   = "architecture"
-    values = [lookup(each.value, "arch", "x86_64")]
+    values = [length(regexall("ARM", lookup(each.value, "ami_type", "AL2_x86_64"))) > 0 ? "arm64" : "x86_64"]
   }
 }
 
