@@ -5,15 +5,16 @@ tags = {
   env  = "dev"
   test = "tc2"
 }
-kubernetes_version = "1.19"
+kubernetes_version  = "1.20"
+managed_node_groups = []
 node_groups = [
   {
     name          = "arm64"
     min_size      = 1
     max_size      = 3
     desired_size  = 1
-    arch          = "arm64"
     instance_type = "m6g.medium"
+    ami_type      = "AL2_ARM_64"
   },
   {
     name          = "x86"
