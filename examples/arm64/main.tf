@@ -5,14 +5,12 @@ terraform {
 }
 
 provider "aws" {
-  alias               = "codebuild"
-  region              = "ap-northeast-1"
-  allowed_account_ids = [var.aws_account_id]
+  alias  = "codebuild"
+  region = "ap-northeast-1"
 }
 
 provider "aws" {
-  region              = var.aws_region
-  allowed_account_ids = [var.aws_account_id]
+  region = var.aws_region
 }
 
 # build container image

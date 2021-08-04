@@ -12,6 +12,7 @@ managed_node_groups = [
     min_size      = 1
     max_size      = 3
     desired_size  = 1
+    ami_type      = "AL2_x86_64"
     instance_type = "t3.large"
   }
 ]

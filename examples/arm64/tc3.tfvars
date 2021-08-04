@@ -5,7 +5,7 @@ tags = {
   env  = "dev"
   test = "tc3"
 }
-kubernetes_version = "1.19"
+kubernetes_version = "1.20"
 managed_node_groups = [
   {
     name          = "default"
@@ -16,3 +16,4 @@ managed_node_groups = [
     ami_type      = "AL2_ARM_64"
   }
 ]
+node_groups = []
