@@ -13,6 +13,7 @@
 - [Amazon ECR](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/ecr)
 - [AWS Fault Injection Simulator with AWS Systems Manager](https://github.com/Young-ook/terraform-aws-ssm/blob/main/examples/fis)
 - [AWS Fault Injection Simulator with Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/fis)
+- [AWS Load Balancer Controller](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/lb)
 
 ## Getting started
 ### AWS CLI
