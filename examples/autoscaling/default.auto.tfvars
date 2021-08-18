@@ -4,7 +4,7 @@ name       = "eks-autoscaling"
 tags = {
   env = "dev"
 }
-kubernetes_version = "1.20"
+kubernetes_version = "1.21"
 managed_node_groups = [
   {
     name          = "default"

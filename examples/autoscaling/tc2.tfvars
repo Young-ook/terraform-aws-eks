@@ -5,7 +5,7 @@ tags = {
   env  = "dev"
   test = "tc2"
 }
-kubernetes_version = "1.19"
+kubernetes_version = "1.21"
 managed_node_groups = [
   {
     name          = "default"
@@ -15,3 +15,5 @@ managed_node_groups = [
     instance_type = "t3.small"
   }
 ]
+node_groups      = []
+fargate_profiles = []
