@@ -1,12 +1,11 @@
 # Spot Instances for node groups example
 
 terraform {
-  required_version = "0.13.5"
+  required_version = "~> 1.0"
 }
 
 provider "aws" {
-  region              = var.aws_region
-  allowed_account_ids = [var.aws_account_id]
+  region = var.aws_region
 }
 
 # eks
