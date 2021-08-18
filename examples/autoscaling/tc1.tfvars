@@ -5,8 +5,9 @@ tags = {
   env  = "dev"
   test = "tc1"
 }
-kubernetes_version = "1.20"
-enable_ssm         = true
+kubernetes_version  = "1.21"
+enable_ssm          = true
+managed_node_groups = []
 node_groups = [
   {
     name          = "default"
@@ -16,3 +17,4 @@ node_groups = [
     instance_type = "t3.small"
   }
 ]
+fargate_profiles = []
