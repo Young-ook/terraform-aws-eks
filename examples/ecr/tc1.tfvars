@@ -6,7 +6,9 @@ tags = {
   platform = "fargate"
   test     = "tc1"
 }
-kubernetes_version = "1.19"
+kubernetes_version  = "1.21"
+managed_node_groups = []
+node_groups         = []
 fargate_profiles = [
   {
     name      = "hello"
