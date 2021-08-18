@@ -20,22 +20,22 @@ To build an application for ARM64 architecture with AWS CodeBuild, we have to co
 There is another important configuration for build project. We have to set compute type to `BUILD_GENERAL1_LARGE` type. Currently it is only available for `ARM_CONTAINER` environment type of CodeBuild project. Please visit [this page](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html) to find out more information and for latest updates.
 
 Run terraform:
-```
+```sh
 terraform init
 terraform apply
 ```
 Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
-```
+```sh
 terraform plan -var-file tc1.tfvars
 terraform apply -var-file tc1.tfvars
 ```
 
 ## Verify
 After provisioning of EKS cluster, you can describe nodes using kubectl and check out your node groups are running on ARM64 architecture.
-```
+```sh
 kubectl describe node
 ```
-```
+```sh
 System Info:
   OS Image:                   Amazon Linux 2
   Operating System:           linux
@@ -51,12 +51,12 @@ Amazon EKS customers can now run production workloads using Arm-based instances 
 ### Deploy NodeJS application from Private Registry
 Apply the artifact from codebuild project for multi-arch container image build
 
-```
+```sh
 kubectl apply -f hello-nodejs.yaml
 ```
 
 ### Deploy Nginx from Public Registry
-Edit and save a new deployment file (nginx.yaml) on your workspace and apply:
+Copy below and **SAVE** as a new deployment file (nginx.yaml) on your workspace. You can edit the file if you have anything to change.
 ```
 apiVersion: v1
 kind: Service
@@ -92,19 +92,21 @@ spec:
         ports:
         - containerPort: 80
 ```
-```
+Then, apply the modified manifest.
+```sh
 kubectl apply -f nginx.yaml
 ```
+The output could be:
 ```
 service/my-nginx-svc created
 deployment.apps/my-nginx created
 ```
 
 To verify that the nginx pods are running properly on the multiple architecture node groups, run describe command.
-```
+```sh
 kubectl describe nodes
 ```
-```
+```sh
 Name:               ip-172-xx-yx-xxx.us-west-2.compute.internal
                     beta.kubernetes.io/instance-type=m6g.medium
                     eks.amazonaws.com/nodegroup=eks-x86-arm64-tc2
@@ -150,12 +152,21 @@ Events:                       <none>
 ```
 
 ## Clean up
-Run terraform:
+Remove application:
+```sh
+kubectl delete -f hello-nodejs.yaml
 ```
+or
+```sh
+kubectl delete -f nginx.yaml
+```
+
+Run terraform:
+```sh
 terraform destroy
 ```
 Don't forget you have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
-```
+```sh
 terraform destroy -var-file tc1.tfvars
 ```
 
