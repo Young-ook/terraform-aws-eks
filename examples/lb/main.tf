@@ -1,7 +1,7 @@
 # Amazon EKS with AWS LoadBalancers
 
 terraform {
-  required_version = "0.13.5"
+  required_version = "~> 1.0"
 }
 
 provider "aws" {
