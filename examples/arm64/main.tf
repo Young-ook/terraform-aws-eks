@@ -1,7 +1,7 @@
 # ARM64 node groups example
 
 terraform {
-  required_version = "0.13.5"
+  required_version = "~> 1.0"
 }
 
 provider "aws" {
@@ -11,14 +11,6 @@ provider "aws" {
 
 provider "aws" {
   region = var.aws_region
-}
-
-# build container image
-module "codebuild" {
-  providers = { aws = aws.codebuild }
-  source    = "./modules/codebuild"
-  name      = var.name
-  tags      = var.tags
 }
 
 # eks

@@ -5,7 +5,7 @@ phases:
       - yum update -y
   pre_build:
     commands:
-      - cd examples/arm64/modules/codebuild/app/
+      - cd examples/arm64/app/
       - $(aws ecr get-login --no-include-email)
       - echo $TAG
       - IMAGE_URI="$REPOSITORY_URI:$TAG"
