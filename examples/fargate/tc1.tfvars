@@ -5,10 +5,10 @@ tags = {
   env  = "dev"
   test = "tc1"
 }
-kubernetes_version = "1.19"
+kubernetes_version = "1.21"
 fargate_profiles = [
   {
-    name      = "hello"
-    namespace = "hello"
+    name      = "default"
+    namespace = "default"
   },
 ]

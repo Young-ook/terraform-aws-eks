@@ -26,7 +26,7 @@ After then you will see the created EKS cluster and node groups. For more inform
 ## AWS Fargate
 AWS Fargate is a technology that provides on-demand, right-sized compute capacity for containers. With AWS Fargate, you no longer have to provision, configure, or scale groups of virtual machines to run containers. This removes the need to choose server types, decide when to scale your node groups, or optimize cluster packing. You can control which pods start on Fargate and how they run with Fargate profiles. Each pod running on Fargate has its own isolation boundary and does not share the underlying kernel, CPU resources, memory resources, or elastic network interface with another pod. For more information, please refer [this](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html).
 
-Here is a [hello-kubernetes](https://github.com/Young-ook/terraform-aws-eks/blob/main/app/hello-kubernetes.yaml) application to enable AWS Fargate as node groups for EKS cluster.
+Here is a [hello-kubernetes](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/fargate/manifests/hello-kubernetes.yaml) application to enable AWS Fargate as node groups for EKS cluster.
 ```hcl
 module "eks-fargate" {
   source  = "Young-ook/eks/aws"
