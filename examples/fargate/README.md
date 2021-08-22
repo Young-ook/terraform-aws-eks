@@ -17,8 +17,8 @@ terraform apply
 ```
 Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
 ```
-terraform plan -var-file=default.tfvars
-terraform apply -var-file=default.tfvars
+terraform plan -var-file tc1.tfvars
+terraform apply -var-file tc1.tfvars
 ```
 
 After then you will see the created EKS cluster and node groups. For more information about configuration of service account mapping for IAM role in Kubernetes, please check out the [IRSA](https://github.com/Young-ook/terraform-aws-eks/tree/main/modules/iam-role-for-serviceaccount/)
@@ -42,7 +42,7 @@ module "eks-fargate" {
 ```
 Run terraform. After provisioning of EKS cluster, you can deploy the example using kubectl.
 ```
-kubectl apply -f hello-kubernetes.yaml
+kubectl apply -f manifests/hello-kubernetes.yaml
 ```
 A few minutes later you can see the fargate nodes are up. And you can try to access the service via port forwarding when all pods are ready and runnig. If everything looks fine, open the `localhost:8080` url on your web browser.
 ```
@@ -59,7 +59,7 @@ kubectl port-forward svc/hello-kubernetes 8080:80
 ```
 To clean up all resources or hello-kubernetes application from cluster, run kubectl:
 ```
-kubectl delete -f hello-kubernetes.yaml
+kubectl delete -f manifests/hello-kubernetes.yaml
 ```
 
 ## Clean up
@@ -69,5 +69,5 @@ terraform destroy
 ```
 Don't forget you have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
 ```
-terraform destroy -var-file=default.tfvars
+terraform destroy -var-file tc1.tfvars
 ```
