@@ -5,7 +5,7 @@ tags = {
   env  = "dev"
   test = "tc2"
 }
-kubernetes_version = "1.19"
+kubernetes_version = "1.21"
 fargate_profiles = [
   {
     name      = "hello"
