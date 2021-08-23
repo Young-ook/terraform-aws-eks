@@ -39,7 +39,7 @@ resource "local_file" "cpu-stress" {
     alarm  = local.stop_condition_alarm
     role   = aws_iam_role.fis-run.arn
   })
-  filename        = "${path.module}/cpu-stress.json"
+  filename        = "${path.module}/.fis/cpu-stress.json"
   file_permission = "0600"
 }
 
@@ -49,7 +49,7 @@ resource "local_file" "network-latency" {
     alarm  = local.stop_condition_alarm
     role   = aws_iam_role.fis-run.arn
   })
-  filename        = "${path.module}/network-latency.json"
+  filename        = "${path.module}/.fis/network-latency.json"
   file_permission = "0600"
 }
 
@@ -64,7 +64,7 @@ resource "local_file" "throttle-ec2-api" {
     alarm    = local.stop_condition_alarm
     role     = aws_iam_role.fis-run.arn
   })
-  filename        = "${path.module}/throttle-ec2-api.json"
+  filename        = "${path.module}/.fis/throttle-ec2-api.json"
   file_permission = "0600"
 }
 
@@ -76,13 +76,13 @@ resource "local_file" "terminate-eks-nodes" {
     alarm     = local.stop_condition_alarm
     role      = aws_iam_role.fis-run.arn
   })
-  filename        = "${path.module}/terminate-eks-nodes.json"
+  filename        = "${path.module}/.fis/terminate-eks-nodes.json"
   file_permission = "0600"
 }
 
 resource "local_file" "create-templates" {
   content = join("\n", [
-    "#!/bin/bash -ex",
+    "#!/bin/bash",
     "OUTPUT='.fis_cli_result'",
     "TEMPLATES=('cpu-stress.json' 'network-latency.json' 'throttle-ec2-api.json' 'terminate-eks-nodes.json')",
     "for template in $${TEMPLATES[@]}; do",
@@ -90,7 +90,7 @@ resource "local_file" "create-templates" {
     "done",
     ]
   )
-  filename        = "${path.module}/fis-create-experiment-templates.sh"
+  filename        = "${path.module}/.fis/fis-create-experiment-templates.sh"
   file_permission = "0600"
 }
 
@@ -104,13 +104,13 @@ resource "null_resource" "create-templates" {
   ]
   provisioner "local-exec" {
     when    = create
-    command = "bash ${path.module}/fis-create-experiment-templates.sh"
+    command = "cd ${path.module}/.fis && bash fis-create-experiment-templates.sh"
   }
 }
 
 resource "local_file" "delete-templates" {
   content = join("\n", [
-    "#!/bin/bash -ex",
+    "#!/bin/bash",
     "OUTPUT='.fis_cli_result'",
     "while read id; do",
     "  aws fis delete-experiment-template --region ${var.aws_region} --id $${id} --output text --query 'experimentTemplate.id' 2>&1 > /dev/null",
@@ -118,7 +118,7 @@ resource "local_file" "delete-templates" {
     "rm $${OUTPUT}",
     ]
   )
-  filename        = "${path.module}/fis-delete-experiment-templates.sh"
+  filename        = "${path.module}/.fis/fis-delete-experiment-templates.sh"
   file_permission = "0600"
 }
 
@@ -130,9 +130,8 @@ resource "null_resource" "delete-templates" {
     local_file.terminate-eks-nodes,
     local_file.delete-templates,
   ]
-
   provisioner "local-exec" {
     when    = destroy
-    command = "bash ${path.module}/fis-delete-experiment-templates.sh"
+    command = "cd ${path.module}/.fis && bash fis-delete-experiment-templates.sh"
   }
 }
