@@ -29,7 +29,7 @@ variable "fargate_profiles" {
 
 variable "wait" {
   description = "Wait duration after control plane creation"
-  default     = "120s"
+  default     = "90s"
 }
 
 ### feature

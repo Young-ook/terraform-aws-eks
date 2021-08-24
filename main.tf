@@ -288,6 +288,7 @@ resource "aws_autoscaling_group" "ng" {
     aws_iam_role_policy_attachment.eks-cni,
     aws_iam_role_policy_attachment.ecr-read,
     aws_launch_template.ng,
+    time_sleep.wait,
   ]
 }
 
@@ -368,6 +369,7 @@ resource "aws_eks_node_group" "ng" {
     aws_iam_role_policy_attachment.eks-ng,
     aws_iam_role_policy_attachment.eks-cni,
     aws_iam_role_policy_attachment.ecr-read,
+    time_sleep.wait,
   ]
 }
 
@@ -436,11 +438,7 @@ provider "kubernetes" {
 resource "time_sleep" "wait" {
   count           = ((local.managed_node_groups_enabled || local.fargate_enabled) ? 0 : (local.node_groups_enabled ? 1 : 0))
   create_duration = var.wait
-  depends_on = [
-    aws_eks_cluster.cp,
-    aws_eks_node_group.ng,
-    aws_autoscaling_group.ng,
-  ]
+  depends_on      = [aws_eks_cluster.cp, ]
 }
 
 resource "kubernetes_config_map" "aws-auth" {
