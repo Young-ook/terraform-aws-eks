@@ -125,6 +125,21 @@ data "aws_ami" "eks" {
   }
 }
 
+data "aws_ami" "br" {
+  for_each    = { for ng in var.node_groups : ng.name => ng }
+  owners      = ["amazon"]
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = [format("bottlerocket-aws-k8s-%s-*", var.kubernetes_version)]
+  }
+  filter {
+    name   = "architecture"
+    values = [length(regexall("ARM", lookup(each.value, "ami_type", "BR_x86_64"))) > 0 ? "arm64" : "x86_64"]
+  }
+}
+
 data "template_cloudinit_config" "ng" {
   for_each      = { for ng in var.node_groups : ng.name => ng }
   base64_encode = true
@@ -148,12 +163,25 @@ data "template_cloudinit_config" "ng" {
   }
 }
 
+data "template_file" "br" {
+  for_each = { for ng in var.node_groups : ng.name => ng }
+  template = file("${path.module}/templates/bottlerocket.tpl")
+  vars = {
+    cluster_name                 = aws_eks_cluster.cp.name
+    cluster_endpoint             = aws_eks_cluster.cp.endpoint
+    cluster_ca_data              = aws_eks_cluster.cp.certificate_authority.0.data
+    admin_container_enabled      = false
+    admin_container_superpowered = false
+    admin_container_source       = ""
+  }
+}
+
 resource "aws_launch_template" "ng" {
   for_each      = { for ng in var.node_groups : ng.name => ng }
   name          = format("eks-%s", uuid())
   tags          = merge(local.default-tags, local.eks-tag, var.tags)
-  image_id      = data.aws_ami.eks[each.key].id
-  user_data     = base64encode(data.template_cloudinit_config.ng[each.key].rendered)
+  image_id      = length(regexall("^AL2", lookup(each.value, "ami_type", "AL2_x86_64"))) > 0 ? data.aws_ami.eks[each.key].id : data.aws_ami.br[each.key].id
+  user_data     = base64encode(length(regexall("^AL2", lookup(each.value, "ami_type", "AL2_x86_64"))) > 0 ? data.template_cloudinit_config.ng[each.key].rendered : data.template_file.br[each.key].rendered)
   instance_type = lookup(each.value, "instance_type", "t3.medium")
 
   iam_instance_profile {
@@ -260,6 +288,7 @@ resource "aws_autoscaling_group" "ng" {
     aws_iam_role_policy_attachment.eks-cni,
     aws_iam_role_policy_attachment.ecr-read,
     aws_launch_template.ng,
+    time_sleep.wait,
   ]
 }
 
@@ -340,6 +369,7 @@ resource "aws_eks_node_group" "ng" {
     aws_iam_role_policy_attachment.eks-ng,
     aws_iam_role_policy_attachment.eks-cni,
     aws_iam_role_policy_attachment.ecr-read,
+    time_sleep.wait,
   ]
 }
 
@@ -408,11 +438,7 @@ provider "kubernetes" {
 resource "time_sleep" "wait" {
   count           = ((local.managed_node_groups_enabled || local.fargate_enabled) ? 0 : (local.node_groups_enabled ? 1 : 0))
   create_duration = var.wait
-  depends_on = [
-    aws_eks_cluster.cp,
-    aws_eks_node_group.ng,
-    aws_autoscaling_group.ng,
-  ]
+  depends_on      = [aws_eks_cluster.cp, ]
 }
 
 resource "kubernetes_config_map" "aws-auth" {
