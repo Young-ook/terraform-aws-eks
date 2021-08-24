@@ -407,7 +407,7 @@ provider "kubernetes" {
 
 resource "time_sleep" "wait" {
   count           = ((local.managed_node_groups_enabled || local.fargate_enabled) ? 0 : (local.node_groups_enabled ? 1 : 0))
-  create_duration = "180s"
+  create_duration = var.wait
   depends_on = [
     aws_eks_cluster.cp,
     aws_eks_node_group.ng,

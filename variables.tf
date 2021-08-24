@@ -27,6 +27,11 @@ variable "fargate_profiles" {
   default     = []
 }
 
+variable "wait" {
+  description = "Wait duration after control plane creation"
+  default     = "120s"
+}
+
 ### feature
 variable "enabled_cluster_log_types" {
   description = "A list of the desired control plane logging to enable"
