@@ -23,6 +23,16 @@ resource "aws_iam_role_policy_attachment" "fis-run" {
   role       = aws_iam_role.fis-run.id
 }
 
+### systems manager document for fault injection simulator experiment
+
+resource "aws_ssm_document" "disk-stress" {
+  name            = "FIS-Run-Disk-Stress"
+  tags            = merge(local.default-tags, var.tags)
+  document_format = "YAML"
+  document_type   = "Command"
+  content         = file("${path.module}/templates/disk-stress.yaml")
+}
+
 ### fault injection simulator experiment templates
 
 locals {
@@ -80,11 +90,21 @@ resource "local_file" "terminate-eks-nodes" {
   file_permission = "0600"
 }
 
+resource "local_file" "disk-stress" {
+  content = templatefile("${path.module}/templates/disk-stress.tpl", {
+    doc_arn = aws_ssm_document.disk-stress.arn
+    alarm   = local.stop_condition_alarm
+    role    = aws_iam_role.fis-run.arn
+  })
+  filename        = "${path.module}/.fis/disk-stress.json"
+  file_permission = "0600"
+}
+
 resource "local_file" "create-templates" {
   content = join("\n", [
     "#!/bin/bash",
     "OUTPUT='.fis_cli_result'",
-    "TEMPLATES=('cpu-stress.json' 'network-latency.json' 'throttle-ec2-api.json' 'terminate-eks-nodes.json')",
+    "TEMPLATES=('cpu-stress.json' 'network-latency.json' 'throttle-ec2-api.json' 'terminate-eks-nodes.json' 'disk-stress.json')",
     "for template in $${TEMPLATES[@]}; do",
     "  aws fis create-experiment-template --region ${var.aws_region} --cli-input-json file://$${template} --output text --query 'experimentTemplate.id' 2>&1 | tee -a $${OUTPUT}",
     "done",
