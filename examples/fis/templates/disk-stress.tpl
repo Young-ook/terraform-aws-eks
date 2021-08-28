@@ -23,9 +23,9 @@
             "actionId": "aws:ssm:send-command",
             "description": "run disk stress using ssm",
             "parameters": {
-                "duration": "PT1M",
+                "duration": "PT5M",
                 "documentArn": "${doc_arn}",
-                "documentParameters": "{\"DurationSeconds\": \"60\", \"Workers\": \"4\", \"Bytes\": \"15\", \"InstallDependencies\": \"True\"}"
+                "documentParameters": "{\"DurationSeconds\": \"300\", \"Workers\": \"4\", \"Bytes\": \"4g\", \"InstallDependencies\": \"True\"}"
             },
             "targets": {
                 "Instances": "ec2-instances"

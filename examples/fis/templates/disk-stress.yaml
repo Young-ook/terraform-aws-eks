@@ -28,7 +28,7 @@ parameters:
   Bytes:
     type: String
     description: "The bytes of disk to use (required)."
-    allowedPattern: "^[0-9]+(M|G|T)$"
+    allowedPattern: "^[0-9]+(b|k|m|g)$"
   InstallDependencies:
     type: String
     description: "If set to True, Systems Manager installs the required dependencies on the target instances. (default: True)."

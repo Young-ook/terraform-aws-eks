@@ -93,7 +93,7 @@ resource "local_file" "terminate-eks-nodes" {
 resource "local_file" "disk-stress" {
   content = templatefile("${path.module}/templates/disk-stress.tpl", {
     doc_arn = aws_ssm_document.disk-stress.arn
-    alarm   = local.stop_condition_alarm
+    alarm   = aws_cloudwatch_metric_alarm.disk.arn
     role    = aws_iam_role.fis-run.arn
   })
   filename        = "${path.module}/.fis/disk-stress.json"
