@@ -158,6 +158,19 @@ Make sure that all your EKS node group instances are running. Go to the AWS FIS 
 
 ![aws-cw-cpu-alarm](../../images/aws-cw-cpu-alarm.png)
 
+### Disk Stress
+With this disk stress experiment, you can test if the alarm fires when there is not enough space on the compute node to write files(such as logs). This test verifies that you have set up an alarm to be raised when the disk utilization metric is greater than a threshold. See what happens to your application when the disk file system utilization on the EKS node (ec2 instance) is very high.
+
+#### Define Steady State
+Before we begin a failure experiment, we need to validate the user experience and revise the dashboard and metrics to understand that the systems are working under normal state, in other words, steady state. The goal of this experiment is to verify that the disk usage alarm works well when disk usage increases. So an alarm off state is our planned steady state.
+
+#### Run Experiment
+Make sure that all your EKS node group instances are running. Go to the AWS FIS service page and select `DiskStress` from the list of experiment templates. Then use the on-screen `Actions` button to start the experiment. In this experiment, AWS FIS increases Disk filesystem utilization for all ec2 instances with the env=prod tag. If you want, you can change the experiment targets in the experiment template. To change the number of EKS nodes to which the Disk stress experiment will be applied, edit the filter or tag values in the target selection mode configuration in the template. After starting the experiment, you can see the Disk filesystem utilization increase on the CloudWatch service page.
+
+![aws-fis-disk-stress-eks-nodes-action-stopped](../../images/aws-fis-disk-stress-eks-nodes-action-stopped.png)
+
+![aws-cw-container-insights-disk](../../images/aws-cw-container-insights-disk.png)
+
 ## Clean up
 ### Remove Application
 Delete all kubernetes resources.

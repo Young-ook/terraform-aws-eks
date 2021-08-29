@@ -1,0 +1,91 @@
+---
+description: |
+  ### Document name - FIS-Run-Disk-Stress
+
+  ## What does this document do?
+  It runs disk stress on an instance via stress-ng tool.
+
+  ## Input Parameters
+  * DurationSeconds: (Required) The duration - in seconds - of the disk stress.
+  * Workers: The number of virtual disk stressors (default: 1).
+  * Bytes: The bytes of virtual disk to use (required).
+  * InstallDependencies: If set to True, Systems Manager installs the required dependencies on the target instances. (default: True).
+
+  ## Output Parameters
+  None.
+
+schemaVersion: '2.2'
+parameters:
+  DurationSeconds:
+    type: String
+    description: "(Required) The duration - in seconds - of the disk stress."
+    allowedPattern: "^[0-9]+$"
+  Workers:
+    type: String
+    description: "The number of disk stressors (default: 1)."
+    default: "1"
+    allowedPattern: "^[0-9]+$"
+  Bytes:
+    type: String
+    description: "The bytes of disk to use (required)."
+    allowedPattern: "^[0-9]+(b|k|m|g)$"
+  InstallDependencies:
+    type: String
+    description: "If set to True, Systems Manager installs the required dependencies on the target instances. (default: True)."
+    default: 'True'
+    allowedValues:
+      - 'True'
+      - 'False'
+mainSteps:
+  - action: aws:runShellScript
+    name: InstallDependencies
+    precondition:
+      StringEquals:
+        - platformType
+        - Linux
+    description: |
+      ## Parameter: InstallDependencies
+      If set to True, this step installs the required dependecy via operating system's repository. It supports both
+      Debian (apt) and CentOS (yum) based package managers.
+    inputs:
+      runCommand:
+        - |
+          #!/bin/bash
+          if  [[ "{{ InstallDependencies }}" == True ]] ; then
+            if [[ "$( which stress-ng 2>/dev/null )" ]] ; then echo Dependency is already installed. ; exit ; fi
+            echo "Installing required dependencies"
+            if [ -f  "/etc/system-release" ] ; then
+              if cat /etc/system-release | grep -i 'Amazon Linux' ; then
+                sudo amazon-linux-extras install testing
+                sudo yum -y install stress-ng
+              else
+                echo "There was a problem installing dependencies."
+                exit 1
+              fi
+            elif cat /etc/issue | grep -i Ubuntu ; then
+              sudo apt-get update -y
+              sudo DEBIAN_FRONTEND=noninteractive sudo apt-get install -y stress-ng
+            else
+              echo "There was a problem installing dependencies."
+              exit 1
+            fi
+          fi
+  - action: aws:runShellScript
+    name: ExecuteStressNg
+    precondition:
+      StringEquals:
+        - platformType
+        - Linux
+    description: |
+      ## Parameters: DurationSeconds, Workers and Bytes
+      This step will run a disk stress test on the instance for the specified DurationSeconds time.
+      It will start `Workers` number of workers, using `Bytes` of the total available disk.
+    inputs:
+      maxAttempts: 1
+      runCommand:
+        - |
+          if [ {{ DurationSeconds }} -lt 1 ] || [ {{ DurationSeconds }} -gt 43200 ] ; then echo DurationSeconds parameter value must be between 1 and 43200 && exit; fi
+          pgrep stress-ng && echo Another stress-ng command is running, exiting... && exit
+          echo Initiating disk stress for {{ DurationSeconds }} seconds, {{ Workers }} workers, using {{ Bytes }} percent of total available disk...
+          stress-ng --fallocate {{ Workers }} --fallocate-bytes {{ Bytes }} -t {{ DurationSeconds }}s --metrics
+          echo Finished disk stress.
