@@ -46,7 +46,7 @@ locals {
 resource "local_file" "cpu-stress" {
   content = templatefile("${path.module}/templates/cpu-stress.tpl", {
     region = var.aws_region
-    alarm  = local.stop_condition_alarm
+    alarm  = aws_cloudwatch_metric_alarm.cpu.arn
     role   = aws_iam_role.fis-run.arn
   })
   filename        = "${path.module}/.fis/cpu-stress.json"
