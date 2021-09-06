@@ -6,6 +6,7 @@ locals {
   cw_disk_alarm_name              = join("-", [var.name, "disk-alarm"])
   cw_api_p90_alarm_name           = join("-", [var.name, "api-p90-alarm"])
   cw_api_avg_alarm_name           = join("-", [var.name, "api-avg-alarm"])
+  cw_svc_health_alarm_name        = join("-", [var.name, "frontend-healthy-host-alarm"])
   asg_target_tracking_policy_name = join("-", [var.name, "target-tracking-autoscaling-policy"])
   fis_role_name                   = join("-", [var.name, "role"])
   default-tags = merge(

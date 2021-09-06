@@ -109,6 +109,34 @@ Let’s go ahead and explore Sock Shop application. Some things to try out:
 1. Remove items from cart
 1. Check out items
 
+#### Hypothesis
+The experiment we’ll run is to verify and fine-tune our application availability when compute nodes are terminated accidentally. Our application is deployed as a container on the Kubernetes cluster, we assume that if some nodes are teminated, the Kubernetes control plane will reschedule the pods to the other healthy nodes.
+
+We talked about following the scientific method when doing Chaos Engineering, starting with developing a hypothesis. To help with this, we use experiment chart (like the one below) to help design this experiment. Please take 5 minutes to write your experiment plan.
+
+**Steady State Hypothesis Example**
+
++ Title: Services are all available and healthy
++ Type: What are your assumptions?
+   - [ ] No Impact
+   - [ ] Degraded Performance
+   - [ ] Service Outage
+   - [ ] Impproved Performance
++ Probes:
+   - Type: CloudWatch Metric
+   - Status: `service_number_of_running_pods` is greater than 0
++ Stop condition (Abort condition):
+   - Type: CloudWatch Alarm
+   - Status: `service_number_of_running_pods` is less than 1
++ Results:
+   - What did you see?
++ Conclusions:
+   - [ ] Everything is as expected
+   - [ ] Detected something
+   - [ ] Handleable error has occurred
+   - [ ] Need to automate
+   - [ ] Need to dig deeper
+
 #### Run Experiment
 Make sure that all your EKS node group instances are running. Go to the AWS FIS service page and select `TerminateEKSNodes` from the list of experiment templates. Then use the on-screen `Actions` button to start the experiment. AWS FIS shuts down EKS nodes for up to 70% of currently running instances. In this experiment, this value is 40% and it is configured in the experiment template. You can edit this value in the target selection mode configuration if you want to change the number of EKS nodes to shut down You can see the terminated instances on the EC2 service page, and the new instances will appear shortly after the EKS node is shut down.
 
