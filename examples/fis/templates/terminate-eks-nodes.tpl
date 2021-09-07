@@ -24,11 +24,6 @@
             }
         }
     },
-    "stopConditions": [
-        {
-            "source": "aws:cloudwatch:alarm",
-            "value": "${alarm}"
-        }
-    ],
+    "stopConditions": ${alarm},
     "roleArn": "${role}"
 }

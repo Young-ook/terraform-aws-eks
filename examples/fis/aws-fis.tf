@@ -83,8 +83,17 @@ resource "local_file" "terminate-eks-nodes" {
     az        = var.azs[random_integer.az.result]
     vpc       = local.target_vpc
     nodegroup = local.target_eks_nodes
-    alarm     = local.stop_condition_alarm
     role      = aws_iam_role.fis-run.arn
+    alarm = jsonencode([
+      {
+        source = "aws:cloudwatch:alarm"
+        value  = aws_cloudwatch_metric_alarm.cpu.arn
+      },
+      {
+        source = "aws:cloudwatch:alarm"
+        value  = aws_cloudwatch_metric_alarm.svc-health.arn
+    }])
+
   })
   filename        = "${path.module}/.fis/terminate-eks-nodes.json"
   file_permission = "0600"

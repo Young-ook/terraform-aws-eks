@@ -36,3 +36,24 @@ resource "aws_cloudwatch_metric_alarm" "disk" {
     ClusterName = module.eks.cluster.name
   }
 }
+
+resource "aws_cloudwatch_metric_alarm" "svc-health" {
+  alarm_name                = local.cw_svc_health_alarm_name
+  alarm_description         = "This metric monitors healty backed pods of a service"
+  tags                      = merge(local.default-tags, var.tags)
+  metric_name               = "service_number_of_running_pods"
+  comparison_operator       = "LessThanThreshold"
+  datapoints_to_alarm       = 1
+  evaluation_periods        = 1
+  namespace                 = "ContainerInsights"
+  period                    = 10
+  threshold                 = 1
+  statistic                 = "Average"
+  insufficient_data_actions = []
+
+  dimensions = {
+    Namespace   = "sockshop"
+    Service     = "front-end"
+    ClusterName = module.eks.cluster.name
+  }
+}

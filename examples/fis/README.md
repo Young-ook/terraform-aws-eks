@@ -1,6 +1,8 @@
 # AWS Fault Injection Simulator
 [AWS Fault Injection Simulator](https://aws.amazon.com/fis/) is a fully managed service for running fault injection experiments on AWS that makes it easier to improve an application’s performance, observability, and resiliency. Fault injection experiments are used in chaos engineering, which is the practice of stressing an application in testing or production environments by creating disruptive events, such as sudden increase in CPU or memory consumption, observing how the system responds, and implementing improvements.
 
+![aws-chaos-engineering-workshop-eks-architecture](../../images/aws-chaos-engineering-workshop-eks-architecture.png)
+
 ## Chaos Engineering
 ### Why Chaos Engineering
 There are many reasons to do chaos engineering. We see teams transitioning in this way to reduce incidents, lower downtime costs, train their teams, and prepare for critical moments. Practicing chaos engineering allows you to detect problems before they become accidents and before customers are affected. And chaos engineering is useful for reducing downtime costs because it allows teams to have a resilient architecture. While the number of companies operating at Internet scale increases and high-traffic events such as sales or launches increase, the cost of downtime will become more expensive. Additionally, this continuous practice of chaos engineering gives teams more confidence every day as they build their own applications and systems. It takes less time to fire-fighting and more time to create and create value.
@@ -109,6 +111,34 @@ Let’s go ahead and explore Sock Shop application. Some things to try out:
 1. Remove items from cart
 1. Check out items
 
+#### Hypothesis
+The experiment we’ll run is to verify and fine-tune our application availability when compute nodes are terminated accidentally. Our application is deployed as a container on the Kubernetes cluster, we assume that if some nodes are teminated, the Kubernetes control plane will reschedule the pods to the other healthy nodes.
+
+We talked about following the scientific method when doing Chaos Engineering, starting with developing a hypothesis. To help with this, we use experiment chart (like the one below) to help design this experiment. Please take 5 minutes to write your experiment plan.
+
+**Steady State Hypothesis Example**
+
++ Title: Services are all available and healthy
++ Type: What are your assumptions?
+   - [ ] No Impact
+   - [ ] Degraded Performance
+   - [ ] Service Outage
+   - [ ] Impproved Performance
++ Probes:
+   - Type: CloudWatch Metric
+   - Status: `service_number_of_running_pods` is greater than 0
++ Stop condition (Abort condition):
+   - Type: CloudWatch Alarm
+   - Status: `service_number_of_running_pods` is less than 1
++ Results:
+   - What did you see?
++ Conclusions:
+   - [ ] Everything is as expected
+   - [ ] Detected something
+   - [ ] Handleable error has occurred
+   - [ ] Need to automate
+   - [ ] Need to dig deeper
+
 #### Run Experiment
 Make sure that all your EKS node group instances are running. Go to the AWS FIS service page and select `TerminateEKSNodes` from the list of experiment templates. Then use the on-screen `Actions` button to start the experiment. AWS FIS shuts down EKS nodes for up to 70% of currently running instances. In this experiment, this value is 40% and it is configured in the experiment template. You can edit this value in the target selection mode configuration if you want to change the number of EKS nodes to shut down You can see the terminated instances on the EC2 service page, and the new instances will appear shortly after the EKS node is shut down.
 
@@ -125,6 +155,13 @@ ip-10-1-9-221.ap-northeast-2.compute.internal   Ready    <none>   4m40s   v1.20.
 ip-10-1-9-221.ap-northeast-2.compute.internal   NotReady   <none>   4m40s   v1.20.4-eks-6b7464
 ip-10-1-9-221.ap-northeast-2.compute.internal   NotReady   <none>   4m40s   v1.20.4-eks-6b7464
 ```
+
+#### Discussion
+Then access the microservices application again. What happened? Perhaps a node shutdown by a fault injection experiment will cause the application to crash. This is because the first deployment of the application did not consider high availability.
+
+In this experiment, business healthy state (steady state) is specified as cpu utilization and number of healthy pods. But after the first experiment, you will see the service does not work properly even though the monitoring indicators are in the normal range. It would be weird it is also meaningful. This result shows that unintended problems can occur even if the monitoring numbers are normal. It could be one of the experimental results that can be obtained through chaos engineering.
+
+An important part of this lab is the high availability (stateless, immutable, replicable) characteristics. This example shows that a service problem occurs when such characteristics are not considered within the first experiment and suggests a way to secure high availability by improving the architecture. Go forward.
 
 #### Architecture Improvements
 Cluster Autoscaler is a tool that automatically adjusts the size of the Kubernetes cluster when one of the following conditions is true:
