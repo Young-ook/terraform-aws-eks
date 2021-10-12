@@ -31,11 +31,6 @@ resource "aws_iam_role_policy_attachment" "eks-cluster" {
   role       = aws_iam_role.cp.id
 }
 
-resource "aws_iam_role_policy_attachment" "eks-service" {
-  policy_arn = format("arn:%s:iam::aws:policy/AmazonEKSServicePolicy", data.aws_partition.current.partition)
-  role       = aws_iam_role.cp.id
-}
-
 resource "aws_eks_cluster" "cp" {
   name     = format("%s", local.name)
   role_arn = aws_iam_role.cp.arn
@@ -50,7 +45,6 @@ resource "aws_eks_cluster" "cp" {
 
   depends_on = [
     aws_iam_role_policy_attachment.eks-cluster,
-    aws_iam_role_policy_attachment.eks-service,
   ]
 }
 
