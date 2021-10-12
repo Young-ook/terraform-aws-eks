@@ -19,6 +19,10 @@ cd terraform-aws-eks/examples/arm64
 To build an application for ARM64 architecture with AWS CodeBuild, we have to configure environment variable of the build project. The key parameters of the environment for build project are `image`, `type` and `compute type`. The image parameter is (container) image tag or image digest that identifies the Docker image to use for this build project. We use `aws/codebuild/amazonlinux2-aarch64-standard:2.0` image to build an application for ARM64 architectuer based. The type of build environment to use for related builds. In this example, `ARM_CONTAINER` is suitalbe. Be aware of that the environment type `ARM_CONTAINER` is available only in regions US East (N. Virginia), US East (Ohio), US West (Oregon), EU (Ireland), Asia Pacific (Mumbai), Asia Pacific (Tokyo), Asia Pacific (Sydney), and EU (Frankfurt). For more information about build project enviroment, please refer to [this user guide](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-codebuild-project-environment.html)
 There is another important configuration for build project. We have to set compute type to `BUILD_GENERAL1_LARGE` type. Currently it is only available for `ARM_CONTAINER` environment type of CodeBuild project. Please visit [this page](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html) to find out more information and for latest updates.
 
+![aws-ecr-multi-arch-build-pipeline](../../images/aws-ecr-multi-arch-build-pipeline.png)
+
+![aws-ecr-multi-arch-manifest](../../images/aws-ecr-multi-arch-manifest.png)
+
 Run terraform:
 ```sh
 terraform init
