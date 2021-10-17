@@ -23,6 +23,7 @@ module "eks" {
   kubernetes_version  = var.kubernetes_version
   managed_node_groups = var.managed_node_groups
   node_groups         = var.node_groups
+  enable_ssm          = var.enable_ssm
   policy_arns         = ["arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"]
 }
 

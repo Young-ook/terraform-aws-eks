@@ -40,6 +40,13 @@ variable "fargate_profiles" {
   default     = []
 }
 
+### feature
+variable "enable_ssm" {
+  description = "Allow ssh access using session manager"
+  type        = bool
+  default     = false
+}
+
 ### description
 variable "name" {
   description = "The logical name of the module instance"
