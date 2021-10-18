@@ -1,7 +1,7 @@
 # App Mesh example
 
 terraform {
-  required_version = "0.13.5"
+  required_version = "~> 1.0"
 }
 
 provider "aws" {
@@ -23,7 +23,11 @@ module "eks" {
   kubernetes_version  = var.kubernetes_version
   managed_node_groups = var.managed_node_groups
   node_groups         = var.node_groups
-  policy_arns         = ["arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"]
+  enable_ssm          = var.enable_ssm
+  policy_arns = [
+    "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess",
+    "arn:aws:iam::aws:policy/AWSAppMeshEnvoyAccess",
+  ]
 }
 
 # utilities
