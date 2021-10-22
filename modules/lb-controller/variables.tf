@@ -21,7 +21,10 @@ variable "helm" {
 ### security/policy
 variable "oidc" {
   description = "The Open ID Connect properties"
-  type        = map
+  type        = object({
+    id = string
+    arn = string
+  })
 }
 
 ### description
