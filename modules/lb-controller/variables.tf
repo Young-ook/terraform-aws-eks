@@ -22,7 +22,7 @@ variable "helm" {
 variable "oidc" {
   description = "The Open ID Connect properties"
   type        = object({
-    id = string
+    url = string
     arn = string
   })
 }
