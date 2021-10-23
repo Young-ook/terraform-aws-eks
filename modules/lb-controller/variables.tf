@@ -7,7 +7,7 @@ variable "enabled" {
 ### helm
 variable "helm" {
   description = "The helm release configuration"
-  type        = map
+  type        = map(any)
   default = {
     repository      = "https://aws.github.io/eks-charts"
     name            = "aws-load-balancer-controller"
@@ -21,7 +21,10 @@ variable "helm" {
 ### security/policy
 variable "oidc" {
   description = "The Open ID Connect properties"
-  type        = map
+  type = object({
+    url = string
+    arn = string
+  })
 }
 
 ### description
@@ -34,6 +37,16 @@ variable "petname" {
   description = "An indicator whether to append a random identifier to the end of the name to avoid duplication"
   type        = bool
   default     = true
+}
+
+variable "region" {
+  description = "Required if you're deploying the controller to Amazon EC2 nodes that have restricted access to the Amazon EC2 instance metadata service (IMDS), or if you're deploying to Fargate"
+  type        = string
+}
+
+variable "vpc_id" {
+  description = "Required if you're deploying the controller to Amazon EC2 nodes that have restricted access to the Amazon EC2 instance metadata service (IMDS), or if you're deploying to Fargate"
+  type        = string
 }
 
 ### tags
