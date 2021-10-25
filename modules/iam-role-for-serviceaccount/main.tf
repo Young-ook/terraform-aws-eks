@@ -18,9 +18,7 @@ resource "aws_iam_role" "irsa" {
       }
       Condition = {
         StringEquals = {
-          "${local.oidc_url}:sub" = local.oidc_fully_qualified_subjects
-        },
-        StringEquals = {
+          "${local.oidc_url}:sub" = local.oidc_fully_qualified_subjects,
           "${local.oidc_url}:aud" = "sts.amazonaws.com"
         }
       }
