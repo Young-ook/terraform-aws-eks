@@ -1,5 +1,6 @@
 locals {
   oidc_fully_qualified_subjects = format("system:serviceaccount:%s:%s", var.namespace, var.serviceaccount)
+  oidc_url                      = trimprefix(var.oidc_url, "https://")
 }
 
 # security/policy
@@ -17,7 +18,10 @@ resource "aws_iam_role" "irsa" {
       }
       Condition = {
         StringEquals = {
-          format("%s:sub", var.oidc_url) = local.oidc_fully_qualified_subjects
+          "${local.oidc_url}:sub" = local.oidc_fully_qualified_subjects
+        },
+        StringEquals = {
+          "${local.oidc_url}:aud" = "sts.amazonaws.com"
         }
       }
     }]
