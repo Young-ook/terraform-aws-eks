@@ -15,6 +15,7 @@
 - [AWS Fault Injection Simulator with Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/fis)
 - [AWS Load Balancer Controller](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/lb)
 - [AWS Fault Injection Simulator with Amazon Aurora](https://github.com/Young-ook/terraform-aws-aurora/blob/main/examples/fis)
+- [Amazon EMR on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/emr)
 
 ## Getting started
 ### AWS CLI
