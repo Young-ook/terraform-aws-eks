@@ -38,6 +38,12 @@ variable "name" {
   default     = null
 }
 
+variable "path" {
+  description = "The path for role"
+  type        = string
+  default     = "/"
+}
+
 ### tags
 variable "tags" {
   description = "The key-value maps for tagging"
