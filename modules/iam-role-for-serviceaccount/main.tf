@@ -6,7 +6,7 @@ locals {
 resource "aws_iam_role" "irsa" {
   count = var.enabled ? 1 : 0
   name  = format("%s", local.name)
-  path  = "/"
+  path  = var.path
   tags  = merge(local.default-tags, var.tags)
   assume_role_policy = jsonencode({
     Statement = [{
