@@ -1,5 +1,17 @@
 variable "enabled" {
-  description = "A conditional indicator to enable cluster-autoscale"
+  description = "A conditional indicator to enable container-insights"
+  type        = bool
+  default     = true
+}
+
+variable "enable-logs" {
+  description = "A conditional indicator to enable logs"
+  type        = bool
+  default     = true
+}
+
+variable "enable-metrics" {
+  description = "A conditional indicator to enable metrics"
   type        = bool
   default     = true
 }

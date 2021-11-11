@@ -2,7 +2,7 @@
 
 module "irsa-metrics" {
   source         = "../iam-role-for-serviceaccount"
-  count          = var.enabled ? 1 : 0
+  count          = (var.enabled && var.enable-metrics) ? 1 : 0
   name           = join("-", compact(["irsa", var.cluster_name, "amazon-cloudwatch", local.suffix]))
   namespace      = "amazon-cloudwatch"
   serviceaccount = "amazon-cloudwatch"
@@ -13,7 +13,7 @@ module "irsa-metrics" {
 }
 
 resource "helm_release" "metrics" {
-  count            = var.enabled ? 1 : 0
+  count            = (var.enabled && var.enable-metrics) ? 1 : 0
   name             = "aws-cloudwatch-metrics"
   chart            = "aws-cloudwatch-metrics"
   version          = lookup(var.helm, "version", null)
@@ -37,7 +37,7 @@ resource "helm_release" "metrics" {
 
 module "irsa-logs" {
   source         = "../iam-role-for-serviceaccount"
-  count          = var.enabled ? 1 : 0
+  count          = (var.enabled && var.enable-logs) ? 1 : 0
   name           = join("-", compact(["irsa", var.cluster_name, "aws-for-fluent-bit", local.suffix]))
   namespace      = "kube-system"
   serviceaccount = "aws-for-fluent-bit"
@@ -48,7 +48,7 @@ module "irsa-logs" {
 }
 
 resource "helm_release" "logs" {
-  count           = var.enabled ? 1 : 0
+  count           = (var.enabled && var.enable-logs) ? 1 : 0
   name            = "aws-for-fluent-bit"
   chart           = "aws-for-fluent-bit"
   version         = lookup(var.helm, "version", null)
