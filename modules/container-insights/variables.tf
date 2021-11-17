@@ -1,13 +1,16 @@
-variable "enabled" {
-  description = "A conditional indicator to enable cluster-autoscale"
-  type        = bool
-  default     = true
+variable "features" {
+  description = "Toggle flags to enable cloudwatch features"
+  type        = map(any)
+  default = {
+    enable_metrics = false
+    enable_logs    = false
+  }
 }
 
 ### helm
 variable "helm" {
   description = "The helm release configuration"
-  type        = map
+  type        = map(any)
   default = {
     repository      = "https://aws.github.io/eks-charts"
     cleanup_on_fail = true
@@ -17,7 +20,7 @@ variable "helm" {
 ### security/policy
 variable "oidc" {
   description = "The Open ID Connect properties"
-  type        = map
+  type        = map(any)
 }
 
 ### description
