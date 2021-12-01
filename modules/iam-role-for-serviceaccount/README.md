@@ -34,6 +34,7 @@ ip-172-31-21-243.ap-northeast-2.compute.internal   Ready    <none>   15m   v1.16
 ```
 
 ### Verify
+#### Create service account
 Ensure the `iam-test` is created and `eks-iam-test` pod is running:
 ```
 cat  << EOF | kubectl apply -f -
@@ -43,21 +44,29 @@ metadata:
   name: iam-test
   namespace: default
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::14xxxxxxxx84:role/irsa-test-s3-readonly
+    eks.amazonaws.com/role-arn: arn:aws:iam::{replace with your aws account}:role/irsa-test-s3-readonly
 EOF
 ```
-```
-curl -LO https://eksworkshop.com/beginner/110_irsa/deploy.files/iam-pod.yaml
-kubectl apply -f iam-pod.yaml
-```
-Get into the pod and run aws-cli to see if retrives list of Amazon S3 buckets:
-```
-kubectl exec -it <Place Pod Name> bash
-aws s3 ls
-```
-Run aws-cli to see if it retrives list of Amazon EC2 instances which does not have privileges in the allocated IAM policy:
-```
-aws ec2 describe-instances --region ap-northeast-2
 
-An error occurred (UnauthorizedOperation) when calling the DescribeInstances operation: You are not authorized to perform this operation.
+#### Run test application
+Successfully created service account, you can deploy test application. This will run a pod to try to describe s3 bucket on your AWS account using aws-cli.
+```
+cat  << EOF | kubectl apply -f -
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: aws-cli
+spec:
+  template:
+    metadata:
+      labels:
+        app: aws-cli
+    spec:
+      serviceAccountName: iam-test
+      containers:
+      - name: aws-cli
+        image: amazon/aws-cli:latest
+        args: ["s3", "ls"]
+      restartPolicy: Never
+EOF
 ```
