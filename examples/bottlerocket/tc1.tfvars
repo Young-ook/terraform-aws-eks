@@ -14,7 +14,12 @@ managed_node_groups = [
     desired_size  = 1
     instance_type = "t3.small"
     ami_type      = "AL2_x86_64"
-  }
+  },
+  {
+    name          = "bottlerocket"
+    instance_type = "t3.small"
+    ami_type      = "BOTTLEROCKET_x86_64"
+  },
 ]
 node_groups = [
   {
@@ -29,7 +34,7 @@ node_groups = [
   {
     name          = "bottlerocket"
     instance_type = "t3.small"
-    ami_type      = "BR_x86_64"
+    ami_type      = "BOTTLEROCKET_x86_64"
   },
   {
     name          = "al2-gpu"
@@ -40,5 +45,5 @@ node_groups = [
     name          = "al2-arm"
     instance_type = "m6g.medium"
     ami_type      = "AL2_ARM_64"
-  }
+  },
 ]

@@ -21,6 +21,17 @@ terraform plan -var-file tc1.tfvars
 terraform apply -var-file tc1.tfvars
 ```
 
+## Launch Bottlerocket managed node group
+You can configure an AMI type for your (aws managed or self managed) node groups. For GPU instance types, you can set the `ami_type` parameter in the node group definition. GPU instance types should use the AL2_x86_64_GPU for its ami type or Non-GPU instances should use the AL2_x86_64. And ARM architecture based instance should use AL2_ARM_64.
+
+Possible values:
+- AL2_x86_64
+- AL2_x86_64_GPU
+- AL2_ARM_64
+- CUSTOM
+- BOTTLEROCKET_ARM_64
+- BOTTLEROCKET_x86_64
+
 ## Clean up
 To remove all infrastrcuture, run terraform:
 ```sh

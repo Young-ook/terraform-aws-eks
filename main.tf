@@ -130,7 +130,7 @@ data "aws_ami" "br" {
   }
   filter {
     name   = "architecture"
-    values = [length(regexall("ARM", lookup(each.value, "ami_type", "BR_x86_64"))) > 0 ? "arm64" : "x86_64"]
+    values = [length(regexall("ARM", lookup(each.value, "ami_type", "BOTTLEROCKET_x86_64"))) > 0 ? "arm64" : "x86_64"]
   }
 }
 
@@ -337,7 +337,7 @@ resource "aws_eks_node_group" "ng" {
   node_group_name = join("-", [aws_eks_cluster.cp.name, each.key])
   node_role_arn   = aws_iam_role.ng.0.arn
   subnet_ids      = local.subnet_ids
-  ami_type        = lookup(each.value, "ami_type", "AL2_x86_64") # available values ["AL2_x86_64", "AL2_x86_64_GPU", "AL2_ARM_64"]
+  ami_type        = lookup(each.value, "ami_type", "AL2_x86_64")
   instance_types  = [lookup(each.value, "instance_type", "m5.xlarge")]
   version         = aws_eks_cluster.cp.version
   tags            = merge(local.default-tags, var.tags)
