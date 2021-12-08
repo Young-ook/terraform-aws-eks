@@ -15,11 +15,6 @@ managed_node_groups = [
     instance_type = "t3.small"
     ami_type      = "AL2_x86_64"
   },
-  {
-    name          = "bottlerocket"
-    instance_type = "t3.small"
-    ami_type      = "BOTTLEROCKET_x86_64"
-  },
 ]
 node_groups = [
   {
