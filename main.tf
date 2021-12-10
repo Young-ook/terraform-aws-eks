@@ -156,6 +156,7 @@ data "template_file" "br" {
     admin_container_enabled      = lookup(var.bottlerocket_config, "admin_container_enabled", local.default_bottlerocket_config.admin_container_enabled)
     admin_container_superpowered = lookup(var.bottlerocket_config, "admin_container_superpowered", local.default_bottlerocket_config.admin_container_superpowered)
     admin_container_source       = lookup(var.bottlerocket_config, "admin_container_source", local.default_bottlerocket_config.admin_container_source)
+    control_container_enabled    = var.enable_ssm
   }
 }
 
