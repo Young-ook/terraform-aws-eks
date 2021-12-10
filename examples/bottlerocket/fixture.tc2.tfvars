@@ -17,7 +17,6 @@ managed_node_groups = [
     instance_type = "m6g.medium"
     ami_type      = "BOTTLEROCKET_ARM_64"
   },
-
 ]
 node_groups = [
   {

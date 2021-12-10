@@ -45,6 +45,11 @@ variable "enable_ssm" {
   default     = false
 }
 
+variable "bottlerocket_config" {
+  description = "Bottlerocket OS configuration"
+  default     = {}
+}
+
 ### security
 variable "policy_arns" {
   description = "A list of policy ARNs to attach the node groups role"

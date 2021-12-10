@@ -110,27 +110,17 @@ data "aws_ami" "eks" {
   most_recent = true
 
   filter {
-    name   = "name"
-    values = [format(length(regexall("ARM|GPU$", lookup(each.value, "ami_type", "AL2_x86_64"))) > 0 ? "amazon-eks-*-node-%s-*" : "amazon-eks-node-%s-*", var.kubernetes_version)]
+    name = "name"
+    values = [
+      format(length(regexall("^AL2", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
+        (length(regexall("ARM|GPU$", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ? "amazon-eks-*-node-%s-*" : "amazon-eks-node-%s-*") :
+        (length(regexall("^BOTTLEROCKET", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ? "bottlerocket-aws-k8s-%s-*" : "amazon-eks-node-%s-*")
+      , var.kubernetes_version)
+    ]
   }
   filter {
     name   = "architecture"
     values = [length(regexall("ARM", lookup(each.value, "ami_type", "AL2_x86_64"))) > 0 ? "arm64" : "x86_64"]
-  }
-}
-
-data "aws_ami" "br" {
-  for_each    = { for ng in var.node_groups : ng.name => ng }
-  owners      = ["amazon"]
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = [format("bottlerocket-aws-k8s-%s-*", var.kubernetes_version)]
-  }
-  filter {
-    name   = "architecture"
-    values = [length(regexall("ARM", lookup(each.value, "ami_type", "BOTTLEROCKET_x86_64"))) > 0 ? "arm64" : "x86_64"]
   }
 }
 
@@ -157,16 +147,15 @@ data "template_cloudinit_config" "ng" {
   }
 }
 
-data "template_file" "ng_br" {
-  for_each = { for ng in var.node_groups : ng.name => ng }
+data "template_file" "br" {
   template = file("${path.module}/templates/bottlerocket.tpl")
   vars = {
     cluster_name                 = aws_eks_cluster.cp.name
     cluster_endpoint             = aws_eks_cluster.cp.endpoint
     cluster_ca_data              = aws_eks_cluster.cp.certificate_authority.0.data
-    admin_container_enabled      = false
-    admin_container_superpowered = false
-    admin_container_source       = ""
+    admin_container_enabled      = lookup(var.bottlerocket_config, "admin_container_enabled", local.default_bottlerocket_config.admin_container_enabled)
+    admin_container_superpowered = lookup(var.bottlerocket_config, "admin_container_superpowered", local.default_bottlerocket_config.admin_container_superpowered)
+    admin_container_source       = lookup(var.bottlerocket_config, "admin_container_source", local.default_bottlerocket_config.admin_container_source)
   }
 }
 
@@ -174,9 +163,15 @@ resource "aws_launch_template" "ng" {
   for_each      = { for ng in var.node_groups : ng.name => ng }
   name          = format("eks-%s", uuid())
   tags          = merge(local.default-tags, local.eks-tag, var.tags)
-  image_id      = length(regexall("^AL2", lookup(each.value, "ami_type", "AL2_x86_64"))) > 0 ? data.aws_ami.eks[each.key].id : data.aws_ami.br[each.key].id
-  user_data     = base64encode(length(regexall("^AL2", lookup(each.value, "ami_type", "AL2_x86_64"))) > 0 ? data.template_cloudinit_config.ng[each.key].rendered : data.template_file.ng_br[each.key].rendered)
-  instance_type = lookup(each.value, "instance_type", "t3.medium")
+  image_id      = data.aws_ami.eks[each.key].id
+  instance_type = lookup(each.value, "instance_type", local.default_eks_config.instance_type)
+  user_data = (
+    length(regexall("^AL2", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
+    data.template_cloudinit_config.ng[each.key].rendered :
+    length(regexall("^BOTTLEROCKET", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
+    base64encode(data.template_file.br.rendered) :
+    data.template_cloudinit_config.ng[each.key].rendered
+  )
 
   iam_instance_profile {
     arn = aws_iam_instance_profile.ng.0.arn
@@ -305,24 +300,17 @@ data "template_cloudinit_config" "mng" {
   }
 }
 
-data "template_file" "mng_br" {
-  for_each = { for ng in var.managed_node_groups : ng.name => ng }
-  template = file("${path.module}/templates/bottlerocket.tpl")
-  vars = {
-    cluster_name                 = aws_eks_cluster.cp.name
-    cluster_endpoint             = aws_eks_cluster.cp.endpoint
-    cluster_ca_data              = aws_eks_cluster.cp.certificate_authority.0.data
-    admin_container_enabled      = false
-    admin_container_superpowered = false
-    admin_container_source       = ""
-  }
-}
-
 resource "aws_launch_template" "mng" {
-  for_each  = { for ng in var.managed_node_groups : ng.name => ng }
-  name      = format("eks-%s", uuid())
-  tags      = merge(local.default-tags, local.eks-tag, var.tags)
-  user_data = (length(regexall("^AL2", lookup(each.value, "ami_type", "AL2_x86_64"))) > 0) ? data.template_cloudinit_config.mng[each.key].rendered : base64encode(data.template_file.mng_br[each.key].rendered)
+  for_each = { for ng in var.managed_node_groups : ng.name => ng }
+  name     = format("eks-%s", uuid())
+  tags     = merge(local.default-tags, local.eks-tag, var.tags)
+  user_data = (
+    length(regexall("^AL2", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
+    data.template_cloudinit_config.mng[each.key].rendered :
+    length(regexall("^BOTTLEROCKET", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
+    base64encode(data.template_file.br.rendered) :
+    data.template_cloudinit_config.mng[each.key].rendered
+  )
 
   block_device_mappings {
     device_name = "/dev/xvda"
@@ -350,8 +338,8 @@ resource "aws_eks_node_group" "ng" {
   node_group_name = join("-", [aws_eks_cluster.cp.name, each.key])
   node_role_arn   = aws_iam_role.ng.0.arn
   subnet_ids      = local.subnet_ids
-  ami_type        = lookup(each.value, "ami_type", "AL2_x86_64")
-  instance_types  = [lookup(each.value, "instance_type", "m5.xlarge")]
+  ami_type        = lookup(each.value, "ami_type", local.default_eks_config.ami_type)
+  instance_types  = [lookup(each.value, "instance_type", local.default_eks_config.instance_type)]
   version         = aws_eks_cluster.cp.version
   tags            = merge(local.default-tags, var.tags)
 
