@@ -46,10 +46,13 @@ module "cluster-autoscaler" {
 
 module "container-insights" {
   source       = "Young-ook/eks/aws//modules/container-insights"
-  enabled      = false
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
+  features = {
+    enable_metrics = true
+    enable_logs    = true
+  }
 }
 
 module "metrics-server" {
