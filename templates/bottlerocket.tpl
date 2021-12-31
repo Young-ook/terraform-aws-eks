@@ -9,3 +9,6 @@ superpowered = ${admin_container_superpowered}
 %{ if admin_container_source != "" }
 source = "${admin_container_source}"
 %{ endif }
+
+[settings.host-containers.control]
+enabled = ${control_container_enabled}
