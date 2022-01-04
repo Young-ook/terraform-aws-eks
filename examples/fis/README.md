@@ -183,6 +183,8 @@ kubectl apply -f manifests/sockshop-demo-ha.yaml
 #### Rerun Experiment
 Back to the AWS FIS service page, and rerun the terminate eks nodes experiment against the target to ensure that the microservices application is working in the previously assumed steady state.
 
+![aws-fis-sockshop-with-ha](../../images/aws-fis-sockshop-with-ha.png)
+
 ### CPU Stress
 AWS FIS allows you to test resiliency of EKS cluster node groups. See what happens on your application when your EKS nodes (ec2 instances) has very high CPU utilization. This test verifies that the application on the EKS managed node group works properly even with increased CPU utilization.
 
