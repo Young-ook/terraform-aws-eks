@@ -1,5 +1,8 @@
 # Bottle Rocket OS
 
+![bottlerocket-security-first-container-host-os](../../images/bottlerocket-security-first-container-host-os.png)
+![bottlerocket-features](../../images/bottlerocket-features.png)
+
 ## Download example
 Download this example on your workspace
 ```sh
