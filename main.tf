@@ -340,6 +340,7 @@ resource "aws_eks_node_group" "ng" {
   node_role_arn   = aws_iam_role.ng.0.arn
   subnet_ids      = local.subnet_ids
   ami_type        = lookup(each.value, "ami_type", local.default_eks_config.ami_type)
+  capacity_type   = lookup(each.value, "capacity_type", local.default_eks_config.capacity_type)
   instance_types  = [lookup(each.value, "instance_type", local.default_eks_config.instance_type)]
   version         = aws_eks_cluster.cp.version
   tags            = merge(local.default-tags, var.tags)
