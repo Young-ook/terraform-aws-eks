@@ -17,6 +17,7 @@
 - [AWS Fault Injection Simulator with Amazon Aurora](https://github.com/Young-ook/terraform-aws-aurora/blob/main/examples/fis)
 - [Amazon EMR on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/emr)
 - [Amazon EKS with Bottlerocket OS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/bottlerocket)
+- [Amazon EKS Add-ons](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/addon)
 
 ## Getting started
 ### AWS CLI
