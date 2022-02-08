@@ -2,7 +2,6 @@
 variable "subnets" {
   description = "The list of subnet IDs to deploy your EKS cluster"
   type        = list(string)
-  default     = null
 }
 
 ### kubernetes cluster

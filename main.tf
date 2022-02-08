@@ -40,7 +40,7 @@ resource "aws_eks_cluster" "cp" {
   enabled_cluster_log_types = var.enabled_cluster_log_types
 
   vpc_config {
-    subnet_ids = local.subnet_ids
+    subnet_ids = var.subnets
   }
 
   depends_on = [
@@ -206,7 +206,7 @@ resource "aws_launch_template" "ng" {
 resource "aws_autoscaling_group" "ng" {
   for_each              = { for ng in var.node_groups : ng.name => ng }
   name                  = format("eks-%s", uuid())
-  vpc_zone_identifier   = local.subnet_ids
+  vpc_zone_identifier   = var.subnets
   max_size              = lookup(each.value, "max_size", 3)
   min_size              = lookup(each.value, "min_size", 1)
   desired_capacity      = lookup(each.value, "desired_size", 1)
@@ -338,7 +338,7 @@ resource "aws_eks_node_group" "ng" {
   cluster_name    = aws_eks_cluster.cp.name
   node_group_name = join("-", [aws_eks_cluster.cp.name, each.key])
   node_role_arn   = aws_iam_role.ng.0.arn
-  subnet_ids      = local.subnet_ids
+  subnet_ids      = var.subnets
   ami_type        = lookup(each.value, "ami_type", local.default_eks_config.ami_type)
   capacity_type   = lookup(each.value, "capacity_type", local.default_eks_config.capacity_type)
   instance_types  = [lookup(each.value, "instance_type", local.default_eks_config.instance_type)]
@@ -399,7 +399,7 @@ resource "aws_eks_fargate_profile" "fargate" {
   cluster_name           = aws_eks_cluster.cp.name
   fargate_profile_name   = each.key
   pod_execution_role_arn = aws_iam_role.fargate.0.arn
-  subnet_ids             = local.subnet_ids
+  subnet_ids             = var.subnets
   tags                   = merge(local.default-tags, var.tags)
 
   selector {
