@@ -1,3 +1,8 @@
+output "vpc" {
+  description = "The attributes of Amazon VPC"
+  value       = module.vpc.vpc
+}
+
 output "eks" {
   description = "The generated AWS EKS cluster"
   value       = module.eks.cluster

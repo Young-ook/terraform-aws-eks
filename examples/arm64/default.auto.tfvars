@@ -1,6 +1,7 @@
-aws_region = "ap-northeast-1"
-azs        = ["ap-northeast-1a", "ap-northeast-1c", "ap-northeast-1d"]
-name       = "eks-arm64"
+aws_region      = "ap-northeast-1"
+azs             = ["ap-northeast-1a", "ap-northeast-1c", "ap-northeast-1d"]
+use_default_vpc = true
+name            = "eks-arm64"
 tags = {
   env  = "dev"
   arch = "arm64"

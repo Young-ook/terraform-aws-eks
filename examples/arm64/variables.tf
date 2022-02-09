@@ -4,19 +4,16 @@
 variable "aws_region" {
   description = "The aws region to deploy"
   type        = string
-  default     = "us-east-1"
+}
+
+variable "use_default_vpc" {
+  description = "A feature flag for whether to use default vpc"
+  type        = bool
 }
 
 variable "azs" {
   description = "A list of availability zones for the vpc to deploy resources"
   type        = list(string)
-  default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
-}
-
-variable "subnets" {
-  description = "The list of subnets to deploy an eks cluster"
-  type        = list(string)
-  default     = null
 }
 
 ### kubernetes cluster
