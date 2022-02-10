@@ -124,7 +124,7 @@ data "aws_ami" "eks" {
   }
 }
 
-data "template_cloudinit_config" "ng" {
+data "cloudinit_config" "ng" {
   for_each      = { for ng in var.node_groups : ng.name => ng }
   base64_encode = true
   gzip          = false
@@ -147,18 +147,21 @@ data "template_cloudinit_config" "ng" {
   }
 }
 
-data "template_file" "br" {
-  template = file("${path.module}/templates/bottlerocket.tpl")
-  vars = {
-    cluster_name                 = aws_eks_cluster.cp.name
-    cluster_endpoint             = aws_eks_cluster.cp.endpoint
-    cluster_ca_data              = aws_eks_cluster.cp.certificate_authority.0.data
-    admin_container_enabled      = lookup(var.bottlerocket_config, "admin_container_enabled", local.default_bottlerocket_config.admin_container_enabled)
-    admin_container_superpowered = lookup(var.bottlerocket_config, "admin_container_superpowered", local.default_bottlerocket_config.admin_container_superpowered)
-    admin_container_source       = lookup(var.bottlerocket_config, "admin_container_source", local.default_bottlerocket_config.admin_container_source)
-    control_container_enabled    = var.enable_ssm
-  }
+locals {
+  template_file_br = templatefile(
+    "${path.module}/templates/bottlerocket.tpl",
+    {
+      cluster_name                 = aws_eks_cluster.cp.name
+      cluster_endpoint             = aws_eks_cluster.cp.endpoint
+      cluster_ca_data              = aws_eks_cluster.cp.certificate_authority.0.data
+      admin_container_enabled      = lookup(var.bottlerocket_config, "admin_container_enabled", local.default_bottlerocket_config.admin_container_enabled)
+      admin_container_superpowered = lookup(var.bottlerocket_config, "admin_container_superpowered", local.default_bottlerocket_config.admin_container_superpowered)
+      admin_container_source       = lookup(var.bottlerocket_config, "admin_container_source", local.default_bottlerocket_config.admin_container_source)
+      control_container_enabled    = var.enable_ssm
+    }
+  )
 }
+
 
 resource "aws_launch_template" "ng" {
   for_each      = { for ng in var.node_groups : ng.name => ng }
@@ -168,10 +171,10 @@ resource "aws_launch_template" "ng" {
   instance_type = lookup(each.value, "instance_type", local.default_eks_config.instance_type)
   user_data = (
     length(regexall("^AL2", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
-    data.template_cloudinit_config.ng[each.key].rendered :
+    data.cloudinit_config.ng[each.key].rendered :
     length(regexall("^BOTTLEROCKET", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
-    base64encode(data.template_file.br.rendered) :
-    data.template_cloudinit_config.ng[each.key].rendered
+    base64encode(local.template_file_br) :
+    data.cloudinit_config.ng[each.key].rendered
   )
 
   iam_instance_profile {
@@ -286,7 +289,7 @@ resource "aws_autoscaling_group" "ng" {
 
 # Render a multi-part cloud-init config making use of the part
 # above, and other source files
-data "template_cloudinit_config" "mng" {
+data "cloudinit_config" "mng" {
   for_each      = { for ng in var.managed_node_groups : ng.name => ng }
   base64_encode = true
   gzip          = false
@@ -307,10 +310,10 @@ resource "aws_launch_template" "mng" {
   tags     = merge(local.default-tags, local.eks-tag, var.tags)
   user_data = (
     length(regexall("^AL2", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
-    data.template_cloudinit_config.mng[each.key].rendered :
+    data.cloudinit_config.mng[each.key].rendered :
     length(regexall("^BOTTLEROCKET", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
-    base64encode(data.template_file.br.rendered) :
-    data.template_cloudinit_config.mng[each.key].rendered
+    base64encode(local.template_file_br) :
+    data.cloudinit_config.mng[each.key].rendered
   )
 
   block_device_mappings {
