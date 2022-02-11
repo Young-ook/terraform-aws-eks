@@ -129,6 +129,12 @@ data "cloudinit_config" "ng" {
   base64_encode = true
   gzip          = false
 
+  # Optional script which is executed prior to the remaining cloudinit_config
+  part {
+    content_type = "text/x-shellscript"
+    content      = lookup(each.value, "init_script", "")
+  }
+
   part {
     content_type = "text/x-shellscript"
     content      = <<-EOT
@@ -293,6 +299,12 @@ data "cloudinit_config" "mng" {
   for_each      = { for ng in var.managed_node_groups : ng.name => ng }
   base64_encode = true
   gzip          = false
+
+  # Optional script which is executed prior to the remaining cloudinit_config
+  part {
+    content_type = "text/x-shellscript"
+    content      = lookup(each.value, "init_script", "")
+  }
 
   # Main cloud-config configuration file.
   part {
