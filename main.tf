@@ -181,6 +181,8 @@ resource "aws_launch_template" "ng" {
   block_device_mappings {
     device_name = "/dev/xvda"
     ebs {
+      kms_key_id            = lookup(each.value, "kms_key_id", null)
+      encrypted             = lookup(each.value, "encrypted", null)
       volume_size           = lookup(each.value, "disk_size", "20")
       volume_type           = "gp2"
       delete_on_termination = true
@@ -316,6 +318,8 @@ resource "aws_launch_template" "mng" {
   block_device_mappings {
     device_name = "/dev/xvda"
     ebs {
+      kms_key_id            = lookup(each.value, "kms_key_id", null)
+      encrypted             = lookup(each.value, "encrypted", null)
       volume_size           = lookup(each.value, "disk_size", "20")
       volume_type           = "gp2"
       delete_on_termination = true
