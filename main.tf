@@ -344,6 +344,16 @@ resource "aws_eks_node_group" "ng" {
   instance_types  = [lookup(each.value, "instance_type", local.default_eks_config.instance_type)]
   version         = aws_eks_cluster.cp.version
   tags            = merge(local.default-tags, var.tags)
+  labels          = lookup(each.value, "labels", {})
+
+  dynamic "taint" {
+    for_each = lookup(each.value, "taints", {})
+    content {
+      key    = taint.value.key
+      value  = lookup(taint.value, "value")
+      effect = taint.value.effect
+    }
+  }
 
   scaling_config {
     max_size     = lookup(each.value, "max_size", 3)
