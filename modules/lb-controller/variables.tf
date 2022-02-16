@@ -36,6 +36,13 @@ variable "petname" {
   default     = true
 }
 
+# for fargate
+variable "vpc_id" {
+  description = "The vpc id to deploy your EKS Cluster"
+  type        = string
+  default     = null
+}
+
 ### tags
 variable "tags" {
   description = "The key-value maps for tagging"
