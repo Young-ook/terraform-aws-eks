@@ -39,6 +39,7 @@ resource "helm_release" "lbc" {
       "clusterName"                                               = var.cluster_name
       "serviceAccount.name"                                       = local.serviceaccount
       "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn[0]
+      "vpcId"                                                     = var.vpc_id
     }
     content {
       name  = set.key
