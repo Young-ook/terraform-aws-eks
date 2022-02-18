@@ -10,10 +10,9 @@ provider "aws" {
 
 # vpc
 module "vpc" {
-  source  = "Young-ook/sagemaker/aws//modules/vpc"
-  version = "> 0.0.6"
-  name    = var.name
-  tags    = var.tags
+  source = "Young-ook/vpc/aws"
+  name   = var.name
+  tags   = var.tags
   vpc_config = var.use_default_vpc ? null : {
     azs         = var.azs
     cidr        = "10.10.0.0/16"
