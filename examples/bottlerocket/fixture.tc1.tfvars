@@ -1,5 +1,6 @@
-aws_region = "ap-northeast-2"
-name       = "eks-bottlerocket-tc1"
+aws_region      = "ap-northeast-2"
+use_default_vpc = false
+name            = "eks-bottlerocket-tc1"
 tags = {
   env  = "dev"
   test = "tc1"
