@@ -18,6 +18,7 @@
 - [Amazon EMR on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/emr)
 - [Amazon EKS with Bottlerocket OS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/bottlerocket)
 - [Amazon EKS Add-ons](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/addon)
+- [Machine Learing with Kubeflow on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/kubeflow)
 
 ## Getting started
 ### AWS CLI
