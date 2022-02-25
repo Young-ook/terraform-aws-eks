@@ -58,6 +58,15 @@ Run below command to check the status
 kubectl -n kubeflow get all
 ```
 
+### Access Kubeflow dashboard
+Use port-forward to access Kubeflow dashboard.
+```
+kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80
+```
+
+Open `localhost:8080` in your favorite browswer. Click on **Start Setup**, and specify the namespace as *mykubeflow*
+![kubeflow-dashboard-first-look](../../images/kubeflow-dashboard-first-look.png)
+
 ## Clean up
 Undeploy kubeflow from your cluster:
 ```
