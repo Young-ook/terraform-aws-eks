@@ -39,6 +39,7 @@ resource "local_file" "kfinst" {
     aws_region = var.aws_region
     eks_name   = module.eks.cluster.name
     eks_role   = module.eks.role.arn
+    kubeconfig = module.eks.kubeconfig
   })
   filename        = "${path.module}/kfinst.sh"
   file_permission = "0700"

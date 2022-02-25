@@ -48,7 +48,7 @@ sudo mv -v /tmp/kfctl /usr/local/bin
 To install an alternate or newer version, visit the official project [repository](https://github.com/kubeflow/kfctl/tags) and download the archive what you want.
 
 ### Deploy Kubeflow
-You can see the bash command like below after terraform apply is complete. This is a bash script to install the kubeflow to the EKS cluster using the configuration file which is downloaed in the script.
+You will find *install* script on your current workspace after terraform apply is complete. That is a bash script to install the kubeflow to the EKS cluster.
 ```
 bash kfinst.sh
 ```
