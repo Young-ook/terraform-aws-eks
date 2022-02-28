@@ -64,10 +64,9 @@ Use port-forward to access Kubeflow dashboard.
 kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80
 ```
 
-Open `localhost:8080` in your favorite browswer. Click on **Start Setup**.
+Open `localhost:8080` in your favorite browswer. Click on *Start Setup* and then specify the namespace as *mykubeflow*
 ![kubeflow-setup-workspace](../../images/kubeflow-setup-workspace.png)
 
-Specify the namespace as *mykubeflow*
 ![kubeflow-dashboard-first-look](../../images/kubeflow-dashboard-first-look.png)
 
 ## Clean up
