@@ -7,7 +7,7 @@ variable "enabled" {
 ### helm
 variable "helm" {
   description = "The helm release configuration"
-  type        = map
+  type        = any
   default = {
     repository      = "https://aws.github.io/eks-charts"
     name            = "aws-load-balancer-controller"
@@ -15,13 +15,14 @@ variable "helm" {
     namespace       = "kube-system"
     serviceaccount  = "aws-load-balancer-controller"
     cleanup_on_fail = true
+    vars            = {}
   }
 }
 
 ### security/policy
 variable "oidc" {
   description = "The Open ID Connect properties"
-  type        = map
+  type        = map(any)
 }
 
 ### description
