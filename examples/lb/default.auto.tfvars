@@ -16,4 +16,8 @@ fargate_profiles = [
     name      = "default"
     namespace = "default"
   },
+  {
+    name      = "kube-system"
+    namespace = "kube-system"
+  },
 ]

@@ -43,8 +43,12 @@ provider "helm" {
 
 module "lb-controller" {
   source       = "../../modules/lb-controller"
-  enabled      = module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = var.tags
+  helm = {
+    vars = module.eks.features.fargate_enabled ? {
+      vpcId = module.vpc.vpc.id
+    } : {}
+  }
 }
