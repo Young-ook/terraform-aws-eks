@@ -10,17 +10,10 @@ tags = {
 }
 kubernetes_version  = "1.21"
 managed_node_groups = []
-node_groups = [
+node_groups         = []
+fargate_profiles = [
   {
-    name          = "spot"
-    min_size      = 1
-    max_size      = 3
-    desired_size  = 1
-    instance_type = "t3.large"
-    instances_distribution = {
-      spot_allocation_strategy = "lowest-price"
-      spot_max_price           = "0.036"
-    }
-  }
+    name      = "default"
+    namespace = "default"
+  },
 ]
-fargate_profiles = []
