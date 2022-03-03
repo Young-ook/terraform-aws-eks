@@ -17,6 +17,10 @@ variable "helm" {
     cleanup_on_fail = true
     vars            = {}
   }
+  validation {
+    condition     = var.helm.vars != null
+    error_message = "Additional helm variables must not be null."
+  }
 }
 
 ### security/policy
