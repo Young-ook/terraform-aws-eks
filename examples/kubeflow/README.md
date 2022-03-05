@@ -1,6 +1,8 @@
 # Kubeflow
 [Kubeflow](https://www.kubeflow.org/) provides a simple, portable, and scalable way of running Machine Learning workloads on Kubernetes.
 
+![kubeflow-platform-overview](../../images/kubeflow-platform-overview.png)
+
 ## Download example
 Download this example on your workspace
 ```sh
