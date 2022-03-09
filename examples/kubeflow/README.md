@@ -1,5 +1,6 @@
 # Kubeflow
 [Kubeflow](https://www.kubeflow.org/) provides a simple, portable, and scalable way of running Machine Learning workloads on Kubernetes.
+Below is the kubeflow platform diagram.
 
 ![kubeflow-platform-overview](../../images/kubeflow-platform-overview.png)
 
@@ -70,6 +71,9 @@ Open `localhost:8080` in your favorite browswer. Click on *Start Setup* and then
 ![kubeflow-setup-workspace](../../images/kubeflow-setup-workspace.png)
 
 ![kubeflow-dashboard-first-look](../../images/kubeflow-dashboard-first-look.png)
+
+### Kubeflow fairing
+Kubeflow fairing streamlines the process of building, training, and deploying machine learning (ML) training jobs in a hybrid cloud environment. By using Kubeflow fairing and adding a few lines of code, you can run your ML training job locally or in the cloud, directly from Python code or a Jupyter notebook. If you want to run hands-on lab about kubeflow fairing with AWS, please follow [the instructions](https://www.eksworkshop.com/advanced/420_kubeflow/fairing/).
 
 ## Clean up
 Undeploy kubeflow from your cluster:
