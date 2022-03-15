@@ -54,7 +54,7 @@ resource "helm_release" "autoscaler" {
     for_each = {
       "autoDiscovery.clusterName"                                 = var.cluster_name
       "serviceAccount.name"                                       = local.serviceaccount
-      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn[0]
+      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn
     }
     content {
       name  = set.key

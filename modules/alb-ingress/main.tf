@@ -123,7 +123,7 @@ resource "helm_release" "albingress" {
       "autoDiscoverAwsVpcID"                                           = true
       "clusterName"                                                    = var.cluster_name
       "rbac.serviceAccount.name"                                       = local.serviceaccount
-      "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn[0]
+      "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn
     }
     content {
       name  = set.key
