@@ -7,7 +7,7 @@ variable "enabled" {
 ### helm
 variable "helm" {
   description = "The helm release configuration"
-  type        = map(any)
+  type        = any
   default = {
     name            = "aws-alb-ingress-controller"
     repository      = "https://charts.helm.sh/incubator"

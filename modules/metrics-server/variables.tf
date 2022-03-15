@@ -7,7 +7,7 @@ variable "enabled" {
 ### helm
 variable "helm" {
   description = "The helm release configuration"
-  type        = map
+  type        = any
   default = {
     name            = "metrics-server"
     repository      = "https://charts.helm.sh/stable"
@@ -20,7 +20,7 @@ variable "helm" {
 ### security/policy
 variable "oidc" {
   description = "The Open ID Connect properties"
-  type        = map
+  type        = map(any)
 }
 
 ### description

@@ -7,6 +7,7 @@ variable "enabled" {
 ### helm
 variable "helm" {
   description = "The helm release configuration"
+  type        = any
   default = {
     name            = "aws-node-termination-handler"
     repository      = "https://aws.github.io/eks-charts"
@@ -20,7 +21,7 @@ variable "helm" {
 ### security/policy
 variable "oidc" {
   description = "The Open ID Connect properties"
-  type        = map
+  type        = map(any)
 }
 
 ### description
