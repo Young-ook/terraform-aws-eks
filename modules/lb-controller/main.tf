@@ -38,7 +38,7 @@ resource "helm_release" "lbc" {
     for_each = merge({
       "clusterName"                                               = var.cluster_name
       "serviceAccount.name"                                       = local.serviceaccount
-      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn[0]
+      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn
     }, lookup(var.helm, "vars", {}))
     content {
       name  = set.key
