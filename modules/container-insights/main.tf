@@ -32,7 +32,7 @@ resource "helm_release" "metrics" {
     for_each = {
       "clusterName"                                               = var.cluster_name
       "serviceAccount.name"                                       = "amazon-cloudwatch"
-      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa-metrics[0].arn[0]
+      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa-metrics[0].arn
     }
     content {
       name  = set.key
@@ -71,7 +71,7 @@ resource "helm_release" "logs" {
       "kinesis.enabled"                                           = false
       "elasticsearch.enabled"                                     = false
       "serviceAccount.name"                                       = "aws-for-fluent-bit"
-      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa-logs[0].arn[0]
+      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa-logs[0].arn
     }
     content {
       name  = set.key

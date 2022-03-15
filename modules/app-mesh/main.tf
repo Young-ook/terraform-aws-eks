@@ -34,7 +34,7 @@ resource "helm_release" "appmesh" {
     for_each = {
       "region"                                                    = data.aws_region.current.0.name
       "serviceAccount.name"                                       = local.serviceaccount
-      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn[0]
+      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn
       "tracing.enabled"                                           = true
       "tracing.provider"                                          = "x-ray"
     }
