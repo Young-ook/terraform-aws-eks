@@ -9,10 +9,11 @@ variable "helm" {
   description = "The helm release configuration"
   type        = any
   default = {
-    name            = "cluster-autoscaler"
-    chart           = "cluster-autoscaler"
-    namespace       = "kube-system"
-    serviceaccount  = "cluster-autoscaler"
+    name            = "karpenter"
+    repository      = "https://charts.karpenter.sh"
+    chart           = "karpenter"
+    namespace       = "karpenter"
+    serviceaccount  = "karpenter"
     cleanup_on_fail = true
     vars            = {}
   }
