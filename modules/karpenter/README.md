@@ -2,7 +2,8 @@
 [Karpenter](https://github.com/aws/karpenter) is an open-source node provisioning project built for Kubernetes. Its goal is to improve the efficiency and cost of running workloads on Kubernetes clusters. Check out the [docs](https://karpenter.sh/) to learn more.
 
 ## Examples
-- [Amazon EKS Autoscaling](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/autoscaling/)
+- [Introducing Karpenter](https://aws.amazon.com/blogs/aws/introducing-karpenter-an-open-source-high-performance-kubernetes-cluster-autoscaler/)
+- [Implement autoscaling with Karpenter](https://www.eksworkshop.com/beginner/085_scaling_karpenter/)
 
 ## Quickstart
 ### Setup
