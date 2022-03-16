@@ -24,7 +24,6 @@ provider "helm" {
 
 module "karpenter" {
   source       = "Young-ook/eks/aws//modules/kerpenter"
-  cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
 }
 ```
