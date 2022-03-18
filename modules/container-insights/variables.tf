@@ -10,7 +10,7 @@ variable "features" {
 ### helm
 variable "helm" {
   description = "The helm release configuration"
-  type        = map(any)
+  type        = any
   default = {
     repository      = "https://aws.github.io/eks-charts"
     cleanup_on_fail = true
