@@ -20,6 +20,7 @@ module "irsa" {
 resource "aws_iam_policy" "lbc" {
   count       = var.enabled ? 1 : 0
   name        = local.name
+  tags        = merge(local.default-tags, var.tags)
   description = format("Allow aws-load-balancer-controller to manage AWS resources")
   path        = "/"
   policy      = file("${path.module}/policy.json")
