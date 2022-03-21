@@ -15,6 +15,7 @@ variable "helm" {
     namespace       = "kube-system"
     serviceaccount  = "aws-load-balancer-controller"
     cleanup_on_fail = true
+    vars            = {}
   }
 }
 
