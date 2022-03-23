@@ -71,7 +71,13 @@ terraform init
 terraform apply
 ```
 ## Generate kubernetes config
-This terraform module provides users with a shell script that extracts the kubeconfig file of the EKS cluster. When users run the terraform init command in their workspace, the script is downloaded with the terraform module from the terraform registry. User can see how to run this script in terraform output after terraform apply command completes successfully. Using this script, users can easily obtain a kubeconfig file. So, they can use this kubeconfig file for access to the EKS cluster (with Spinnaker). The original script is here [update-kubeconfig.sh](https://github.com/Young-ook/terraform-aws-eks/blob/main/script/update-kubeconfig.sh) and users can check out the details of the script.
+This terraform module provides users with a shell script that extracts the kubeconfig file of the EKS cluster. When users run the terraform init command in their workspace, the script is downloaded with the terraform module from the terraform registry. And After terraform apply, a user can see how to run this script in terraform output, and it looks like below. To download the kubernetes config file into your (local) workspace, copy the bash shell from the terraform outputs and export the downloaded file as an environment variable.
+```
+bash -e .terraform/modules/eks/script/update-kubeconfig.sh -r ap-northeast-2 -n eks-example -k kubeconfig
+export KUBECONFIG=kubeconfig
+```
+
+Using this script, you can easily obtain a kubeconfig file for access the their EKS cluster. For your information, the original script is here [update-kubeconfig.sh](https://github.com/Young-ook/terraform-aws-eks/blob/main/script/update-kubeconfig.sh) and you can check out the details of the script.
 
 **[Important]** Before you run this script you must configure your local environment to have proper permission to get the credentials from EKS cluster on your AWS account whatever you are using aws-cli or aws-vault.
 
