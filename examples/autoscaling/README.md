@@ -8,7 +8,7 @@ cd terraform-aws-eks/examples/autoscaling
 ```
 
 ## Setup
-[This](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/autoscaling/main.tf) is the example of terraform configuration file to create a managed EKS on your AWS account. Check out and apply it using terraform command.
+[This](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/autoscaling/main.tf) is the example of terraform configuration file to create a managed EKS on your AWS account. Check out and apply it using terraform command. If you don't have the terraform and kubernetes tools in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions before you move to the next step.
 
 Run terraform:
 ```
@@ -21,10 +21,20 @@ terraform plan -var-file tc1.tfvars
 terraform apply -var-file tc1.tfvars
 ```
 
+### Update kubeconfig
+We need to get kubernetes config file for access the cluster that we've made using terraform. After terraform apply, you will see the bash command on the outputs. For more details, please refer to the [user guide](https://github.com/Young-ook/terraform-aws-eks#generate-kubernetes-config). 
+
 ## Horizontal Pod Autoscaler (HPA)
 The [Horizontal Pod Autoscaler](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) automatically scales the number of Pods in a replication controller, deployment, replica set or stateful set based on observed CPU utilization.
 
-This example requires a running Kubernetes cluster and kubectl. [Metrics server](https://github.com/kubernetes-sigs/metrics-server) monitoring needs to be deployed in the cluster to provide metrics through the [Metrics API](https://github.com/kubernetes/metrics). Horizontal Pod Autoscaler uses this API to collect metrics. To learn how to deploy the metrics-server, see the metrics-server documentation.
+### Metric server
+[Metrics server](https://github.com/kubernetes-sigs/metrics-server) monitoring needs to be deployed in the cluster to provide metrics through the [Metrics API](https://github.com/kubernetes/metrics). Horizontal Pod Autoscaler uses this API to collect metrics. To learn how to deploy the metrics-server, see the metrics-server documentation.
+
+To confirm that metric server pods are running on your cluster, run following command. And the output is similar to the following:
+```
+kubectl get pods -n kube-system -l k8s-app=metrics-server
+metrics-server-85cc795fbf-79d72   1/1     Running   0          22s
+```
 
 ### PHP application
 First, we will start a deployment running the image and expose it as a service. Run the following command:
