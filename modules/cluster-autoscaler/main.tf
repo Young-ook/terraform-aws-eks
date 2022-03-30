@@ -51,11 +51,11 @@ resource "helm_release" "autoscaler" {
   cleanup_on_fail  = lookup(var.helm, "cleanup_on_fail", true)
 
   dynamic "set" {
-    for_each = {
+    for_each = merge({
       "autoDiscovery.clusterName"                                 = var.cluster_name
       "serviceAccount.name"                                       = local.serviceaccount
       "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn
-    }
+    }, lookup(var.helm, "vars", {}))
     content {
       name  = set.key
       value = set.value

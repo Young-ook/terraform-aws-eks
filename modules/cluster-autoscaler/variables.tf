@@ -14,6 +14,7 @@ variable "helm" {
     namespace       = "kube-system"
     serviceaccount  = "cluster-autoscaler"
     cleanup_on_fail = true
+    vars            = {}
   }
 }
 
