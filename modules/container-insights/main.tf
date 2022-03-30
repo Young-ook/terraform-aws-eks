@@ -63,7 +63,7 @@ resource "helm_release" "logs" {
   cleanup_on_fail = lookup(var.helm, "cleanup_on_fail", true)
 
   dynamic "set" {
-    for_each = {
+    for_each = merge({
       "cloudWatch.enabled"                                        = true
       "cloudWatch.region"                                         = data.aws_region.current.0.name
       "cloudWatch.logGroupName"                                   = format("/aws/containerinsights/%s/application", var.cluster_name)
@@ -72,7 +72,7 @@ resource "helm_release" "logs" {
       "elasticsearch.enabled"                                     = false
       "serviceAccount.name"                                       = "aws-for-fluent-bit"
       "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa-logs[0].arn
-    }
+    }, lookup(var.helm, "vars", {}))
     content {
       name  = set.key
       value = set.value
