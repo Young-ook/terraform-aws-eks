@@ -9,6 +9,7 @@ kubernetes_version = "1.21"
 managed_node_groups = [
   {
     name          = "default"
+    desired_size  = 2
     max_size      = 6
     instance_type = "t3.small"
   }

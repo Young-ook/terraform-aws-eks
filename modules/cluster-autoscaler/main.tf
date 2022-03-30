@@ -7,18 +7,16 @@ locals {
 
 module "irsa" {
   source         = "../iam-role-for-serviceaccount"
-  count          = var.enabled ? 1 : 0
   name           = join("-", ["irsa", local.name])
   namespace      = local.namespace
   serviceaccount = local.serviceaccount
   oidc_url       = var.oidc.url
   oidc_arn       = var.oidc.arn
-  policy_arns    = [aws_iam_policy.autoscaler.0.arn]
+  policy_arns    = [aws_iam_policy.autoscaler.arn]
   tags           = var.tags
 }
 
 resource "aws_iam_policy" "autoscaler" {
-  count       = var.enabled ? 1 : 0
   name        = local.name
   description = format("Allow cluster-autoscaler to manage AWS resources")
   path        = "/"
@@ -41,7 +39,6 @@ resource "aws_iam_policy" "autoscaler" {
 }
 
 resource "helm_release" "autoscaler" {
-  count            = var.enabled ? 1 : 0
   name             = lookup(var.helm, "name", "cluster-autoscaler")
   chart            = lookup(var.helm, "chart", "cluster-autoscaler")
   version          = lookup(var.helm, "version", null)
@@ -54,7 +51,7 @@ resource "helm_release" "autoscaler" {
     for_each = merge({
       "autoDiscovery.clusterName"                                 = var.cluster_name
       "serviceAccount.name"                                       = local.serviceaccount
-      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn
+      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa.arn
     }, lookup(var.helm, "vars", {}))
     content {
       name  = set.key

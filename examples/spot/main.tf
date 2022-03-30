@@ -51,7 +51,6 @@ module "metrics-server" {
 
 module "cluster-autoscaler" {
   source       = "Young-ook/eks/aws//modules/cluster-autoscaler"
-  enabled      = false
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
