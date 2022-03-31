@@ -15,6 +15,7 @@ variable "helm" {
     namespace       = "appmesh-system"
     serviceaccount  = "aws-appmesh-controller"
     cleanup_on_fail = true
+    vars            = {}
   }
 }
 

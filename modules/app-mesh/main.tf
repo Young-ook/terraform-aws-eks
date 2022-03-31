@@ -31,13 +31,13 @@ resource "helm_release" "appmesh" {
   cleanup_on_fail  = lookup(var.helm, "cleanup_on_fail", true)
 
   dynamic "set" {
-    for_each = {
+    for_each = merge({
       "region"                                                    = data.aws_region.current.0.name
       "serviceAccount.name"                                       = local.serviceaccount
       "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn
       "tracing.enabled"                                           = true
       "tracing.provider"                                          = "x-ray"
-    }
+    }, lookup(var.helm, "vars", {}))
     content {
       name  = set.key
       value = set.value
