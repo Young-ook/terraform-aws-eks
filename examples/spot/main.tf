@@ -59,7 +59,6 @@ module "cluster-autoscaler" {
 
 module "node-termination-handler" {
   source       = "../../modules/node-termination-handler"
-  enabled      = true
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }

@@ -6,7 +6,6 @@ locals {
 }
 
 resource "helm_release" "node-termination-handler" {
-  count           = var.enabled ? 1 : 0
   name            = lookup(var.helm, "name", "aws-node-termination-handler")
   chart           = lookup(var.helm, "chart", "aws-node-termination-handler")
   version         = lookup(var.helm, "version", null)
