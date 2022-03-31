@@ -7,18 +7,16 @@ locals {
 
 module "irsa" {
   source         = "../iam-role-for-serviceaccount"
-  count          = var.enabled ? 1 : 0
   name           = join("-", ["irsa", local.name])
   namespace      = local.namespace
   serviceaccount = local.serviceaccount
   oidc_url       = var.oidc.url
   oidc_arn       = var.oidc.arn
-  policy_arns    = [aws_iam_policy.albingress.0.arn]
+  policy_arns    = [aws_iam_policy.albingress.arn]
   tags           = var.tags
 }
 
 resource "aws_iam_policy" "albingress" {
-  count       = var.enabled ? 1 : 0
   name        = local.name
   description = format("Allow alb-ingress-controller to manage AWS resources")
   path        = "/"
@@ -109,7 +107,6 @@ resource "aws_iam_policy" "albingress" {
 }
 
 resource "helm_release" "albingress" {
-  count           = var.enabled ? 1 : 0
   name            = lookup(var.helm, "name", "aws-alb-ingress-controller")
   chart           = lookup(var.helm, "chart", "aws-alb-ingress-controller")
   version         = lookup(var.helm, "version", null)
@@ -123,7 +120,7 @@ resource "helm_release" "albingress" {
       "autoDiscoverAwsVpcID"                                           = true
       "clusterName"                                                    = var.cluster_name
       "rbac.serviceAccount.name"                                       = local.serviceaccount
-      "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn
+      "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa.arn
     }, lookup(var.helm, "vars", {}))
     content {
       name  = set.key
