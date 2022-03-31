@@ -1,4 +1,9 @@
-## kubernetes appmesh
+## kubernetes aws-app-mesh-controller
+
+# aws partitions
+module "aws" {
+  source = "Young-ook/spinnaker/aws//modules/aws-partitions"
+}
 
 locals {
   namespace      = lookup(var.helm, "namespace", "appmesh-system")
@@ -13,8 +18,8 @@ module "irsa" {
   oidc_url       = var.oidc.url
   oidc_arn       = var.oidc.arn
   policy_arns = [
-    format("arn:%s:iam::aws:policy/AWSCloudMapFullAccess", data.aws_partition.current.partition),
-    format("arn:%s:iam::aws:policy/AWSAppMeshFullAccess", data.aws_partition.current.partition),
+    format("arn:%s:iam::aws:policy/AWSCloudMapFullAccess", module.aws.partition.partition),
+    format("arn:%s:iam::aws:policy/AWSAppMeshFullAccess", module.aws.partition.partition),
   ]
   tags = var.tags
 }
@@ -30,7 +35,7 @@ resource "helm_release" "appmesh" {
 
   dynamic "set" {
     for_each = merge({
-      "region"                                                    = data.aws_region.current.name
+      "region"                                                    = module.aws.region.name
       "serviceAccount.name"                                       = local.serviceaccount
       "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa.arn
       "tracing.enabled"                                           = true
