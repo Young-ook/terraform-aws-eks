@@ -1,3 +1,4 @@
+### deprecated
 resource "random_string" "albingress-suffix" {
   length  = 5
   upper   = false

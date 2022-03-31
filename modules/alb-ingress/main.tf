@@ -1,3 +1,4 @@
+### deprecated
 ## kubernetes alb-ingress
 
 locals {

@@ -1,3 +1,4 @@
+### deprecated
 ### helm
 variable "helm" {
   description = "The helm release configuration"
