@@ -14,6 +14,7 @@ variable "helm" {
     chart           = "aws-alb-ingress-controller"
     namespace       = "kube-system"
     cleanup_on_fail = true
+    vars            = {}
   }
 }
 
