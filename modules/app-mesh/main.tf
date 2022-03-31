@@ -7,21 +7,19 @@ locals {
 
 module "irsa" {
   source         = "../iam-role-for-serviceaccount"
-  count          = var.enabled ? 1 : 0
   name           = join("-", ["irsa", local.name])
   namespace      = local.namespace
   serviceaccount = local.serviceaccount
   oidc_url       = var.oidc.url
   oidc_arn       = var.oidc.arn
   policy_arns = [
-    format("arn:%s:iam::aws:policy/AWSCloudMapFullAccess", data.aws_partition.current.0.partition),
-    format("arn:%s:iam::aws:policy/AWSAppMeshFullAccess", data.aws_partition.current.0.partition),
+    format("arn:%s:iam::aws:policy/AWSCloudMapFullAccess", data.aws_partition.current.partition),
+    format("arn:%s:iam::aws:policy/AWSAppMeshFullAccess", data.aws_partition.current.partition),
   ]
   tags = var.tags
 }
 
 resource "helm_release" "appmesh" {
-  count            = var.enabled ? 1 : 0
   name             = lookup(var.helm, "name", "appmesh-controller")
   chart            = lookup(var.helm, "chart", "appmesh-controller")
   version          = lookup(var.helm, "version", null)
@@ -32,9 +30,9 @@ resource "helm_release" "appmesh" {
 
   dynamic "set" {
     for_each = merge({
-      "region"                                                    = data.aws_region.current.0.name
+      "region"                                                    = data.aws_region.current.name
       "serviceAccount.name"                                       = local.serviceaccount
-      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[0].arn
+      "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa.arn
       "tracing.enabled"                                           = true
       "tracing.provider"                                          = "x-ray"
     }, lookup(var.helm, "vars", {}))
