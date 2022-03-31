@@ -14,7 +14,7 @@ resource "helm_release" "node-termination-handler" {
   cleanup_on_fail = lookup(var.helm, "cleanup_on_fail", true)
 
   dynamic "set" {
-    for_each = merge({}, lookup(var.helm, "values", {}))
+    for_each = merge({}, lookup(var.helm, "vars", {}))
     content {
       name  = set.key
       value = set.value

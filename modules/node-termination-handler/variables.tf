@@ -9,6 +9,7 @@ variable "helm" {
     namespace       = "kube-system"
     serviceaccount  = "aws-node-termination-handler"
     cleanup_on_fail = true
+    vars            = {}
   }
 }
 
