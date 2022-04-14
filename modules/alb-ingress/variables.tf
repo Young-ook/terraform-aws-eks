@@ -1,9 +1,4 @@
-variable "enabled" {
-  description = "A conditional indicator to enable cluster-autoscale"
-  type        = bool
-  default     = true
-}
-
+### deprecated
 ### helm
 variable "helm" {
   description = "The helm release configuration"
@@ -14,6 +9,7 @@ variable "helm" {
     chart           = "aws-alb-ingress-controller"
     namespace       = "kube-system"
     cleanup_on_fail = true
+    vars            = {}
   }
 }
 
