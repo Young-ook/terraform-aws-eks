@@ -6,7 +6,6 @@ locals {
 }
 
 resource "helm_release" "metrics" {
-  count           = var.enabled ? 1 : 0
   name            = lookup(var.helm, "name", "metrics-server")
   chart           = lookup(var.helm, "chart", "metrics-server")
   version         = lookup(var.helm, "version", null)

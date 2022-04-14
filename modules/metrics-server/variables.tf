@@ -1,9 +1,3 @@
-variable "enabled" {
-  description = "A conditional indicator to enable metrics-server"
-  type        = bool
-  default     = true
-}
-
 ### helm
 variable "helm" {
   description = "The helm release configuration"
