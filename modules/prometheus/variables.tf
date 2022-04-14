@@ -12,6 +12,7 @@ variable "helm" {
       "server.persistentVolume.storageClass"       = "gp2"
     }
     cleanup_on_fail = true
+    vars            = {}
   }
 }
 

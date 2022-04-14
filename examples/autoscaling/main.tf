@@ -84,7 +84,7 @@ module "prometheus" {
   oidc         = module.eks.oidc
   tags         = { env = "test" }
   helm = {
-    values = {
+    vars = {
       "alertmanager.persistentVolume.storageClass" = "gp2"
       "server.persistentVolume.storageClass"       = "gp2"
     }
