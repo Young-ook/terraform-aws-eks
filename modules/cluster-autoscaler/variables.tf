@@ -1,9 +1,3 @@
-variable "enabled" {
-  description = "A conditional indicator to enable cluster-autoscale"
-  type        = bool
-  default     = true
-}
-
 ### helm
 variable "helm" {
   description = "The helm release configuration"
@@ -14,6 +8,7 @@ variable "helm" {
     namespace       = "kube-system"
     serviceaccount  = "cluster-autoscaler"
     cleanup_on_fail = true
+    vars            = {}
   }
 }
 

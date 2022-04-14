@@ -51,8 +51,8 @@ module "alb-ingress" {
 }
 
 module "cluster-autoscaler" {
+  for_each     = toset(module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled ? ["enabled"] : [])
   source       = "Young-ook/eks/aws//modules/cluster-autoscaler"
-  enabled      = module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
