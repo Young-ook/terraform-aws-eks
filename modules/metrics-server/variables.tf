@@ -8,6 +8,7 @@ variable "helm" {
     chart           = "metrics-server"
     namespace       = "kube-system"
     cleanup_on_fail = true
+    vars            = {}
   }
 }
 

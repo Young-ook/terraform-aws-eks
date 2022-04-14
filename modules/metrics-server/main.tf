@@ -14,9 +14,9 @@ resource "helm_release" "metrics" {
   cleanup_on_fail = lookup(var.helm, "cleanup_on_fail", true)
 
   dynamic "set" {
-    for_each = {
+    for_each = merge({
       "args[0]" = "--kubelet-preferred-address-types=InternalIP"
-    }
+    }, lookup(var.helm, "vars", {}))
     content {
       name  = set.key
       value = set.value
