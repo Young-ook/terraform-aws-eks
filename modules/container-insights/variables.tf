@@ -14,6 +14,7 @@ variable "helm" {
   default = {
     repository      = "https://aws.github.io/eks-charts"
     cleanup_on_fail = true
+    vars            = {}
   }
 }
 
