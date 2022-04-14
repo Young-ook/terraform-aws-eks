@@ -1,9 +1,3 @@
-variable "enabled" {
-  description = "A conditional indicator to enable prometheus"
-  type        = bool
-  default     = true
-}
-
 ### helm
 variable "helm" {
   description = "The helm release configuration"
@@ -18,6 +12,7 @@ variable "helm" {
       "server.persistentVolume.storageClass"       = "gp2"
     }
     cleanup_on_fail = true
+    vars            = {}
   }
 }
 

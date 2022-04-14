@@ -70,21 +70,21 @@ module "container-insights" {
 }
 
 module "metrics-server" {
+  for_each     = toset(module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled ? ["enabled"] : [])
   source       = "Young-ook/eks/aws//modules/metrics-server"
-  enabled      = module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
 }
 
 module "prometheus" {
+  for_each     = toset(module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled ? ["enabled"] : [])
   source       = "../../modules/prometheus"
-  enabled      = module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
   helm = {
-    values = {
+    vars = {
       "alertmanager.persistentVolume.storageClass" = "gp2"
       "server.persistentVolume.storageClass"       = "gp2"
     }

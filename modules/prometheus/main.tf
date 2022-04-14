@@ -6,7 +6,6 @@ locals {
 }
 
 resource "helm_release" "prometheus" {
-  count            = var.enabled ? 1 : 0
   name             = lookup(var.helm, "name", "prometheus")
   chart            = lookup(var.helm, "chart", "prometheus")
   version          = lookup(var.helm, "version", null)
@@ -16,7 +15,7 @@ resource "helm_release" "prometheus" {
   cleanup_on_fail  = lookup(var.helm, "cleanup_on_fail", true)
 
   dynamic "set" {
-    for_each = merge({}, lookup(var.helm, "values", {}))
+    for_each = merge({}, lookup(var.helm, "vars", {}))
     content {
       name  = set.key
       value = set.value
