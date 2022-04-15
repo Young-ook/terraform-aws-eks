@@ -5,15 +5,10 @@ terraform {
 }
 
 provider "aws" {
-  alias  = "codebuild"
-  region = "ap-northeast-1"
-}
-
-provider "aws" {
   region = var.aws_region
 }
 
-# vpc
+### network/vpc
 module "vpc" {
   source = "Young-ook/vpc/aws"
   name   = var.name
@@ -26,7 +21,7 @@ module "vpc" {
   }
 }
 
-# eks
+### cluster/eks
 module "eks" {
   source              = "Young-ook/eks/aws"
   name                = var.name
@@ -35,4 +30,12 @@ module "eks" {
   kubernetes_version  = var.kubernetes_version
   managed_node_groups = var.managed_node_groups
   node_groups         = var.node_groups
+}
+
+### artifact/ecr
+module "ecr" {
+  providers    = { aws = aws.codebuild }
+  source       = "Young-ook/eks/aws//modules/ecr"
+  name         = "hello-nodejs"
+  scan_on_push = false
 }

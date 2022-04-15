@@ -1,14 +1,11 @@
 # build container image
 
-### ecr
-module "ecr" {
-  providers    = { aws = aws.codebuild }
-  source       = "Young-ook/eks/aws//modules/ecr"
-  name         = "hello-nodejs"
-  scan_on_push = false
+provider "aws" {
+  alias  = "codebuild"
+  region = "ap-northeast-1"
 }
 
-### codebuild
+### pipeline/cb
 locals {
   stages             = ["amd64", "arm64", "manifest"]
   image_al2_aarch64  = "aws/codebuild/amazonlinux2-aarch64-standard:2.0"
