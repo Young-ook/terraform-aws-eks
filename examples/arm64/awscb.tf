@@ -18,7 +18,7 @@ module "cb" {
   providers = { aws = aws.codebuild }
   for_each  = toset(local.stages)
   source    = "Young-ook/spinnaker/aws//modules/codebuild"
-  version   = "~> 2.0"
+  version   = "2.2.6"
   name      = join("-", ["hello-nodejs", each.key])
   tags      = var.tags
   environment_config = {
