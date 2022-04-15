@@ -44,7 +44,6 @@ provider "helm" {
 
 module "alb-ingress" {
   source       = "Young-ook/eks/aws//modules/alb-ingress"
-  enabled      = false
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }

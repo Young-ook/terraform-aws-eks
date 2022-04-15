@@ -43,7 +43,6 @@ provider "helm" {
 
 module "metrics-server" {
   source       = "Young-ook/eks/aws//modules/metrics-server"
-  enabled      = true
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
