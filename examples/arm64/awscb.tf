@@ -1,14 +1,17 @@
 # build container image
 
-### ecr
-module "ecr" {
-  providers    = { aws = aws.codebuild }
-  source       = "Young-ook/eks/aws//modules/ecr"
-  name         = "hello-nodejs"
-  scan_on_push = false
+# This seperate provider is no longer required in this example,
+# because this example tested on ap-northeast-2 (seoul) and it supports arm64 architectre
+# with ECR, ECR, EKS, CodeBuild now. if you want to run this example on other regions,
+# please check below before you begin.
+# (https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html)
+
+provider "aws" {
+  alias  = "codebuild"
+  region = "ap-northeast-1"
 }
 
-### codebuild
+### pipeline/cb
 locals {
   stages             = ["amd64", "arm64", "manifest"]
   image_al2_aarch64  = "aws/codebuild/amazonlinux2-aarch64-standard:2.0"
@@ -18,12 +21,11 @@ locals {
 }
 
 module "cb" {
-  providers = { aws = aws.codebuild }
-  for_each  = toset(local.stages)
-  source    = "Young-ook/spinnaker/aws//modules/codebuild"
-  version   = "~> 2.0"
-  name      = join("-", ["hello-nodejs", each.key])
-  tags      = var.tags
+  for_each = toset(local.stages)
+  source   = "Young-ook/spinnaker/aws//modules/codebuild"
+  version  = "2.2.6"
+  name     = join("-", ["hello-nodejs", each.key])
+  tags     = var.tags
   environment_config = {
     type            = each.key == "arm64" ? "ARM_CONTAINER" : "LINUX_CONTAINER"
     compute_type    = "BUILD_GENERAL1_LARGE"
