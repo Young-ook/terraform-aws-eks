@@ -1,6 +1,13 @@
-module "current" {
-  source  = "Young-ook/spinnaker/aws//modules/aws-partitions"
-  version = ">= 2.0"
+module "aws" {
+  source = "Young-ook/spinnaker/aws//modules/aws-partitions"
+}
+
+locals {
+  aws = {
+    dns       = module.aws.partition.dns_suffix
+    partition = module.aws.partition.partition
+    region    = module.aws.region.name
+  }
 }
 
 resource "aws_iam_role" "fis-run" {
@@ -11,7 +18,7 @@ resource "aws_iam_role" "fis-run" {
       Action = "sts:AssumeRole"
       Effect = "Allow"
       Principal = {
-        Service = [format("fis.%s", module.current.partition.dns_suffix)]
+        Service = [format("fis.%s", local.aws.dns)]
       }
     }]
     Version = "2012-10-17"
@@ -19,7 +26,7 @@ resource "aws_iam_role" "fis-run" {
 }
 
 resource "aws_iam_role_policy_attachment" "fis-run" {
-  policy_arn = format("arn:%s:iam::aws:policy/PowerUserAccess", module.current.partition.partition)
+  policy_arn = format("arn:%s:iam::aws:policy/PowerUserAccess", local.aws.partition)
   role       = aws_iam_role.fis-run.id
 }
 
