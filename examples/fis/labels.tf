@@ -8,7 +8,6 @@ locals {
   cw_api_avg_alarm_name           = join("-", [var.name, "api-avg-alarm"])
   cw_svc_health_alarm_name        = join("-", [var.name, "frontend-healthy-host-alarm"])
   asg_target_tracking_policy_name = join("-", [var.name, "target-tracking-autoscaling-policy"])
-  fis_role_name                   = join("-", [var.name, "role"])
   default-tags = merge(
     { "terraform.io" = "managed" },
   )
