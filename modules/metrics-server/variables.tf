@@ -4,7 +4,7 @@ variable "helm" {
   type        = any
   default = {
     name            = "metrics-server"
-    repository      = "https://charts.bitnami.com/bitnami"
+    repository      = "https://kubernetes-sigs.github.io/metrics-server/"
     chart           = "metrics-server"
     namespace       = "kube-system"
     cleanup_on_fail = true
