@@ -11,7 +11,6 @@
 - [Amazon EKS on AWS Graviton](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/arm64)
 - [Amazon EKS with Spot Instances](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/spot)
 - [Amazon ECR](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/ecr)
-- [AWS Fault Injection Simulator with AWS Systems Manager](https://github.com/Young-ook/terraform-aws-ssm/blob/main/examples/fis)
 - [AWS Fault Injection Simulator with Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/fis)
 - [AWS Load Balancer Controller](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/lb)
 - [AWS Fault Injection Simulator with Amazon Aurora](https://github.com/Young-ook/terraform-aws-aurora/blob/main/examples/fis)
@@ -106,3 +105,7 @@ Error: configmaps "aws-auth" already exists
   on .terraform/modules/eks/main.tf line 343, in resource "kubernetes_config_map" "aws-auth":
  343: resource "kubernetes_config_map" "aws-auth" {
 ```
+
+## Additional Resources
+- [Seamlessly Migrate Workloads from EKS Self-managed node groups to managed node groups](https://aws.amazon.com/blogs/containers/seamlessly-migrate-workloads-from-eks-self-managed-node-group-to-eks-managed-node-groups/)
+- [Metrics and traces collection using Amazon EKS add-ons for AWS Distro for OpenTelemetry (ADOT)](https://aws.amazon.com/blogs/containers/metrics-and-traces-collection-using-amazon-eks-add-ons-for-aws-distro-for-opentelemetry/)
