@@ -106,6 +106,6 @@ Error: configmaps "aws-auth" already exists
  343: resource "kubernetes_config_map" "aws-auth" {
 ```
 
-## Additional Resources
+# Additional Resources
 - [Seamlessly Migrate Workloads from EKS Self-managed node groups to managed node groups](https://aws.amazon.com/blogs/containers/seamlessly-migrate-workloads-from-eks-self-managed-node-group-to-eks-managed-node-groups/)
 - [Metrics and traces collection using Amazon EKS add-ons for AWS Distro for OpenTelemetry (ADOT)](https://aws.amazon.com/blogs/containers/metrics-and-traces-collection-using-amazon-eks-add-ons-for-aws-distro-for-opentelemetry/)
