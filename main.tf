@@ -366,6 +366,7 @@ resource "aws_eks_node_group" "ng" {
     aws_iam_role_policy_attachment.eks-ng,
     aws_iam_role_policy_attachment.eks-cni,
     aws_iam_role_policy_attachment.ecr-read,
+    aws_launch_template.mng,
     time_sleep.wait,
   ]
 }
