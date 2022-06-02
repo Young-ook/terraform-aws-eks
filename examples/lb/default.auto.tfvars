@@ -8,16 +8,15 @@ name       = "eks-lbc"
 tags = {
   env = "dev"
 }
-kubernetes_version  = "1.21"
-managed_node_groups = []
-node_groups         = []
-fargate_profiles = [
+kubernetes_version = "1.21"
+managed_node_groups = [
   {
-    name      = "default"
-    namespace = "default"
-  },
-  {
-    name      = "kube-system"
-    namespace = "kube-system"
-  },
+    name          = "game-2048"
+    min_size      = 1
+    max_size      = 3
+    desired_size  = 1
+    instance_type = "t3.large"
+  }
 ]
+node_groups      = []
+fargate_profiles = []
