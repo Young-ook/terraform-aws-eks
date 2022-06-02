@@ -11,6 +11,7 @@ provider "aws" {
 # vpc
 module "vpc" {
   source              = "Young-ook/spinnaker/aws//modules/spinnaker-aware-aws-vpc"
+  version             = "2.3.1"
   name                = var.name
   tags                = merge(var.tags, module.eks.tags.shared)
   azs                 = var.azs
@@ -24,6 +25,7 @@ module "vpc" {
 # eks
 module "eks" {
   source              = "Young-ook/eks/aws"
+  version             = "1.7.5"
   name                = var.name
   tags                = var.tags
   subnets             = values(module.vpc.subnets["private"])
