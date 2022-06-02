@@ -73,6 +73,12 @@ kubectl delete -f https://raw.githubusercontent.com/kubernetes-sigs/aws-load-bal
 ```
 
 ### Remove Infrastructure
+Make sure the game 2048 application is removed from the kubernetes cluster before deploying the infrastructure. If you skipped uninstalling the 2048 game in the previous step, you may see an error like the one below because terraform did not delete the application load balancer it created using the load balancer controller.
+```
+ Error: error deleting EC2 Subnet (subnet-001c9360b531a4a70): DependencyViolation: The subnet 'subnet-001c9360b531a4a70' has dependencies and cannot be deleted.
+│ 	status code: 400, request id: f76a5dc7-0107-4847-a006-4c4e46be9720
+╵
+```
 Run terraform to destroy infrastructure:
 ```sh
 terraform destroy
