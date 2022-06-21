@@ -12,7 +12,6 @@ locals {
   name    = var.name == null || var.name == "" ? local.uid : var.name
   default-tags = merge(
     { "terraform.io" = "managed" },
-    local.eks-owned-tag
   )
 }
 

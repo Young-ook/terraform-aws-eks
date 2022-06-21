@@ -7,14 +7,43 @@ tags = {
   metrics = "false"
   logs    = "false"
 }
-kubernetes_version = "1.20"
+kubernetes_version = "1.22"
 managed_node_groups = [
   {
-    name          = "default"
+    name          = "mng"
+    desired_size  = 1
     min_size      = 1
     max_size      = 3
-    desired_size  = 1
     instance_type = "t3.large"
+  },
+  {
+    name          = "mng-eachtag"
+    desired_size  = 1
+    min_size      = 1
+    max_size      = 3
+    instance_type = "t3.large"
+    tags = {
+      test = "each-node-tag"
+    }
+  }
+]
+node_groups = [
+  {
+    name          = "ng"
+    desired_size  = 1
+    min_size      = 1
+    max_size      = 3
+    instance_type = "t3.large"
+  },
+  {
+    name          = "ng-eachtag"
+    desired_size  = 1
+    min_size      = 1
+    max_size      = 3
+    instance_type = "t3.large"
+    tags = {
+      test = "each-node-tag"
+    }
   }
 ]
 enable_cw = {

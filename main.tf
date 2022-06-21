@@ -163,7 +163,7 @@ data "template_file" "br" {
 resource "aws_launch_template" "ng" {
   for_each      = { for ng in var.node_groups : ng.name => ng }
   name          = format("eks-%s", uuid())
-  tags          = merge(local.default-tags, local.eks-tag, var.tags)
+  tags          = merge(local.default-tags, local.eks-tag, var.tags, lookup(each.value, "tags", {}))
   image_id      = data.aws_ami.eks[each.key].id
   instance_type = lookup(each.value, "instance_type", local.default_eks_config.instance_type)
   user_data = (
@@ -194,7 +194,7 @@ resource "aws_launch_template" "ng" {
 
   tag_specifications {
     resource_type = "instance"
-    tags          = merge(local.eks-owned-tag, var.tags)
+    tags          = merge(local.default-tags, local.eks-tag, var.tags, lookup(each.value, "tags", {}))
   }
 
   lifecycle {
@@ -255,10 +255,8 @@ resource "aws_autoscaling_group" "ng" {
 
   dynamic "tag" {
     for_each = merge(
+      { "eks:nodegroup-name" = join("-", [aws_eks_cluster.cp.name, each.key]) },
       local.eks-tag,
-      {
-        "eks:nodegroup-name" = join("-", [aws_eks_cluster.cp.name, each.key])
-      }
     )
     content {
       key                 = tag.key
@@ -304,7 +302,7 @@ data "template_cloudinit_config" "mng" {
 resource "aws_launch_template" "mng" {
   for_each = { for ng in var.managed_node_groups : ng.name => ng }
   name     = format("eks-%s", uuid())
-  tags     = merge(local.default-tags, local.eks-tag, var.tags)
+  tags     = merge(local.default-tags, local.eks-tag, var.tags, lookup(each.value, "tags", {}))
   user_data = (
     length(regexall("^AL2", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
     data.template_cloudinit_config.mng[each.key].rendered :
@@ -324,7 +322,7 @@ resource "aws_launch_template" "mng" {
 
   tag_specifications {
     resource_type = "instance"
-    tags          = merge(local.eks-owned-tag, var.tags)
+    tags          = merge(local.default-tags, local.eks-tag, var.tags, lookup(each.value, "tags", {}))
   }
 
   lifecycle {
@@ -343,7 +341,7 @@ resource "aws_eks_node_group" "ng" {
   capacity_type   = lookup(each.value, "capacity_type", local.default_eks_config.capacity_type)
   instance_types  = [lookup(each.value, "instance_type", local.default_eks_config.instance_type)]
   version         = aws_eks_cluster.cp.version
-  tags            = merge(local.default-tags, var.tags)
+  tags            = merge(local.default-tags, var.tags, lookup(each.value, "tags", {}))
 
   scaling_config {
     max_size     = lookup(each.value, "max_size", 3)
@@ -401,7 +399,7 @@ resource "aws_eks_fargate_profile" "fargate" {
   fargate_profile_name   = each.key
   pod_execution_role_arn = aws_iam_role.fargate.0.arn
   subnet_ids             = var.subnets
-  tags                   = merge(local.default-tags, var.tags)
+  tags                   = merge(local.default-tags, var.tags, lookup(each.value, "tags", {}))
 
   selector {
     namespace = lookup(each.value, "namespace", "default")
