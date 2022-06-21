@@ -194,7 +194,7 @@ resource "aws_launch_template" "ng" {
 
   tag_specifications {
     resource_type = "instance"
-    tags          = merge(local.eks-owned-tag, var.tags)
+    tags          = merge(local.default-tags, local.eks-tag, var.tags, lookup(each.value, "tags", {}))
   }
 
   lifecycle {
@@ -256,10 +256,7 @@ resource "aws_autoscaling_group" "ng" {
   dynamic "tag" {
     for_each = merge(
       { "eks:nodegroup-name" = join("-", [aws_eks_cluster.cp.name, each.key]) },
-      local.default-tags,
       local.eks-tag,
-      var.tags,
-      lookup(each.value, "tags", {})
     )
     content {
       key                 = tag.key
@@ -325,7 +322,7 @@ resource "aws_launch_template" "mng" {
 
   tag_specifications {
     resource_type = "instance"
-    tags          = merge(local.eks-owned-tag, var.tags)
+    tags          = merge(local.default-tags, local.eks-tag, var.tags, lookup(each.value, "tags", {}))
   }
 
   lifecycle {
