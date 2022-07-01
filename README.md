@@ -47,16 +47,14 @@ brew install tfenv
 ```
 Then, you can use tfenv in your workspace like below.
 ```
-tfenv install 0.12.18
-tfenv use 0.12.18
+tfenv install <version>
+tfenv use <version>
 ```
 Also this tool is helpful to upgrade terraform v0.12. It is a major release focused on configuration language improvements and thus includes some changes that you'll need to consider when upgrading. But the version 0.11 and 0.12 are very different. So if some codes are written in older version and others are in 0.12 it would be great for us to have nice tool to support quick switching of version.
 ```
 tfenv list
-tfenv use 0.12.18
-tfenv use 0.11.14
 tfenv install latest
-tfenv use 0.12.18
+tfenv use <version>
 ```
 
 ### Kubernetes CLI
