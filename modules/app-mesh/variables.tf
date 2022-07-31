@@ -2,16 +2,7 @@
 variable "helm" {
   description = "The helm release configuration"
   type        = any
-  default = {
-    name            = "appmesh-controller"
-    repository      = "https://aws.github.io/eks-charts"
-    version         = null
-    chart           = "appmesh-controller"
-    namespace       = "aws-appmesh"
-    serviceaccount  = "aws-appmesh-controller"
-    cleanup_on_fail = true
-    vars            = {}
-  }
+  default     = {}
 }
 
 ### security/policy
