@@ -1,15 +1,13 @@
-resource "random_string" "uid" {
-  length  = 12
-  upper   = false
-  lower   = true
-  number  = false
-  special = false
+### frigga name
+module "frigga" {
+  source  = "Young-ook/spinnaker/aws//modules/frigga"
+  version = "2.3.4"
+  name    = var.name == null || var.name == "" ? "eks" : var.name
+  petname = var.name == null || var.name == "" ? true : false
 }
 
 locals {
-  service = "eks"
-  uid     = join("-", [local.service, random_string.uid.result])
-  name    = var.name == null || var.name == "" ? local.uid : var.name
+  name = module.frigga.name
   default-tags = merge(
     { "terraform.io" = "managed" },
   )
