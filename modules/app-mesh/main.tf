@@ -6,8 +6,8 @@ module "aws" {
 }
 
 locals {
-  namespace      = lookup(var.helm, "namespace", "appmesh-system")
-  serviceaccount = lookup(var.helm, "serviceaccount", "aws-appmesh-controller")
+  namespace      = lookup(var.helm, "namespace")
+  serviceaccount = lookup(var.helm, "serviceaccount")
 }
 
 module "irsa" {
@@ -25,13 +25,13 @@ module "irsa" {
 }
 
 resource "helm_release" "appmesh" {
-  name             = lookup(var.helm, "name", "appmesh-controller")
-  chart            = lookup(var.helm, "chart", "appmesh-controller")
-  version          = lookup(var.helm, "version", null)
-  repository       = lookup(var.helm, "repository", "https://aws.github.io/eks-charts")
+  name             = lookup(var.helm, "name")
+  chart            = lookup(var.helm, "chart")
+  version          = lookup(var.helm, "version")
+  repository       = lookup(var.helm, "repository")
   namespace        = local.namespace
   create_namespace = true
-  cleanup_on_fail  = lookup(var.helm, "cleanup_on_fail", true)
+  cleanup_on_fail  = lookup(var.helm, "cleanup_on_fail")
 
   dynamic "set" {
     for_each = merge({

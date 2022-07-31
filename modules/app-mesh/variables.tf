@@ -5,8 +5,9 @@ variable "helm" {
   default = {
     name            = "appmesh-controller"
     repository      = "https://aws.github.io/eks-charts"
+    version         = null
     chart           = "appmesh-controller"
-    namespace       = "appmesh-system"
+    namespace       = "aws-appmesh"
     serviceaccount  = "aws-appmesh-controller"
     cleanup_on_fail = true
     vars            = {}
