@@ -2,16 +2,7 @@
 variable "helm" {
   description = "The helm release configuration"
   type        = any
-  default = {
-    name            = "chaos-mesh"
-    repository      = "https://charts.chaos-mesh.org"
-    version         = null
-    chart           = "chaos-mesh"
-    namespace       = "chaos-mesh"
-    serviceaccount  = "chaos-mesh-controller"
-    cleanup_on_fail = true
-    vars            = {}
-  }
+  default     = {}
 }
 
 ### security/policy
