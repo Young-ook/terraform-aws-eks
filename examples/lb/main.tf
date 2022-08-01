@@ -50,7 +50,10 @@ module "lb-controller" {
   tags         = var.tags
   helm = {
     vars = module.eks.features.fargate_enabled ? {
-      vpcId = module.vpc.vpc.id
-    } : {}
+      vpcId       = module.vpc.vpc.id
+      clusterName = module.eks.cluster.name
+      } : {
+      clusterName = module.eks.cluster.name
+    }
   }
 }

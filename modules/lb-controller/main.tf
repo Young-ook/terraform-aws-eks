@@ -35,7 +35,6 @@ resource "helm_release" "lbc" {
 
   dynamic "set" {
     for_each = merge({
-      "clusterName"                                               = var.cluster_name
       "serviceAccount.name"                                       = local.serviceaccount
       "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa.arn
     }, lookup(var.helm, "vars", local.default_helm_config["vars"]))
