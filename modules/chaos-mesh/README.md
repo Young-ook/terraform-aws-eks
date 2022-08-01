@@ -21,7 +21,7 @@ provider "helm" {
   }
 }
 
-module "app-mesh" {
+module "chaos-mesh" {
   source       = "Young-ook/eks/aws//modules/chaos-mesh"
   oidc         = module.eks.oidc
   tags         = { env = "test" }
