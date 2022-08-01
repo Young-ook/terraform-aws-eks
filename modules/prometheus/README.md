@@ -9,8 +9,8 @@
 This is a terraform module to deploy Helm chart for Prometheus.
 ```hcl
 module "eks" {
-  source                     = "Young-ook/eks/aws"
-  name                       = "eks"
+  source       = "Young-ook/eks/aws"
+  name         = "eks"
 }
 
 provider "helm" {
@@ -23,12 +23,10 @@ provider "helm" {
 
 module "prometheus" {
   source       = "Young-ook/eks/aws//modules/prometheus"
-  enabled      = true
-  cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
   helm = {
-    values = {
+    vars = {
       "alertmanager.persistentVolume.storageClass" = "gp2"
       "server.persistentVolume.storageClass"       = "gp2"
     }
