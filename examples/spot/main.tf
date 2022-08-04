@@ -49,10 +49,14 @@ module "metrics-server" {
 }
 
 module "cluster-autoscaler" {
-  source       = "Young-ook/eks/aws//modules/cluster-autoscaler"
-  cluster_name = module.eks.cluster.name
-  oidc         = module.eks.oidc
-  tags         = { env = "test" }
+  source = "Young-ook/eks/aws//modules/cluster-autoscaler"
+  oidc   = module.eks.oidc
+  tags   = { env = "test" }
+  helm = {
+    vars = {
+      "autoDiscovery.clusterName" = module.eks.cluster.name
+    }
+  }
 }
 
 module "node-termination-handler" {
