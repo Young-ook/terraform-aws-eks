@@ -1,14 +1,13 @@
-resource "random_string" "node-termination-handler-suffix" {
-  length  = 5
-  upper   = false
-  lower   = true
-  number  = false
-  special = false
+### frigga name
+module "frigga" {
+  source  = "Young-ook/spinnaker/aws//modules/frigga"
+  version = "2.3.4"
+  name    = lookup(var.helm, "name", local.default_helm_config["name"])
+  petname = true
 }
 
 locals {
-  suffix = var.petname ? random_string.node-termination-handler-suffix.result : ""
-  name   = join("-", compact([var.cluster_name, "app-mesh", local.suffix]))
+  name = module.frigga.name
   default-tags = merge(
     { "terraform.io" = "managed" },
     { "Name" = local.name },
