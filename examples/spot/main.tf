@@ -56,8 +56,7 @@ module "cluster-autoscaler" {
 }
 
 module "node-termination-handler" {
-  source       = "../../modules/node-termination-handler"
-  cluster_name = module.eks.cluster.name
-  oidc         = module.eks.oidc
-  tags         = { env = "test" }
+  source = "Young-ook/eks/aws//modules/node-termination-handler"
+  oidc   = module.eks.oidc
+  tags   = { env = "test" }
 }
