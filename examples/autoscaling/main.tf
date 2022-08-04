@@ -69,11 +69,10 @@ module "container-insights" {
 }
 
 module "metrics-server" {
-  for_each     = toset(module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled ? ["enabled"] : [])
-  source       = "Young-ook/eks/aws//modules/metrics-server"
-  cluster_name = module.eks.cluster.name
-  oidc         = module.eks.oidc
-  tags         = { env = "test" }
+  for_each = toset(module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled ? ["enabled"] : [])
+  source   = "Young-ook/eks/aws//modules/metrics-server"
+  oidc     = module.eks.oidc
+  tags     = { env = "test" }
 }
 
 module "prometheus" {

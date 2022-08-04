@@ -42,10 +42,9 @@ provider "helm" {
 }
 
 module "metrics-server" {
-  source       = "Young-ook/eks/aws//modules/metrics-server"
-  cluster_name = module.eks.cluster.name
-  oidc         = module.eks.oidc
-  tags         = { env = "test" }
+  source = "Young-ook/eks/aws//modules/metrics-server"
+  oidc   = module.eks.oidc
+  tags   = { env = "test" }
 }
 
 module "cluster-autoscaler" {
