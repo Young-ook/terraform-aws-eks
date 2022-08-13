@@ -11,8 +11,8 @@
 This is a terraform module to deploy Helm chart for App Mesh controller.
 ```hcl
 module "eks" {
-  source                     = "Young-ook/eks/aws"
-  name                       = "eks"
+  source       = "Young-ook/eks/aws"
+  name         = "eks"
 }
 
 provider "helm" {
@@ -25,7 +25,6 @@ provider "helm" {
 
 module "app-mesh" {
   source       = "Young-ook/eks/aws//modules/app-mesh"
-  cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
 }
@@ -37,9 +36,12 @@ terraform apply
 ```
 
 ### Verify
-All steps are finished, check that there are pods that are `Ready` in `appmesh-system` namespace. Ensure the `appmesh-controller` pod is generated and running:
+All steps are finished, check all pods are `Ready` in `aws-appmesh` namespace by default or you've changed. Ensure the `appmesh-controller` pod is generated and running:
 ```
-$ kubectl -n appmesh-system get all
+kubectl -n aws-appmesh get all
+```
+The expected output is as follows:
+```
 NAME                                            READY   STATUS    RESTARTS   AGE
 pod/appmesh-controller-xxxxxxxxx-xxxxx          1/1     Running   0          10h
 
@@ -52,9 +54,13 @@ deployment.apps/appmesh-controller          1/1     1            1           10h
 NAME                                                  DESIRED   CURRENT   READY   AGE
 replicaset.apps/appmesh-controller-xxxxxxxxx          1         1         1       10h
 ```
+
 And you can list the all CRD(Custom Resource Definition)s for App Mesh integration.
 ```
-$ kubectl get crds | grep appmesh
+kubectl get crds | grep appmesh
+```
+The expected output is as follows:
+```
 gatewayroutes.appmesh.k8s.aws
 meshes.appmesh.k8s.aws
 virtualgateways.appmesh.k8s.aws
