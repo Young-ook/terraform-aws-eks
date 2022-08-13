@@ -25,19 +25,19 @@ resource "aws_iam_policy" "lbc" {
 }
 
 resource "helm_release" "lbc" {
-  name            = lookup(var.helm, "name", "aws-load-balancer-controller")
-  chart           = lookup(var.helm, "chart", "aws-load-balancer-controller")
-  version         = lookup(var.helm, "version", null)
-  repository      = lookup(var.helm, "repository", "https://aws.github.io/eks-charts")
-  namespace       = local.namespace
-  cleanup_on_fail = lookup(var.helm, "cleanup_on_fail", true)
+  name             = lookup(var.helm, "name", local.default_helm_config["name"])
+  chart            = lookup(var.helm, "chart", local.default_helm_config["chart"])
+  version          = lookup(var.helm, "version", local.default_helm_config["version"])
+  repository       = lookup(var.helm, "repository", local.default_helm_config["repository"])
+  namespace        = local.namespace
+  create_namespace = true
+  cleanup_on_fail  = lookup(var.helm, "cleanup_on_fail", local.default_helm_config["cleanup_on_fail"])
 
   dynamic "set" {
     for_each = merge({
-      "clusterName"                                               = var.cluster_name
       "serviceAccount.name"                                       = local.serviceaccount
       "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa.arn
-    }, lookup(var.helm, "vars", {}))
+    }, lookup(var.helm, "vars", local.default_helm_config["vars"]))
     content {
       name  = set.key
       value = set.value
