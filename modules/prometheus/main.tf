@@ -1,21 +1,21 @@
 ## kubernetes prometheus
 
 locals {
-  namespace      = lookup(var.helm, "namespace", "prometheus")
-  serviceaccount = lookup(var.helm, "serviceaccount", "prometheus")
+  namespace      = lookup(var.helm, "namespace", local.default_helm_config["namespace"])
+  serviceaccount = lookup(var.helm, "serviceaccount", local.default_helm_config["serviceaccount"])
 }
 
 resource "helm_release" "prometheus" {
-  name             = lookup(var.helm, "name", "prometheus")
-  chart            = lookup(var.helm, "chart", "prometheus")
-  version          = lookup(var.helm, "version", null)
-  repository       = lookup(var.helm, "repository", "https://prometheus-community.github.io/helm-charts")
+  name             = lookup(var.helm, "name", local.default_helm_config["name"])
+  chart            = lookup(var.helm, "chart", local.default_helm_config["chart"])
+  version          = lookup(var.helm, "version", local.default_helm_config["version"])
+  repository       = lookup(var.helm, "repository", local.default_helm_config["repository"])
   namespace        = local.namespace
   create_namespace = true
-  cleanup_on_fail  = lookup(var.helm, "cleanup_on_fail", true)
+  cleanup_on_fail  = lookup(var.helm, "cleanup_on_fail", local.default_helm_config["cleanup_on_fail"])
 
   dynamic "set" {
-    for_each = merge({}, lookup(var.helm, "vars", {}))
+    for_each = merge({}, lookup(var.helm, "vars", local.default_helm_config["vars"]))
     content {
       name  = set.key
       value = set.value
