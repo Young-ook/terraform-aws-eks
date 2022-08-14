@@ -1,8 +1,8 @@
 ## kubernetes cluster autoscaler
 
 locals {
-  namespace      = lookup(var.helm, "namespace", "kube-system")
-  serviceaccount = lookup(var.helm, "serviceaccount", "cluster-autoscaler")
+  namespace      = lookup(var.helm, "namespace", local.default_helm_config["namespace"])
+  serviceaccount = lookup(var.helm, "serviceaccount", local.default_helm_config["serviceaccount"])
 }
 
 module "irsa" {
