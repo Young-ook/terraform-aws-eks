@@ -91,3 +91,17 @@ module "prometheus" {
     }
   }
 }
+
+module "karpenter" {
+  for_each = toset(module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled ? ["enabled"] : [])
+  source   = "Young-ook/eks/aws//modules/karpenter"
+  oidc     = module.eks.oidc
+  tags     = { env = "test" }
+  helm = {
+    vars = {
+      "clusterName" = module.eks.cluster.name
+      #"clusterEndpoint" = "cluster_endpoint"
+      #"aws.defaultInstanceProfile" = "default_instance_profile"
+    }
+  }
+}
