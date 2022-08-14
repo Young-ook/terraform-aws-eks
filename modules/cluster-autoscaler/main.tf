@@ -6,7 +6,7 @@ locals {
 }
 
 module "irsa" {
-  source         = "../iam-role-for-serviceaccount"
+  source         = "Young-ook/eks/aws//modules/iam-role-for-serviceaccount"
   name           = join("-", ["irsa", local.name])
   namespace      = local.namespace
   serviceaccount = local.serviceaccount
@@ -39,20 +39,19 @@ resource "aws_iam_policy" "autoscaler" {
 }
 
 resource "helm_release" "autoscaler" {
-  name             = lookup(var.helm, "name", "cluster-autoscaler")
-  chart            = lookup(var.helm, "chart", "cluster-autoscaler")
-  version          = lookup(var.helm, "version", null)
-  repository       = lookup(var.helm, "repository", join("/", [path.module, "charts"]))
+  name             = lookup(var.helm, "name", local.default_helm_config["name"])
+  chart            = lookup(var.helm, "chart", local.default_helm_config["chart"])
+  version          = lookup(var.helm, "version", local.default_helm_config["version"])
+  repository       = lookup(var.helm, "repository", local.default_helm_config["repository"])
   namespace        = local.namespace
   create_namespace = true
-  cleanup_on_fail  = lookup(var.helm, "cleanup_on_fail", true)
+  cleanup_on_fail  = lookup(var.helm, "cleanup_on_fail", local.default_helm_config["cleanup_on_fail"])
 
   dynamic "set" {
     for_each = merge({
-      "autoDiscovery.clusterName"                                 = var.cluster_name
       "serviceAccount.name"                                       = local.serviceaccount
       "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa.arn
-    }, lookup(var.helm, "vars", {}))
+    }, lookup(var.helm, "vars", local.default_helm_config["vars"]))
     content {
       name  = set.key
       value = set.value

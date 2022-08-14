@@ -50,11 +50,15 @@ module "alb-ingress" {
 }
 
 module "cluster-autoscaler" {
-  for_each     = toset(module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled ? ["enabled"] : [])
-  source       = "Young-ook/eks/aws//modules/cluster-autoscaler"
-  cluster_name = module.eks.cluster.name
-  oidc         = module.eks.oidc
-  tags         = { env = "test" }
+  for_each = toset(module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled ? ["enabled"] : [])
+  source   = "Young-ook/eks/aws//modules/cluster-autoscaler"
+  oidc     = module.eks.oidc
+  tags     = { env = "test" }
+  helm = {
+    vars = {
+      "autoDiscovery.clusterName" = module.eks.cluster.name
+    }
+  }
 }
 
 module "container-insights" {
