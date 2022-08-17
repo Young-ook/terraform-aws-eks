@@ -1,3 +1,7 @@
+**[DEPRECATED - no longer actively maintained]**
+
+Please use the [AWS Load Balancer Controller](https://github.com/Young-ook/terraform-aws-eks/tree/main/modules/lb-controller) instead.
+
 # Application Load Balancer on Amazon EKS
 You can load balance application traffic across pods using the AWS Application Load Balancer (ALB). To learn more, see [What is an Application Load Balancer?](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html) in the Application Load Balancers User Guide. You can share an ALB across multiple applications in your Kubernetes cluster using Ingress groups. In the past, you needed to use a separate ALB for each application. The controller automatically provisions AWS ALBs in response to Kubernetes Ingress objects. ALBs can be used with pods deployed to nodes or to AWS Fargate. You can deploy an ALB to public or private subnets.
 
