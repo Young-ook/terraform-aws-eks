@@ -15,6 +15,7 @@
 - [AWS Load Balancer Controller](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/lb)
 - [AWS Fault Injection Simulator with Amazon EKS](https://github.com/Young-ook/terraform-aws-fis/tree/main/examples/eks)
 - [AWS Fault Injection Simulator with Amazon Aurora](https://github.com/Young-ook/terraform-aws-fis/tree/main/examples/rds)
+- [AWS Fault Injection Simulator with Amazon ElastiCache for Redis](https://github.com/Young-ook/terraform-aws-fis/tree/main/examples/redis)
 - [Amazon EMR on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/emr)
 - [Amazon EKS with Bottlerocket OS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/bottlerocket)
 - [Amazon EKS Add-ons](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/addon)
