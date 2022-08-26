@@ -1,6 +1,8 @@
 name = "eks-irsa"
 tags = {
-  env = "dev"
+  env       = "dev"
+  nodegroup = "true"
+  fargate   = "false"
 }
 aws_region         = "ap-northeast-2"
 azs                = ["ap-northeast-2a", "ap-northeast-2b", "ap-northeast-2c"]
@@ -9,9 +11,10 @@ enable_igw         = true
 enable_ngw         = true
 single_ngw         = true
 kubernetes_version = "1.21"
-fargate_profiles = [
+managed_node_groups = [
   {
-    name      = "default"
-    namespace = "default"
-  },
+    name          = "default"
+    desired_size  = 1
+    instance_type = "t3.large"
+  }
 ]
