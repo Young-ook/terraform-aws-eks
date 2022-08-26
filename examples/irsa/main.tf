@@ -23,12 +23,13 @@ module "vpc" {
 
 # eks
 module "eks" {
-  source             = "Young-ook/eks/aws"
-  name               = var.name
-  tags               = var.tags
-  subnets            = values(module.vpc.subnets["private"])
-  kubernetes_version = var.kubernetes_version
-  fargate_profiles   = var.fargate_profiles
+  source              = "Young-ook/eks/aws"
+  name                = var.name
+  tags                = var.tags
+  subnets             = values(module.vpc.subnets["private"])
+  kubernetes_version  = var.kubernetes_version
+  fargate_profiles    = var.fargate_profiles
+  managed_node_groups = var.managed_node_groups
 }
 
 module "irsa" {
