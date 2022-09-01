@@ -1,14 +1,14 @@
-resource "random_string" "irsa-suffix" {
-  length  = 12
-  upper   = false
-  lower   = true
-  number  = true
-  special = false
+### frigga name
+module "frigga" {
+  source     = "Young-ook/spinnaker/aws//modules/frigga"
+  version    = "2.3.5"
+  name       = var.name == null || var.name == "" ? "irsa" : var.name
+  petname    = var.name == null || var.name == "" ? true : false
+  max_length = 64
 }
 
 locals {
-  suffix = random_string.irsa-suffix.result
-  name   = var.name == null ? substr(join("-", ["irsa", local.suffix]), 0, 64) : substr(var.name, 0, 64)
+  name = module.frigga.name
   default-tags = merge(
     { "terraform.io" = "managed" },
     { "Name" = local.name },
