@@ -93,7 +93,7 @@ module "prometheus" {
 }
 
 module "karpenter" {
-  for_each = toset(module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled ? ["enabled"] : [])
+  for_each = toset([])  # disabled by default now. autoscaling with karpenter example is working in progress
   source   = "Young-ook/eks/aws//modules/karpenter"
   oidc     = module.eks.oidc
   tags     = { env = "test" }
