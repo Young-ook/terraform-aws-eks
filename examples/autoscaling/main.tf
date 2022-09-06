@@ -91,3 +91,17 @@ module "prometheus" {
     }
   }
 }
+
+module "karpenter" {
+  for_each = toset([])  # disabled by default now. autoscaling with karpenter example is working in progress
+  source   = "Young-ook/eks/aws//modules/karpenter"
+  oidc     = module.eks.oidc
+  tags     = { env = "test" }
+  helm = {
+    vars = {
+      "clusterName" = module.eks.cluster.name
+      #"clusterEndpoint" = "cluster_endpoint"
+      #"aws.defaultInstanceProfile" = "default_instance_profile"
+    }
+  }
+}
