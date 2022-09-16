@@ -21,6 +21,14 @@ output "role" {
   ) : null)
 }
 
+output "instance_profile" {
+  description = "The generated instance profile of the EKS node group"
+  value = (local.node_groups_enabled || local.managed_node_groups_enabled ? zipmap(
+    ["name", "arn"],
+    [aws_iam_instance_profile.ng.0.name, aws_iam_instance_profile.ng.0.arn]
+  ) : null)
+}
+
 output "oidc" {
   description = "The OIDC provider attributes for IAM Role for ServiceAccount"
   value = zipmap(
