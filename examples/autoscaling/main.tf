@@ -42,8 +42,8 @@ provider "helm" {
   }
 }
 
-module "alb-ingress" {
-  source       = "Young-ook/eks/aws//modules/alb-ingress"
+module "lbc" {
+  source       = "Young-ook/eks/aws//modules/lb-controller"
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
@@ -93,15 +93,16 @@ module "prometheus" {
 }
 
 module "karpenter" {
-  for_each = toset([])  # disabled by default now. autoscaling with karpenter example is working in progress
+  for_each = toset(module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled ? ["enabled"] : [])
   source   = "Young-ook/eks/aws//modules/karpenter"
+  version  = "1.7.10"
   oidc     = module.eks.oidc
   tags     = { env = "test" }
   helm = {
     vars = {
-      "clusterName" = module.eks.cluster.name
-      #"clusterEndpoint" = "cluster_endpoint"
-      #"aws.defaultInstanceProfile" = "default_instance_profile"
+      "clusterName"                = module.eks.cluster.name
+      "clusterEndpoint"            = module.eks.cluster.control_plane.endpoint
+      "aws.defaultInstanceProfile" = module.eks.instance_profile.arn
     }
   }
 }
