@@ -25,6 +25,7 @@ module "vpc" {
 # eks
 module "eks" {
   source              = "Young-ook/eks/aws"
+  version             = "1.7.10"
   name                = var.name
   tags                = var.tags
   subnets             = module.vpc.private_subnets
