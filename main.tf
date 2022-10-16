@@ -96,10 +96,10 @@ resource "aws_iam_role_policy_attachment" "ssm-managed" {
   role       = aws_iam_role.ng.0.name
 }
 
-resource "aws_iam_role_policy_attachment" "extra" {
-  for_each   = { for key, val in var.policy_arns : key => val }
+resource "aws_iam_role_policy_attachment" "ng-extra" {
+  for_each   = (local.node_groups_enabled || local.managed_node_groups_enabled) ? { for k, v in var.policy_arns : k => v } : {}
   policy_arn = each.value
-  role       = aws_iam_role.ng[0].name
+  role       = aws_iam_role.ng.0.name
 }
 
 ## self-managed node groups
@@ -390,6 +390,12 @@ resource "aws_iam_role" "fargate" {
 resource "aws_iam_role_policy_attachment" "eks-fargate" {
   count      = local.fargate_enabled ? 1 : 0
   policy_arn = format("arn:%s:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy", data.aws_partition.current.partition)
+  role       = aws_iam_role.fargate.0.name
+}
+
+resource "aws_iam_role_policy_attachment" "fargate-extra" {
+  for_each   = local.fargate_enabled ? { for k, v in var.policy_arns : k => v } : {}
+  policy_arn = each.value
   role       = aws_iam_role.fargate.0.name
 }
 
