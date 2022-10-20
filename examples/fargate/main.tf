@@ -11,8 +11,8 @@ provider "aws" {
 # vpc
 module "vpc" {
   source             = "terraform-aws-modules/vpc/aws"
-  version            = "2.63.0"
-  name               = var.name
+  version            = "2.78.0"
+  name               = "eks-vpc"
   azs                = var.azs
   cidr               = "10.0.0.0/16"
   private_subnets    = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
@@ -25,6 +25,7 @@ module "vpc" {
 # eks
 module "eks" {
   source              = "Young-ook/eks/aws"
+  version             = "1.7.10"
   name                = var.name
   tags                = var.tags
   subnets             = module.vpc.private_subnets

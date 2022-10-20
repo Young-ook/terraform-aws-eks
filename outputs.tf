@@ -15,18 +15,20 @@ output "cluster" {
 
 output "role" {
   description = "The generated role of the EKS node group"
-  value = (local.node_groups_enabled || local.managed_node_groups_enabled ? zipmap(
-    ["name", "arn"],
-    [aws_iam_role.ng.0.name, aws_iam_role.ng.0.arn]
-  ) : null)
+  value = {
+    node_groups         = local.node_groups_enabled ? aws_iam_role.ng.0 : null
+    managed_node_groups = local.managed_node_groups_enabled ? aws_iam_role.ng.0 : null
+    fargate             = local.fargate_enabled ? aws_iam_role.fargate.0 : null
+  }
 }
 
 output "instance_profile" {
   description = "The generated instance profile of the EKS node group"
-  value = (local.node_groups_enabled || local.managed_node_groups_enabled ? zipmap(
-    ["name", "arn"],
-    [aws_iam_instance_profile.ng.0.name, aws_iam_instance_profile.ng.0.arn]
-  ) : null)
+  value = {
+    node_groups         = local.node_groups_enabled ? aws_iam_instance_profile.ng.0 : null
+    managed_node_groups = local.managed_node_groups_enabled ? aws_iam_instance_profile.ng.0 : null
+    fargate             = null
+  }
 }
 
 output "oidc" {

@@ -24,6 +24,7 @@ module "vpc" {
 # eks
 module "eks" {
   source              = "Young-ook/eks/aws"
+  version             = "1.7.10"
   name                = var.name
   tags                = var.tags
   subnets             = values(module.vpc.subnets["private"])
@@ -34,6 +35,7 @@ module "eks" {
 
 module "irsa" {
   source         = "Young-ook/eks/aws//modules/iam-role-for-serviceaccount"
+  version        = "1.7.10"
   name           = join("-", ["irsa", var.name, "s3-readonly"])
   namespace      = "default"
   serviceaccount = "s3-readonly"
