@@ -24,6 +24,7 @@ module "vpc" {
 # eks
 module "eks" {
   source              = "Young-ook/eks/aws"
+  version             = "1.7.10"
   name                = var.name
   tags                = var.tags
   subnets             = slice(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), 0, 3)
@@ -44,6 +45,7 @@ provider "helm" {
 
 module "lbc" {
   source       = "Young-ook/eks/aws//modules/lb-controller"
+  version      = "1.7.5"
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
@@ -52,6 +54,7 @@ module "lbc" {
 module "cluster-autoscaler" {
   for_each = toset(module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled ? ["enabled"] : [])
   source   = "Young-ook/eks/aws//modules/cluster-autoscaler"
+  version  = "1.7.10"
   oidc     = module.eks.oidc
   tags     = { env = "test" }
   helm = {
@@ -63,6 +66,7 @@ module "cluster-autoscaler" {
 
 module "container-insights" {
   source       = "Young-ook/eks/aws//modules/container-insights"
+  version      = "1.7.10"
   cluster_name = module.eks.cluster.name
   oidc         = module.eks.oidc
   tags         = { env = "test" }
@@ -75,6 +79,7 @@ module "container-insights" {
 module "metrics-server" {
   for_each = toset(module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled ? ["enabled"] : [])
   source   = "Young-ook/eks/aws//modules/metrics-server"
+  version  = "1.7.10"
   oidc     = module.eks.oidc
   tags     = { env = "test" }
 }
@@ -82,6 +87,7 @@ module "metrics-server" {
 module "prometheus" {
   for_each = toset(module.eks.features.managed_node_groups_enabled || module.eks.features.node_groups_enabled ? ["enabled"] : [])
   source   = "Young-ook/eks/aws//modules/prometheus"
+  version  = "1.7.10"
   oidc     = module.eks.oidc
   tags     = { env = "test" }
   helm = {
