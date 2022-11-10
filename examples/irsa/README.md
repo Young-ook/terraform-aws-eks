@@ -107,3 +107,6 @@ Don't forget you have to use the `-var-file` option when you run terraform destr
 ```
 terraform destroy -var-file tc1.tfvars
 ```
+
+## Additional Resources
+- [Diving into IAM Roles for Service Accounts](https://aws.amazon.com/blogs/containers/diving-into-iam-roles-for-service-accounts/)
