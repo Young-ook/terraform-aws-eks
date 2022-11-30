@@ -1,5 +1,13 @@
 ## helm
 
+provider "helm" {
+  kubernetes {
+    host                   = lookup(var.helm, "host", local.default_eks_config["host"])
+    token                  = lookup(var.helm, "token", local.default_eks_config["token"])
+    cluster_ca_certificate = lookup(var.helm, "ca_certificate", local.default_eks_config["cluster_ca_certificate"])
+  }
+}
+
 resource "helm_release" "helm" {
   name             = lookup(var.helm, "name", local.default_helm_config["name"])
   chart            = lookup(var.helm, "chart", local.default_helm_config["chart"])
