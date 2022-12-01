@@ -11,10 +11,11 @@ resource "helm_release" "chart" {
 
   dynamic "set" {
     for_each = merge(
+      lookup(each.value, "oidc", null) != null ?
       {
         "serviceAccount.name"                                       = lookup(each.value, "serviceaccount", local.default_helm_config["serviceaccount"])
         "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn" = module.irsa[each.key].arn
-      },
+      } : {},
     lookup(each.value, "values", local.default_helm_config["values"]))
     content {
       name  = set.key
@@ -25,7 +26,7 @@ resource "helm_release" "chart" {
 
 ### security/policy
 module "irsa" {
-  for_each       = { for addon in var.addons : addon.name => addon }
+  for_each       = { for addon in var.addons : addon.name => addon if lookup(addon, "oidc", null) != null }
   source         = "Young-ook/eks/aws//modules/iam-role-for-serviceaccount"
   version        = "1.7.10"
   name           = each.key
