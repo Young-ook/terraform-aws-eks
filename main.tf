@@ -142,7 +142,7 @@ data "template_cloudinit_config" "ng" {
     content      = <<-EOT
     #!/bin/bash
     set -ex
-    /etc/eks/bootstrap.sh ${aws_eks_cluster.cp.name} --kubelet-extra-args '--node-labels=eks.amazonaws.com/nodegroup-image=${data.aws_ami.eks[each.key].id},eks.amazonaws.com/nodegroup=${join("-", [aws_eks_cluster.cp.name, each.key])}' --b64-cluster-ca ${aws_eks_cluster.cp.certificate_authority.0.data} --apiserver-endpoint ${aws_eks_cluster.cp.endpoint}
+    /etc/eks/bootstrap.sh ${aws_eks_cluster.cp.name} --kubelet-extra-args '--node-labels=eks.amazonaws.com/nodegroup-image=${data.aws_ami.eks[each.key].id},eks.amazonaws.com/nodegroup=${each.key}' --b64-cluster-ca ${aws_eks_cluster.cp.certificate_authority.0.data} --apiserver-endpoint ${aws_eks_cluster.cp.endpoint}
     EOT
   }
 }
@@ -205,7 +205,7 @@ resource "aws_launch_template" "ng" {
 
 resource "aws_autoscaling_group" "ng" {
   for_each              = { for ng in var.node_groups : ng.name => ng }
-  name                  = format("eks-%s", uuid())
+  name                  = format("eks-%s-%s", each.key, uuid())
   vpc_zone_identifier   = var.subnets
   max_size              = lookup(each.value, "max_size", 3)
   min_size              = lookup(each.value, "min_size", 1)
@@ -334,7 +334,7 @@ resource "aws_launch_template" "mng" {
 resource "aws_eks_node_group" "ng" {
   for_each        = { for ng in var.managed_node_groups : ng.name => ng }
   cluster_name    = aws_eks_cluster.cp.name
-  node_group_name = join("-", [aws_eks_cluster.cp.name, each.key])
+  node_group_name = each.key
   node_role_arn   = aws_iam_role.ng.0.arn
   subnet_ids      = var.subnets
   ami_type        = lookup(each.value, "ami_type", local.default_eks_config.ami_type)
