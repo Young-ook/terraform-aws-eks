@@ -12,4 +12,11 @@ locals {
     create_namespace = true
     values           = {}
   }
+  default_oidc_config = {
+    url = ""
+    arn = ""
+  }
+  default_irsa_config = {
+    policy_arns = []
+  }
 }
