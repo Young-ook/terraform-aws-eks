@@ -154,7 +154,7 @@ module "helm-addons" {
       values = {
         "clusterName"                = module.eks.cluster.name
         "clusterEndpoint"            = module.eks.cluster.control_plane.endpoint
-        "aws.defaultInstanceProfile" = module.eks.instance_profile.node_groups.arn
+        "aws.defaultInstanceProfile" = module.eks.instance_profile.node_groups == null ? module.eks.instance_profile.managed_node_groups.arn : module.eks.instance_profile.node_groups.arn
       }
       oidc        = module.eks.oidc
       policy_arns = [aws_iam_policy.kpt.arn]

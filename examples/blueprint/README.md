@@ -141,6 +141,22 @@ System Info:
 ### Amazon EC2 Spot Instances
 Amazon EC2 Spot Instances let you take advantage of unused EC2 capacity in the AWS cloud. Spot Instances are available at up to a 90% discount compared to On-Demand prices; however, can be interrupted via Spot Instance interruptions, a two-minute warning before Amazon EC2 stops or terminates the instance. The AWS Node Termination Handler makes it easy for users to take advantage of the cost savings and performance boost offered by EC2 Spot Instances in their Kubernetes clusters while gracefully handling EC2 Spot Instance terminations. The AWS Node Termination Handler provides a connection between termination requests from AWS to Kubernetes nodes, allowing graceful draining and termination of nodes that receive interruption notifications. The termination handler uses the Kubernetes API to initiate drain and cordon actions on a node that is targeted for termination. For more details, please visit [this](https://github.com/Young-ook/terraform-aws-eks/blob/main/modules/node-termination-handler/)
 
+### Bottle Rocket OS
+[Bottlerocket](https://github.com/bottlerocket-os/bottlerocket) is a free and open-source Linux-based operating system meant for hosting containers. If you’re ready to jump right in, read one of our setup guides for running Bottlerocket in Amazon EKS, Amazon ECS, or VMware. Bottlerocket focuses on security and maintainability, providing a reliable, consistent, and safe platform for container-based workloads. This is a reflection of what we've learned building operating systems and services at Amazon. The base operating system has just what you need to run containers reliably, and is built with standard open-source components. Bottlerocket-specific additions focus on reliable updates and on the API. Instead of making configuration changes manually, you can change settings with an API call, and these changes are automatically migrated through updates.
+
+![bottlerocket-security-first-container-host-os](../../images/bottlerocket-security-first-container-host-os.png)
+![bottlerocket-features](../../images/bottlerocket-features.png)
+
+In this EKS blueprint, you can configure an AMI type for your (aws managed or self managed) node groups. For GPU instance types, you can set the *ami_type* parameter in the node group definition. GPU instance types should use the AL2_x86_64_GPU for its ami type or Non-GPU instances should use the AL2_x86_64. And ARM architecture based instance should use AL2_ARM_64.
+
+Possible values:
+- AL2_x86_64
+- AL2_x86_64_GPU
+- AL2_ARM_64
+- CUSTOM
+- BOTTLEROCKET_ARM_64
+- BOTTLEROCKET_x86_64
+
 ## Applications
 - [Yelb](./apps/README.md#yelb)
 - [Game 2048](./apps/README.md#game-2048)
