@@ -33,7 +33,7 @@ locals {
 module "ci" {
   for_each = { for proj in local.projects : proj.name => proj }
   source   = "Young-ook/spinnaker/aws//modules/codebuild"
-  version  = "2.3.1"
+  version  = "2.3.6"
   name     = each.key
   tags     = var.tags
   project = {
@@ -90,12 +90,10 @@ module "logs" {
   log_group = each.value.log_group
 }
 
-/*
 resource "local_file" "manifest" {
-  content = templatefile("${path.module}/templates/hello-nodejs.tpl", {
-    ecr_uri = module.ecr.url
+  content = templatefile("${path.module}/apps/hellojs/hellojs.yaml.tpl", {
+    ecr_uri = module.ecr["hellojs"].url
   })
-  filename        = "${path.cwd}/hello-nodejs.yaml"
+  filename        = "${path.cwd}/hellojs.yaml"
   file_permission = "0400"
 }
-*/
