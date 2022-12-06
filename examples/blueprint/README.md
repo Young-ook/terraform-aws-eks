@@ -98,11 +98,31 @@ Use [Amazon CloudWatch Container Insights](https://docs.aws.amazon.com/AmazonClo
 #### Verify the CloudWatch and FluentBit agents are running on
 All steps are finished, check that there are pods that are *Ready* in *aws-addons* namespace. Ensure the *aws-cloudwatch-metrics*, *aws-for-fluent-bit* pods are generated and running.
 
-## Multi-Architecture Node groups
-### AWS Graviton
+## Computing options
+### AWS Fargate (Serverless)
+AWS Fargate is a technology that provides on-demand, right-sized compute capacity for containers. With AWS Fargate, you no longer have to provision, configure, or scale groups of virtual machines to run containers. This removes the need to choose server types, decide when to scale your node groups, or optimize cluster packing. You can control which pods start on Fargate and how they run with Fargate profiles. Each pod running on Fargate has its own isolation boundary and does not share the underlying kernel, CPU resources, memory resources, or elastic network interface with another pod. For more information, please refer [this](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html).
+
+To run an example of serverless node groups with AWS Fargate, use the another fixture template that configures to only use AWS Fargate based instances. Edit main.tf file to remove *karpenter* from the map of helm-addons and save the file. If you don't remove it, you will get an error that the terraform configuration can't get the instance profile data from the output of the eks module. Run terraform command with fargate fixtures:
+```
+terraform apply -var-file fixture.fargate.tfvars
+```
+
+Then, you can deploy an example from publie resource, such as *hello-kube*, [*nginx*](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
+For example, you can check the list of currently running farget nodes after deployment. Run kubernetes cli:
+```
+kubectl get no
+```
+```
+NAME                 STATUS   ROLES    AGE     VERSION
+fargate-10.0.2.59    Ready    <none>   109s    v1.17.9-eks-a84824
+fargate-10.0.3.171   Ready    <none>   2m31s   v1.17.9-eks-a84824
+fargate-10.0.3.80    Ready    <none>   2m49s   v1.17.9-eks-a84824
+```
+
+### AWS Graviton (Multi-Arch)
 [AWS Graviton](https://aws.amazon.com/ec2/graviton/) processors are custom built by Amazon Web Services using 64-bit ARM Neoverse cores to deliver the best price performance for you cloud workloads running on Amazon EC2. The new general purpose (M6g), compute-optimized (C6g), and memory-optimized (R6g) instances deliver up to 40% better price/performance over comparable current generation x86-based instances for scale-out and Arm-based applications such as web servers, containerized microservices, caching fleets, and distributed data stores that are supported by the extensive Arm ecosystem. You can mix x86 and Arm based EC2 instances within a cluster, and easily evaluate Arm-based application in existing environments. Here is a useful [getting started](https://github.com/aws/aws-graviton-getting-started) guide on how to start to use AWS Graviton. This github repository would be good point where to start. You can find out more details about how to build, run and optimize your application for AWS Graviton processors.
 
-To run an example of hybrid-architecture node groups with AWS Graviton, use the another fixture template that configures to only use AWS Graviton based instances. This stap will create ARM64 architecture based node groups and also.
+To run an example of hybrid-architecture node groups with AWS Graviton, use the another fixture template that configures to only use AWS Graviton based instances. This stap will create ARM64 architecture based node groups.
 ```
 terraform apply -var-file fixture.graviton.tfvars
 ```
@@ -127,6 +147,8 @@ System Info:
   Kubelet Version:            v1.17.11-eks-xxxxyy
   Kube-Proxy Version:         v1.17.11-eks-xxxxyy
 ```
+### Amazon EC2 Spot Instances
+Amazon EC2 Spot Instances let you take advantage of unused EC2 capacity in the AWS cloud. Spot Instances are available at up to a 90% discount compared to On-Demand prices; however, can be interrupted via Spot Instance interruptions, a two-minute warning before Amazon EC2 stops or terminates the instance. The AWS Node Termination Handler makes it easy for users to take advantage of the cost savings and performance boost offered by EC2 Spot Instances in their Kubernetes clusters while gracefully handling EC2 Spot Instance terminations. The AWS Node Termination Handler provides a connection between termination requests from AWS to Kubernetes nodes, allowing graceful draining and termination of nodes that receive interruption notifications. The termination handler uses the Kubernetes API to initiate drain and cordon actions on a node that is targeted for termination. For more details, please visit [this](https://github.com/Young-ook/terraform-aws-eks/blob/main/modules/node-termination-handler/)
 
 ## Applications
 - [Yelb](./apps/README.md#yelb)
