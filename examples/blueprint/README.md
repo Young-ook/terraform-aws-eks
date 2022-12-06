@@ -100,9 +100,10 @@ All steps are finished, check that there are pods that are *Ready* in *aws-addon
 
 ## Applications
 ### Yelb
-#### Deploy a service mesh example
+Yelb is an example of simple restaurant voting app using Amazon EKS and AWS App Mesh. All application computing and data storage resources are deployed on a private network. And an App Mesh proxy (also known as a sidecar proxy in Service Mesh) is also deployed alongside the application container. And AWS X-ray is a tracing system for observing the communication topology of complex distributed systems. Here is the architecture.
 ![aws-am-yelb-architecture](../../images/aws-am-yelb-architecture.png)
 
+#### Deploy a service mesh example
 Run kubectl:
 ```
 kubectl apply -f yelb.yaml
