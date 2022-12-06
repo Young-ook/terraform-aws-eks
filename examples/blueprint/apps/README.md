@@ -8,7 +8,7 @@ Yelb is an example of simple restaurant voting app using Amazon EKS and AWS App 
 ### Deploy a service mesh example
 Run kubectl from the workspace where you ran terraform:
 ```
-kubectl apply -f yelb.yaml
+kubectl apply -f apps/yelb/yelb.yaml
 ```
 
 ### Access the example
@@ -31,7 +31,7 @@ Click **Preview** and **Preview Running Application**. This opens up a preview t
 ### Delete the application
 Run kubectl:
 ```
-kubectl delete -f yelb.yaml
+kubectl delete -f apps/yelb/yelb.yaml
 ```
 
 ## Game 2048
