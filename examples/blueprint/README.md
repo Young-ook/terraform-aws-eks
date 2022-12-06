@@ -130,3 +130,6 @@ terraform destroy -var-file fixture.tc1.tfvars
 
 ## Amazon CloudWatch Container Insights
 - [Amazon CloudWatch Container Insights for Amazon ECS](https://aws.amazon.com/blogs/mt/introducing-container-insights-for-amazon-ecs)
+
+## Amazon EKS Add-ons
+- [Metrics and traces collection using Amazon EKS add-ons for AWS Distro for OpenTelemetry (ADOT)](https://aws.amazon.com/blogs/containers/metrics-and-traces-collection-using-amazon-eks-add-ons-for-aws-distro-for-opentelemetry/)
