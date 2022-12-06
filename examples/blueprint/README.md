@@ -78,21 +78,25 @@ The [AWS load balancer controller](https://github.com/kubernetes-sigs/aws-load-b
 The AWS Load Balancer Controller makes it easy for users to take advantage of the loadbalancer management. For more details, please visit [this](https://github.com/kubernetes-sigs/aws-load-balancer-controller)
 
 #### Verify the AWS Load Balancer Controller
-All steps are finished, check that there are pods that are *Ready* in *aws-addons* namespace:
-Ensure the *aws-load-balancer-controller* pod is generated and running:
+All steps are finished, check that there are pods that are *Ready* in *aws-addons* namespace. Ensure the *aws-load-balancer-controller* pod is generated and running:
 
-```sh
+```
 kubectl get deploy -n aws-addons aws-load-balancer-controller
 ```
-Output:
+
+If the pod is not healthy, please try to check in the log:
 ```
-NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
-aws-load-balancer-controller   2/2     2            2           84s
-```
-If the pod is not healthy, please try to check the log:
-```sh
 kubectl -n aws-addons logs aws-load-balancer-controller-7dd4ff8cb-wqq58
 ```
+
+### Amazon CloudWatch Container Insights
+[Amazon CloudWatch](https://aws.amazon.com/cloudwatch/) is a service that observes and monitors resources and applications on AWS, on premises, and on other clouds. Amazon CloudWatch collects and visualizes real-time logs, metrics, and event data in automated dashboards to streamline your infrastructure and application maintenance. CloudWatch automatically collects metrics for many resources, such as CPU, memory, disk, and network.
+
+Use [Amazon CloudWatch Container Insights](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContainerInsights.html) to collect, aggregate, and summarize metrics and logs from your containerized applications and microservices. Container Insights is available for Amazon Elastic Container Service (Amazon ECS), Amazon Elastic Kubernetes Service (Amazon EKS), and Kubernetes platforms on Amazon EC2. Amazon ECS support includes support for Fargate. Container Insights also provides diagnostic information, such as container restart failures, to help you isolate issues and resolve them quickly. You can also set CloudWatch alarms on metrics that Container Insights collects.
+![aws-cw-container-insights](../../images/aws-cw-container-insights.png)
+
+#### Verify the CloudWatch and FluentBit agents are running on
+All steps are finished, check that there are pods that are *Ready* in *aws-addons* namespace. Ensure the *aws-cloudwatch-metrics*, *aws-for-fluent-bit* pods are generated and running.
 
 ## Applications
 ### Yelb
@@ -118,7 +122,7 @@ In your Cloud9 IDE, run the application.
 kubectl -n yelb port-forward svc/yelb-ui 8080:80
 ```
 
-Click `Preview` and `Preview Running Application`. This opens up a preview tab and shows the application main page.
+Click **Preview** and **Preview Running Application**. This opens up a preview tab and shows the application main page.
 ![aws-am-yelb-screenshot](../../images/aws-am-yelb-screenshot.png)
 
 #### Delete the application
@@ -137,6 +141,7 @@ After a few minutes, verify that the Ingress resource was created with the follo
 ```
 kubectl -n game-2048 get ing
 ```
+
 Output:
 ```
 NAME           CLASS    HOSTS   ADDRESS                                                                        PORTS   AGE
@@ -158,13 +163,18 @@ Make sure the game 2048 application is removed from the kubernetes cluster befor
 ╵
 ```
 
-
 ## Clean up
 To destroy all infrastrcuture, run terraform:
 ```
 terraform destroy
 ```
-Don't forget you have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
+
+If you don't want to see a confirmation question, you can use quite option for terraform destroy command
+```
+terraform destroy --auto-approve
+```
+
+**[Don't forget]** You have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
 ```
 terraform destroy -var-file fixture.tc1.tfvars
 ```
@@ -174,3 +184,10 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Learning AWS App Mesh](https://aws.amazon.com/blogs/compute/learning-aws-app-mesh/)
 - [AWS App Mesh Examples](https://github.com/aws/aws-app-mesh-examples)
 - [Getting started with AWS App Mesh and Amazon EKS](https://aws.amazon.com/blogs/containers/getting-started-with-app-mesh-and-eks/)
+
+## AWS Load Balancer Controller
+- [Kubernetes Ingress with AWS ALB Ingress Controller](https://aws.amazon.com/blogs/opensource/kubernetes-ingress-aws-alb-ingress-controller/a)
+- [AWS Load Balancer Controller](https://github.com/kubernetes-sigs/aws-load-balancer-controller)
+
+## Amazon CloudWatch Container Insights
+- [Amazon CloudWatch Container Insights for Amazon ECS](https://aws.amazon.com/blogs/mt/introducing-container-insights-for-amazon-ecs)
