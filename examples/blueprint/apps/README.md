@@ -159,6 +159,24 @@ Run kubectl:
 kubectl delete -f nginx.yaml
 ```
 
+## Hello NodeJS
+This is a simple example of multi-arch application.
+
+### Build multi-arch container images using CodeBuild
+Move to the CodeBuild service page on the Amazon Console. And start to run build projects that has *hellojs* in their project name. After then, you will see the generated container images for multiple architecture (amd64/x86_64, arm64/aarch64) and integrated manifest.
+
+### Deploy NodeJS application from Private Registry
+If there is no error message, you can go to deploy the artifact from build project. Apply the manifest to deploy hello nodejs application with the multi-arch container images that had been just baked.
+```
+kubectl apply -f hellojs.yaml
+```
+
+### Delete the application
+Run kubectl:
+```
+kubectl delete -f hellojs.yaml
+```
+
 # Known Issues
 ## Dependency Violation
 Make sure the game 2048 application is removed from the kubernetes cluster before deploying the infrastructure. If you skipped uninstalling the 2048 game in the previous step, you may see an error like the one below because terraform did not delete the application load balancer it created using the load balancer controller.

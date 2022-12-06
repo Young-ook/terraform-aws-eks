@@ -134,6 +134,7 @@ System Info:
 - [Yelb](./apps/README.md#yelb)
 - [Game 2048](./apps/README.md#game-2048)
 - [Nginx](./app/README.nd#nginx)
+- [Hello NodeJS](./app/README.nd#hello-nodejs)
 
 ## Clean up
 To destroy all infrastrcuture, run terraform:
