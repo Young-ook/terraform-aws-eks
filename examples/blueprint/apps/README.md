@@ -164,6 +164,7 @@ This is a simple example of multi-arch application.
 
 ### Build multi-arch container images using CodeBuild
 Move to the CodeBuild service page on the Amazon Console. And start to run build projects that has *hellojs* in their project name. After then, you will see the generated container images for multiple architecture (amd64/x86_64, arm64/aarch64) and integrated manifest.
+![aws-ecr-multi-arch-manifest](../../../images/aws-ecr-multi-arch-manifest.png)
 
 ### Deploy NodeJS application from Private Registry
 If there is no error message, you can go to deploy the artifact from build project. Apply the manifest to deploy hello nodejs application with the multi-arch container images that had been just baked.
