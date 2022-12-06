@@ -186,3 +186,12 @@ Make sure the game 2048 application is removed from the kubernetes cluster befor
 │ 	status code: 400, request id: f76a5dc7-0107-4847-a006-4c4e46be9720
 ╵
 ```
+
+## Empty Exception
+Make sure to clean up all ECR repository while you run EKS blueprint example before you destroy all infrastructure. If you skipped a task to delete the existing repositories in this workshop, you may see an error like the one below because terraform did not delete the not empty ECR repository.
+```
+╷
+│ Error: ECR Repository (hellojs) not empty, consider using force_delete: RepositoryNotEmptyException: The repository with name 'hellojs' in registry with id '171104014478' cannot be deleted because it still contains images
+│
+│
+```
