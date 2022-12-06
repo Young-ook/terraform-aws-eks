@@ -1,8 +1,8 @@
 use_default_vpc = false
 fargate_profiles = [
   {
-    name      = "hello-fargate"
-    namespace = "hello-fargate"
+    name      = "default"
+    namespace = "default"
   },
 ]
 managed_node_groups = []
