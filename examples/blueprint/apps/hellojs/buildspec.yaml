@@ -1,0 +1,19 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - cd $APP_PATH
+      - $(aws ecr get-login --no-include-email)
+      - IMAGE_URI="$REPOSITORY_URI:$ARCH"
+  build:
+    commands:
+      - echo Build started on `date`
+      - docker build -t $IMAGE_URI .
+      - docker push $IMAGE_URI
+  post_build:
+    commands:
+      - export DOCKER_CLI_EXPERIMENTAL=enabled
+      - docker manifest create $REPOSITORY_URI $REPOSITORY_URI:arm64 $REPOSITORY_URI:amd64 || true
+      - docker manifest annotate --arch $ARCH $REPOSITORY_URI $REPOSITORY_URI:$ARCH || true
+      - docker manifest push $REPOSITORY_URI || true
+      - docker manifest inspect $REPOSITORY_URI || true

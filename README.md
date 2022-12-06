@@ -6,19 +6,13 @@
 * This module has several sub-modules to deploy kubernetes controllers and utilities using helm provider.
 
 ## Examples
+- [Amazon EKS Blueprint](https://github.com/Young-ook/terraform-aws-eks/tree/main/examples/blueprint)
 - [Amazon EKS Autoscaling](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/autoscaling)
-- [Amazon EKS on AWS Fargate](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/fargate)
-- [Amazon EKS on AWS Graviton](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/arm64)
-- [Amazon EKS with Spot Instances](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/spot)
-- [Amazon CloudWatch Container Insights](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/cw)
-- [Amazon ECR](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/ecr)
-- [AWS Load Balancer Controller](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/lb)
 - [AWS Fault Injection Simulator with Amazon EKS](https://github.com/Young-ook/terraform-aws-fis/tree/main/examples/eks)
 - [AWS Fault Injection Simulator with Amazon Aurora](https://github.com/Young-ook/terraform-aws-fis/tree/main/examples/rds)
 - [AWS Fault Injection Simulator with Amazon ElastiCache for Redis](https://github.com/Young-ook/terraform-aws-fis/tree/main/examples/redis)
 - [Amazon EMR on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/emr)
 - [Amazon EKS with Bottlerocket OS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/bottlerocket)
-- [Amazon EKS Add-ons](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/addon)
 - [Machine Learing with Kubeflow on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/kubeflow)
 
 ## Getting started
@@ -119,4 +113,3 @@ Error: configmaps "aws-auth" already exists
 
 # Additional Resources
 - [Seamlessly Migrate Workloads from EKS Self-managed node groups to managed node groups](https://aws.amazon.com/blogs/containers/seamlessly-migrate-workloads-from-eks-self-managed-node-group-to-eks-managed-node-groups/)
-- [Metrics and traces collection using Amazon EKS add-ons for AWS Distro for OpenTelemetry (ADOT)](https://aws.amazon.com/blogs/containers/metrics-and-traces-collection-using-amazon-eks-add-ons-for-aws-distro-for-opentelemetry/)
