@@ -98,9 +98,42 @@ Use [Amazon CloudWatch Container Insights](https://docs.aws.amazon.com/AmazonClo
 #### Verify the CloudWatch and FluentBit agents are running on
 All steps are finished, check that there are pods that are *Ready* in *aws-addons* namespace. Ensure the *aws-cloudwatch-metrics*, *aws-for-fluent-bit* pods are generated and running.
 
+## Multi-Architecture Node groups
+### AWS Graviton
+[AWS Graviton](https://aws.amazon.com/ec2/graviton/) processors are custom built by Amazon Web Services using 64-bit ARM Neoverse cores to deliver the best price performance for you cloud workloads running on Amazon EC2. The new general purpose (M6g), compute-optimized (C6g), and memory-optimized (R6g) instances deliver up to 40% better price/performance over comparable current generation x86-based instances for scale-out and Arm-based applications such as web servers, containerized microservices, caching fleets, and distributed data stores that are supported by the extensive Arm ecosystem. You can mix x86 and Arm based EC2 instances within a cluster, and easily evaluate Arm-based application in existing environments. Here is a useful [getting started](https://github.com/aws/aws-graviton-getting-started) guide on how to start to use AWS Graviton. This github repository would be good point where to start. You can find out more details about how to build, run and optimize your application for AWS Graviton processors.
+
+To run an example of hybrid-architecture node groups with AWS Graviton, use the another fixture template that configures to only use AWS Graviton based instances. This stap will create ARM64 architecture based node groups and also.
+```
+terraform apply -var-file fixture.graviton.tfvars
+```
+
+#### CodeBuild Environment
+To build an application for ARM64 architecture with AWS CodeBuild, we have to configure environment variable of the build project. The key parameters of the environment for build project are *image*, *type* and *compute type*. The image parameter is (container) image tag or image digest that identifies the Docker image to use for this build project. We use *aws/codebuild/amazonlinux2-aarch64-standard:2.0* image to build an application for ARM64 architectuer based. The type of build environment to use for related builds. In this example, *ARM_CONTAINER* is suitalbe. Be aware of that the environment type *ARM_CONTAINER* is available only in regions US East (N. Virginia), US East (Ohio), US West (Oregon), EU (Ireland), Asia Pacific (Mumbai), Asia Pacific (Tokyo), Asia Pacific (Sydney), and EU (Frankfurt). For more information about build project enviroment, please refer to [this user guide](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-codebuild-project-environment.html)
+There is another important configuration for build project. We have to set compute type to *BUILD_GENERAL1_LARGE* type. Currently it is only available for *ARM_CONTAINER* environment type of CodeBuild project. Please visit [this page](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-compute-types.html) to find out more information and for latest updates.
+
+![aws-ecr-multi-arch-build-pipeline](../../images/aws-ecr-multi-arch-build-pipeline.png)
+![aws-ecr-multi-arch-manifest](../../images/aws-ecr-multi-arch-manifest.png)
+
+
+#### Verify Graviton instances
+After provisioning of EKS cluster, you can describe nodes using kubectl and check out your node groups are running on ARM64 architecture. Amazon EKS customers can now run production workloads using Arm-based instances including the recently launched Amazon EC2 M6g, C6g, and R6g instances powered by AWS Graviton2 processors. Create an EKS cluster with a mixed architecture based node groups.
+```
+kubectl describe node
+```
+```
+System Info:
+  OS Image:                   Amazon Linux 2
+  Operating System:           linux
+  Architecture:               arm64
+  Container Runtime Version:  docker://19.3.6
+  Kubelet Version:            v1.17.11-eks-xxxxyy
+  Kube-Proxy Version:         v1.17.11-eks-xxxxyy
+```
+
 ## Applications
 - [Yelb](./apps/README.md#yelb)
 - [Game 2048](./apps/README.md#game-2048)
+- [Nginx](./app/README.nd#nginx)
 
 ## Clean up
 To destroy all infrastrcuture, run terraform:

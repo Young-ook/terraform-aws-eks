@@ -59,6 +59,106 @@ Run kubectl:
 kubectl delete -f https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/examples/2048/2048_full.yaml
 ```
 
+## Nginx
+### Deploy Nginx from Public Registry
+Copy below and **SAVE** as a new deployment file (nginx.yaml) on your workspace. You can edit the file if you have anything to change.
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx-svc
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+```
+Then, apply the modified manifest.
+```
+kubectl apply -f nginx.yaml
+```
+
+To verify that the nginx pods are running properly on the multiple architecture node groups, run describe command.
+```
+kubectl describe no
+```
+
+The output will be shown below.
+```
+Name:               ip-172-xx-yx-xxx.us-west-2.compute.internal
+                    beta.kubernetes.io/instance-type=m6g.medium
+                    eks.amazonaws.com/nodegroup=eks-x86-arm64-tc2
+                    kubernetes.io/arch=arm64
+                    kubernetes.io/os=linux
+CreationTimestamp:  Fri, 20 Nov 2020 12:52:26 +0900
+System Info:
+  Operating System:           linux
+  Architecture:               arm64
+  Container Runtime Version:  docker://19.3.6
+  Kubelet Version:            v1.17.12-eks-xxxxyy
+  Kube-Proxy Version:         v1.17.12-eks-xxxxyy
+Non-terminated Pods:          (8 in total)
+  Namespace                   Name                         CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
+  ---------                   ----                         ------------  ----------  ---------------  -------------  ---
+  default                     my-nginx-xxxxyyyyww-bqpfk    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
+  default                     my-nginx-xxxxyyyyww-fzpfb    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
+  default                     my-nginx-xxxxyyyyww-kqht5    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
+  default                     my-nginx-xxxxyyyyww-m5x25    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
+  default                     my-nginx-xxxxyyyyww-tcv92    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
+Events:                       <none>
+Name:               ip-172-xx-yy-xxx.us-west-2.compute.internal
+                    beta.kubernetes.io/instance-type=m5.large
+                    eks.amazonaws.com/nodegroup=eks-x86-arm64-tc2
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/os=linux
+CreationTimestamp:  Fri, 20 Nov 2020 12:52:59 +0900
+System Info:
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  docker://19.3.6
+  Kubelet Version:            v1.17.12-eks-xxxxyy
+  Kube-Proxy Version:         v1.17.12-eks-xxxxyy
+Non-terminated Pods:          (28 in total)
+  Namespace                   Name                         CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
+  ---------                   ----                         ------------  ----------  ---------------  -------------  ---
+  default                     my-nginx-xxxxyyyyww-5wlvd    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
+  default                     my-nginx-xxxxyyyyww-626nn    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
+  default                     my-nginx-xxxxyyyyww-6h7nk    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
+  default                     my-nginx-xxxxyyyyww-dgppf    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
+  default                     my-nginx-xxxxyyyyww-fgp8r    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
+Events:                       <none>
+```
+
+### Delete the application
+Run kubectl:
+```
+kubectl delete -f nginx.yaml
+```
+
 # Known Issues
 ## Dependency Violation
 Make sure the game 2048 application is removed from the kubernetes cluster before deploying the infrastructure. If you skipped uninstalling the 2048 game in the previous step, you may see an error like the one below because terraform did not delete the application load balancer it created using the load balancer controller.
