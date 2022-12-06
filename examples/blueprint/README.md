@@ -32,23 +32,14 @@ We need to get kubernetes config file for access the cluster that we've made usi
 [AWS App Mesh](https://aws.amazon.com/app-mesh/) is a service mesh that provides application-level networking to make it easy for your services to communicate with each other across multiple types of compute infrastructure. App Mesh gives end-to-end visibility and high-availability for your applications.
 
 #### Verify the App Mesh Controller
-After all steps are finished, check all pods are *Ready* in *aws-addons* namespace by default or you've changed. Ensure the *appmesh-controller* pod is generated and running:
+After all steps are finished, check all pods are *Ready* in *kube-system* namespace by default or you've changed. Ensure the *appmesh-controller* pod is generated and running:
 ```
-kubectl -n aws-addons get all
+kubectl -n kube-system get po
 ```
 The expected output is as follows:
 ```
 NAME                                            READY   STATUS    RESTARTS   AGE
 pod/appmesh-controller-xxxxxxxxx-xxxxx          1/1     Running   0          10h
-
-NAME                                                TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
-service/appmesh-controller-webhook-service          ClusterIP   10.100.9.216   <none>        443/TCP   10h
-
-NAME                                        READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/appmesh-controller          1/1     1            1           10h
-
-NAME                                                  DESIRED   CURRENT   READY   AGE
-replicaset.apps/appmesh-controller-xxxxxxxxx          1         1         1       10h
 ```
 
 And you can list the all CRD(Custom Resource Definition)s for App Mesh integration.
@@ -78,15 +69,15 @@ The [AWS load balancer controller](https://github.com/kubernetes-sigs/aws-load-b
 The AWS Load Balancer Controller makes it easy for users to take advantage of the loadbalancer management. For more details, please visit [this](https://github.com/kubernetes-sigs/aws-load-balancer-controller)
 
 #### Verify the AWS Load Balancer Controller
-All steps are finished, check that there are pods that are *Ready* in *aws-addons* namespace. Ensure the *aws-load-balancer-controller* pod is generated and running:
+All steps are finished, check that there are pods that are *Ready* in *kube-system* namespace. Ensure the *aws-load-balancer-controller* pod is generated and running:
 
 ```
-kubectl get deploy -n aws-addons aws-load-balancer-controller
+kubectl get deploy -n kube-system aws-load-balancer-controller
 ```
 
 If the pod is not healthy, please try to check in the log:
 ```
-kubectl -n aws-addons logs aws-load-balancer-controller-7dd4ff8cb-wqq58
+kubectl -n kube-system logs aws-load-balancer-controller-7dd4ff8cb-wqq58
 ```
 
 ### Amazon CloudWatch Container Insights
@@ -96,13 +87,13 @@ Use [Amazon CloudWatch Container Insights](https://docs.aws.amazon.com/AmazonClo
 ![aws-cw-container-insights](../../images/aws-cw-container-insights.png)
 
 #### Verify the CloudWatch and FluentBit agents are running on
-All steps are finished, check that there are pods that are *Ready* in *aws-addons* namespace. Ensure the *aws-cloudwatch-metrics*, *aws-for-fluent-bit* pods are generated and running.
+All steps are finished, check that there are pods that are *Ready* in *kube-system* namespace. Ensure the *aws-cloudwatch-metrics*, *aws-for-fluent-bit* pods are generated and running.
 
 ## Computing options
 ### AWS Fargate (Serverless)
 AWS Fargate is a technology that provides on-demand, right-sized compute capacity for containers. With AWS Fargate, you no longer have to provision, configure, or scale groups of virtual machines to run containers. This removes the need to choose server types, decide when to scale your node groups, or optimize cluster packing. You can control which pods start on Fargate and how they run with Fargate profiles. Each pod running on Fargate has its own isolation boundary and does not share the underlying kernel, CPU resources, memory resources, or elastic network interface with another pod. For more information, please refer [this](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html).
 
-To run an example of serverless node groups with AWS Fargate, use the another fixture template that configures to only use AWS Fargate based instances. Edit main.tf file to remove *appmesh-controller*, *aws-cloudwatch-metrics*, *aws-for-fluent-bit*, *karpenter* from the map of helm-addons. And remove all addons except *vpc-cni* from the eks-addons and save the file. If you don't remove it, you will get an error that the terraform configuration can't get the instance profile data from the output of the eks module. Run terraform command with fargate fixtures:
+To run an example of serverless node groups with AWS Fargate, use the another fixture template that configures to only use AWS Fargate based instances. Edit main.tf file to remove all helm-addons except *aws-load-balancer-controller*, *metrics-server* from the map of helm-addons. And remove all eks-addons except *vpc-cni* and save the file. If you don't remove it, you will get an error that the terraform configuration can't get the instance profile data from the output of the eks module. Run terraform command with fargate fixtures:
 ```
 terraform apply -var-file fixture.fargate.tfvars
 ```

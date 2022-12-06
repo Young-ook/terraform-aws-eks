@@ -83,7 +83,7 @@ module "helm-addons" {
       repository     = "https://aws.github.io/eks-charts"
       name           = "appmesh-controller"
       chart_name     = "appmesh-controller"
-      namespace      = "aws-addons"
+      namespace      = "kube-system"
       serviceaccount = "appmesh-controller"
       values = {
         "region"           = var.aws_region
@@ -101,7 +101,7 @@ module "helm-addons" {
       repository     = "https://aws.github.io/eks-charts"
       name           = "aws-cloudwatch-metrics"
       chart_name     = "aws-cloudwatch-metrics"
-      namespace      = "aws-addons"
+      namespace      = "kube-system"
       serviceaccount = "aws-cloudwatch-metrics"
       values = {
         "clusterName" = module.eks.cluster.name
@@ -115,7 +115,7 @@ module "helm-addons" {
       repository     = "https://aws.github.io/eks-charts"
       name           = "aws-for-fluent-bit"
       chart_name     = "aws-for-fluent-bit"
-      namespace      = "aws-addons"
+      namespace      = "kube-system"
       serviceaccount = "aws-for-fluent-bit"
       values = {
         "cloudWatch.enabled"      = true
@@ -134,7 +134,7 @@ module "helm-addons" {
       repository     = "https://aws.github.io/eks-charts"
       name           = "aws-load-balancer-controller"
       chart_name     = "aws-load-balancer-controller"
-      namespace      = "aws-addons"
+      namespace      = "kube-system"
       serviceaccount = "aws-load-balancer-controller"
       values = module.eks.features.fargate_enabled ? {
         "vpcId"       = module.vpc.vpc.id
@@ -149,7 +149,7 @@ module "helm-addons" {
       repository     = "https://charts.karpenter.sh"
       name           = "karpenter"
       chart_name     = "karpenter"
-      namespace      = "aws-addons"
+      namespace      = "kube-system"
       serviceaccount = "karpenter"
       values = {
         "clusterName"                = module.eks.cluster.name
