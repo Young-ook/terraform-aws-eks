@@ -9,7 +9,6 @@
 - [Amazon EKS Blueprint](https://github.com/Young-ook/terraform-aws-eks/tree/main/examples/blueprint)
 - [Amazon EKS Autoscaling](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/autoscaling)
 - [Amazon EKS on AWS Fargate](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/fargate)
-- [Amazon EKS on AWS Graviton](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/arm64)
 - [Amazon EKS with Spot Instances](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/spot)
 - [AWS Fault Injection Simulator with Amazon EKS](https://github.com/Young-ook/terraform-aws-fis/tree/main/examples/eks)
 - [AWS Fault Injection Simulator with Amazon Aurora](https://github.com/Young-ook/terraform-aws-fis/tree/main/examples/rds)
