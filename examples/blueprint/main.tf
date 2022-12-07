@@ -169,6 +169,13 @@ module "helm-addons" {
         "args[0]" = "--kubelet-preferred-address-types=InternalIP"
       }
     },
+    {
+      repository     = "https://aws.github.io/eks-charts"
+      name           = "aws-node-termination-handler"
+      chart_name     = "aws-node-termination-handler"
+      namespace      = "kube-system"
+      serviceaccount = "aws-node-termination-handler"
+    },
   ]
 }
 
