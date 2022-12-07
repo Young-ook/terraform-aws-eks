@@ -1,11 +1,4 @@
-aws_region = "ap-northeast-2"
-azs        = ["ap-northeast-2a", "ap-northeast-2c", "ap-northeast-2d"]
-name       = "eks-mng-mix-tc2"
-tags = {
-  env  = "dev"
-  test = "tc2"
-}
-kubernetes_version = "1.21"
+fargate_profiles = []
 managed_node_groups = [
   {
     name          = "on-demand"
@@ -20,5 +13,4 @@ managed_node_groups = [
     desired_size  = 1
   }
 ]
-node_groups      = []
-fargate_profiles = []
+node_groups = []
