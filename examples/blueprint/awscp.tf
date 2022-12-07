@@ -97,3 +97,12 @@ resource "local_file" "manifest" {
   filename        = "${path.cwd}/hellojs.yaml"
   file_permission = "0400"
 }
+
+resource "local_file" "localbuild" {
+  content = templatefile("${path.module}/apps/hellojs/localbuild.sh.tpl", {
+    region  = var.aws_region
+    ecr_uri = module.ecr["hellojs"].url
+  })
+  filename        = "${path.module}/apps/hellojs/localbuild.sh"
+  file_permission = "0400"
+}
