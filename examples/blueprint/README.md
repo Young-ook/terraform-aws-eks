@@ -93,6 +93,30 @@ All steps are finished, check that there are pods that are *Ready* in *kube-syst
 ### Metrics Server
 [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) is a scalable, efficient source of container resource metrics for Kubernetes built-in autoscaling pipelines. Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver through Metrics API for use by Horizontal Pod Autoscaler and Vertical Pod Autoscaler. Metrics API can also be accessed by kubectl top, making it easier to debug autoscaling pipelines.
 
+### Prometheus
+[Prometheus](https://prometheus.io/) is an open-source systems monitoring and alerting toolkit originally built at SoundCloud. Since its inception in 2012, many companies and organizations have adopted Prometheus, and the project has a very active developer and user community. It is now a standalone open source project and maintained independently of any company. Prometheus joined the Cloud Native Computing Foundation in 2016 as the second hosted project, after Kubernetes.
+
+You can install prometheus on your kubernetes cluster by helm which is a clustered application package manager. Simply add your helm chart configuration into addons list variable in *helm-addons* module. And apply terraform configuration changes to install prometheus monitoring tool. Here is an example.
+```
+module "helm-addons" {
+  source     = "Young-ook/eks/aws//modules/helm-addons"
+  tags       = var.tags
+  addons = [
+    {
+      repository     = "https://prometheus-community.github.io/helm-charts"
+      name           = "prometheus"
+      chart_name     = "prometheus"
+      namespace      = "prometheus"
+      serviceaccount = "prometheus"
+      values = {
+        "alertmanager.persistentVolume.storageClass" = "gp2"
+        "server.persistentVolume.storageClass"       = "gp2"
+      }
+    },
+  ]
+}
+```
+
 ## Computing options
 ### AWS Fargate (Serverless)
 AWS Fargate is a technology that provides on-demand, right-sized compute capacity for containers. With AWS Fargate, you no longer have to provision, configure, or scale groups of virtual machines to run containers. This removes the need to choose server types, decide when to scale your node groups, or optimize cluster packing. You can control which pods start on Fargate and how they run with Fargate profiles. Each pod running on Fargate has its own isolation boundary and does not share the underlying kernel, CPU resources, memory resources, or elastic network interface with another pod. For more information, please refer [this](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html).
@@ -208,3 +232,6 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## Karpenter
 - [Introducing Karpenter](https://aws.amazon.com/blogs/aws/introducing-karpenter-an-open-source-high-performance-kubernetes-cluster-autoscaler/)
 - [Implement autoscaling with Karpenter](https://www.eksworkshop.com/beginner/085_scaling_karpenter/)
+
+## Prometheus
+- [Deploy Promethus using Helm](https://www.eksworkshop.com/intermediate/240_monitoring/deploy-prometheus/)
