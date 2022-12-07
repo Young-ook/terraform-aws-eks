@@ -89,6 +89,57 @@ Use [Amazon CloudWatch Container Insights](https://docs.aws.amazon.com/AmazonClo
 #### Verify the CloudWatch and FluentBit agents are running on
 All steps are finished, check that there are pods that are *Ready* in *kube-system* namespace. Ensure the *aws-cloudwatch-metrics*, *aws-for-fluent-bit* pods are generated and running.
 
+### AWS Node Termination Handler
+[AWS Node Termination Handler](https://github.com/aws/aws-node-termination-handler) is a project ensures that the Kubernetes control plane responds appropriately to events that can cause your EC2 instance to become unavailable, such as EC2 maintenance events, EC2 Spot interruptions, ASG Scale-In, ASG AZ Rebalance, and EC2 Instance Termination via the API or Console. The AWS Node Termination Handler provides a connection between termination requests from AWS to Kubernetes nodes, allowing graceful draining and termination of nodes that receive interruption notifications. The termination handler uses the Kubernetes API to initiate drain and cordon actions on a node that is targeted for termination. To learn more or get started, visit the project on GitHub.
+
+#### Verify the Node Termination Handler is working
+All steps are finished, check that the pod is *Ready* in *kube-system* namespace. Ensure the *aws-node-termination-hander* pod is running:
+```
+kubectl -n kube-system get po
+```
+```
+NAME                                          READY   STATUS    RESTARTS   AGE
+aws-node-xxxxx                                1/1     Running   0          19h
+aws-node-termination-handler-xxxxx            1/1     Running   0          19h
+coredns-xxxxxxxxx-xxxxx                       1/1     Running   0          19h
+coredns-xxxxxxxxx-xxxxx                       1/1     Running   0          19h
+kube-proxy-xxxxx                              1/1     Running   0          19h
+metrics-server-xxxxxxxxx-xxxxx                1/1     Running   0          19h
+```
+
+And also, you can see the logs from pod to check it is working well:
+```
+kubectl -n kube-system logs -f aws-node-termination-handler-xxxxx
+```
+```
+2021/01/17 08:14:11 ??? Trying to get token from IMDSv2
+2021/01/17 08:14:11 ??? Got token from IMDSv2
+2021/01/17 08:14:11 ??? Startup Metadata Retrieved metadata={"accountId":"xxxxxxxxxxxx","availabilityZone":"ap-northeast-2c","instanceId":"i-0dd84c15xxxxe411c","instanceType":"t3.large","localHostname":"ip-172-31-xxx-xxx.ap-northeast-2.compute.internal","privateIp":"172.31.xxx.xxx","publicHostname":"ec2-13-xxx-xxx-xxx.ap-northeast-2.compute.amazonaws.com","publicIp":"13.xxx.xxx.xxx","region":"ap-northeast-2"}
+2021/01/17 08:14:11 ??? aws-node-termination-handler arguments:
+	dry-run: false,
+	node-name: ip-172-31-xxx-xxx.ap-northeast-2.compute.internal,
+	metadata-url: http://169.254.169.254,
+	kubernetes-service-host: 10.xxx.xxx.xxx,
+	kubernetes-service-port: 443,
+	delete-local-data: true,
+	ignore-daemon-sets: true,
+	pod-termination-grace-period: -1,
+	node-termination-grace-period: 120,
+	enable-scheduled-event-draining: false,
+     <...>
+	queue-url: ,
+	check-asg-tag-before-draining: true,
+	managed-asg-tag: aws-node-termination-handler/managed,
+	aws-endpoint: ,
+
+2021/01/17 08:14:11 ??? Started watching for interruption events
+2021/01/17 08:14:11 ??? Kubernetes AWS Node Termination Handler has started successfully!
+2021/01/17 08:14:11 ??? Started watching for event cancellations
+2021/01/17 08:14:11 ??? Started monitoring for events event_type=SPOT_ITN
+2021/01/17 09:13:59 ??? Trying to get token from IMDSv2
+2021/01/17 09:13:59 ??? Got token from IMDSv2
+```
+
 ## Kubernetes Utilities
 ### Metrics Server
 [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) is a scalable, efficient source of container resource metrics for Kubernetes built-in autoscaling pipelines. Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver through Metrics API for use by Horizontal Pod Autoscaler and Vertical Pod Autoscaler. Metrics API can also be accessed by kubectl top, making it easier to debug autoscaling pipelines.
