@@ -6,15 +6,22 @@
 #  - BOTTLEROCKET_ARM_64
 #  - BOTTLEROCKET_x86_64
 
-fargate_profiles    = []
-managed_node_groups = []
-node_groups = [
+fargate_profiles = []
+managed_node_groups = [
   {
-    name          = "bottlerocket"
-    min_size      = 1
-    max_size      = 3
-    desired_size  = 1
+    name          = "bros"
     instance_type = "t3.small"
     ami_type      = "BOTTLEROCKET_x86_64"
   },
+  {
+    name          = "bros-arm64"
+    instance_type = "m6g.medium"
+    ami_type      = "BOTTLEROCKET_ARM_64"
+  },
+  {
+    name          = "al2-gpu"
+    instance_type = "g4dn.xlarge"
+    ami_type      = "AL2_x86_64_GPU"
+  },
 ]
+node_groups = []
