@@ -98,7 +98,7 @@ To run an example of serverless node groups with AWS Fargate, use the another fi
 terraform apply -var-file fixture.fargate.tfvars
 ```
 
-Then, you can deploy an example from publie resource, such as *hello-kube*, [*nginx*](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
+Then, you can deploy an example from publie resource, such as [*hello-kuberntes*](https://github.com/paulbouwer/hello-kubernetes), [*nginx*](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
 For example, you can check the list of currently running farget nodes after deployment. Run kubernetes cli:
 ```
 kubectl get no
@@ -139,13 +139,14 @@ System Info:
   Kube-Proxy Version:         v1.17.11-eks-xxxxyy
 ```
 ### Amazon EC2 Spot Instances
-Amazon EC2 Spot Instances let you take advantage of unused EC2 capacity in the AWS cloud. Spot Instances are available at up to a 90% discount compared to On-Demand prices; however, can be interrupted via Spot Instance interruptions, a two-minute warning before Amazon EC2 stops or terminates the instance. The AWS Node Termination Handler makes it easy for users to take advantage of the cost savings and performance boost offered by EC2 Spot Instances in their Kubernetes clusters while gracefully handling EC2 Spot Instance terminations. The AWS Node Termination Handler provides a connection between termination requests from AWS to Kubernetes nodes, allowing graceful draining and termination of nodes that receive interruption notifications. The termination handler uses the Kubernetes API to initiate drain and cordon actions on a node that is targeted for termination. For more details, please visit [this](https://github.com/Young-ook/terraform-aws-eks/blob/main/modules/node-termination-handler/)
+Amazon EC2 Spot Instances let you take advantage of unused EC2 capacity in the AWS cloud. Spot Instances are available at up to a 90% discount compared to On-Demand prices; however, can be interrupted via Spot Instance interruptions, a two-minute warning before Amazon EC2 stops or terminates the instance. The AWS Node Termination Handler makes it easy for users to take advantage of the cost savings and performance boost offered by EC2 Spot Instances in their Kubernetes clusters while gracefully handling EC2 Spot Instance terminations. The AWS Node Termination Handler provides a connection between termination requests from AWS to Kubernetes nodes, allowing graceful draining and termination of nodes that receive interruption notifications. The termination handler uses the Kubernetes API to initiate drain and cordon actions on a node that is targeted for termination. For more details, please visit [this](https://github.com/Young-ook/terraform-aws-eks/tree/main/modules/node-termination-handler/)
 
 ## Applications
 - [Yelb](./apps/README.md#yelb)
 - [Game 2048](./apps/README.md#game-2048)
 - [Nginx](./apps/README.md#nginx)
 - [Hello NodeJS](./apps/README.md#hello-nodejs)
+- [Hello Kuberentes](./apps/README.md#hello-kubernetes)
 
 ## Clean up
 To destroy all infrastrcuture, run terraform:
