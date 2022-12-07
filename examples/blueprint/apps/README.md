@@ -40,7 +40,7 @@ You can run the sample application on a cluster. Deploy the game 2048 as a sampl
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/examples/2048/2048_full.yaml
 ```
 
-After a few minutes, verify that the Ingress resource was created with the following command. Describe ingress resource using kubectl. You will see the amazon resource name (ARN) of the generated application load balancer (ALB). Copy the address from output and open on the web browser.
+After a few minutes, verify that the Ingress resource was created with the following command. Describe ingress resource using kubectl. You will see the amazon resource name (ARN) of the generated application load balancer (ALB). Copy the address from output (e.g., k8s-game2048-ingress2-9e5ab32c61-1003956951.ap-northeast-2.elb.amazonaws.com) and open on the web browser.
 ```
 kubectl -n game-2048 get ing
 ```
@@ -50,7 +50,6 @@ Output:
 NAME           CLASS    HOSTS   ADDRESS                                                                        PORTS   AGE
 ingress-2048   <none>   *       k8s-game2048-ingress2-9e5ab32c61-1003956951.ap-northeast-2.elb.amazonaws.com   80      29s
 ```
-
 ![aws-ec2-lbc-game-2048](../../../images/aws-ec2-lbc-game-2048.png)
 
 ### Delete the application
@@ -176,6 +175,78 @@ kubectl apply -f hellojs.yaml
 Run kubectl:
 ```
 kubectl delete -f hellojs.yaml
+```
+
+## Hello Kubernetes
+### Deploy Hello Kubernetes application
+This is a simple example to show kubernetes information. Copy below and **SAVE** as a new deployment file (hellokube.yaml) on your workspace. You can edit the file if you have anything to change.
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-kubernetes
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: hello-kubernetes
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-kubernetes
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello-kubernetes
+  template:
+    metadata:
+      labels:
+        app: hello-kubernetes
+    spec:
+      containers:
+      - name: hello-kubernetes
+        image: paulbouwer/hello-kubernetes:1.8
+        ports:
+        - containerPort: 8080
+```
+Then, apply the modified manifest.
+```
+kubectl apply -f hellokube.yaml
+```
+
+To check the status of node groups, run kubernetes cli command:
+```
+kubectl get no
+```
+```
+NAME                 STATUS   ROLES    AGE     VERSION
+fargate-10.0.2.59    Ready    <none>   109s    v1.17.9-eks-a84824
+fargate-10.0.3.171   Ready    <none>   2m31s   v1.17.9-eks-a84824
+fargate-10.0.3.80    Ready    <none>   2m49s   v1.17.9-eks-a84824
+```
+A few minutes later you can see the fargate/ec2 nodes are up. And you can try to access the service via port forwarding when all pods are ready and runnig. If everything looks fine, go forward to the next step.
+
+### Access the example
+#### Local Workspace
+In your local workspace, connect through a proxy to access your application's endpoint.
+```
+kubectl port-forward svc/hello-kubernetes 8080:80
+```
+Open `http://localhost:8080` on your web browser. This shows the application main page.
+
+#### Cloud9
+In your Cloud9 IDE, run the application.
+```
+kubectl port-forward svc/hello-kubernetes 8080:80
+```
+
+### Delete the application
+To clean up all resources or hello-kubernetes application from cluster, run kubectl:
+```
+kubectl delete -f hellokube.yaml
 ```
 
 # Known Issues
