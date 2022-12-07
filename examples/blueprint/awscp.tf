@@ -21,11 +21,11 @@ locals {
       repo         = "hellojs"
     },
     {
-      name      = "yelbv2"
+      name      = "yelb"
       image     = "aws/codebuild/standard:5.0"
-      buildspec = "examples/blueprint/apps/yelbv2/buildspec.yml"
-      app_path  = "examples/blueprint/apps/yelbv2"
-      repo      = "yelbv2"
+      buildspec = "examples/blueprint/apps/yelb/buildspec.yml"
+      app_path  = "examples/blueprint/apps/yelb"
+      repo      = "yelb"
     },
   ]
 }
@@ -75,8 +75,8 @@ module "ecr" {
 }
 
 module "logs" {
-  source  = "Young-ook/lambda/aws//modules/logs"
-  version = "0.2.1"
+  source  = "Young-ook/eventbridge/aws//modules/logs"
+  version = "0.0.6"
   for_each = { for log in [
     {
       type = "codebuild"
@@ -91,8 +91,16 @@ module "logs" {
 }
 
 resource "local_file" "manifest" {
-  content = templatefile("${path.module}/apps/hellojs/hellojs.yaml.tpl", {
-    ecr_uri = module.ecr["hellojs"].url
+  for_each = {
+    hellojs = {
+      filepath = "${path.module}/apps/hellojs/hellojs.yaml.tpl"
+    }
+    yelb = {
+      filepath = "${path.module}/apps/yelb/yelb.yaml.tpl"
+    }
+  }
+  content = templatefile(lookup(each.value, "filepath"), {
+    ecr_uri = module.ecr[each.key].url
   })
   filename        = "${path.cwd}/hellojs.yaml"
   file_permission = "0400"
