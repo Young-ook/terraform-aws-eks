@@ -141,6 +141,39 @@ kubectl -n kube-system logs -f aws-node-termination-handler-xxxxx
 ```
 
 ## Kubernetes Utilities
+### Chaos Mesh
+[Chaos Mesh](https://chaos-mesh.org/docs/) is an open source cloud-native Chaos Engineering platform. It offers various types of fault simulation and has an enormous capability to orchestrate fault scenarios. Using Chaos Mesh, you can conveniently simulate various abnormalities that might occur in reality during the development, testing, and production environments and find potential problems in the system. To lower the threshold for a Chaos Engineering project, Chaos Mesh provides you with a visualization operation. You can easily design your Chaos scenarios on the Web UI and monitor the status of Chaos experiments.
+
+You can install chaos mesh on your kubernetes cluster by helm which is a clustered application package manager. Simply add your helm chart configuration into addons list variable in *helm-addons* module. And apply terraform configuration changes. Here is an example.
+```
+module "helm-addons" {
+  source     = "Young-ook/eks/aws//modules/helm-addons"
+  tags       = var.tags
+  addons = [
+    {
+      repository      = "https://charts.chaos-mesh.org"
+      name            = "chaos-mesh"
+      chart_name      = "chaos-mesh"
+      namespace       = "chaos-mesh"
+      serviceaccount  = "chaos-mesh-controller"
+    },
+  ]
+}
+```
+
+All steps to install chaos mesh using helm-addons are finished, check if all pods are *Ready* in *chaos-mesh* namespace by default or you've changed. To check the running status of Chaos Mesh, execute the following command:
+
+```
+kubectl -n chaos-mesh get po
+```
+The expected output is as follows:
+```
+NAME                                        READY   STATUS    RESTARTS   AGE
+chaos-controller-manager-69fd5c46c8-xlqpc   3/3     Running   0          2d5h
+chaos-daemon-jb8xh                          1/1     Running   0          2d5h
+chaos-dashboard-98c4c5f97-tx5ds             1/1     Running   0          2d5h
+```
+
 ### Metrics Server
 [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) is a scalable, efficient source of container resource metrics for Kubernetes built-in autoscaling pipelines. Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver through Metrics API for use by Horizontal Pod Autoscaler and Vertical Pod Autoscaler. Metrics API can also be accessed by kubectl top, making it easier to debug autoscaling pipelines.
 
@@ -279,6 +312,9 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## AWS Graviton
 - [Amazon's Arm-based Graviton2 Against AMD and Intel](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd)
 - [Graviton2 Single Threaded Performance](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd/5)
+
+## Chaos Mesh
+- [Chaos Testing with AWS Fault Injection Simulator and AWS CodePipeline](https://aws.amazon.com/blogs/architecture/chaos-testing-with-aws-fault-injection-simulator-and-aws-codepipeline/)
 
 ## Karpenter
 - [Introducing Karpenter](https://aws.amazon.com/blogs/aws/introducing-karpenter-an-open-source-high-performance-kubernetes-cluster-autoscaler/)
