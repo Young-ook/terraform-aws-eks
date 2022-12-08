@@ -75,8 +75,8 @@ module "ecr" {
 }
 
 module "logs" {
-  source  = "Young-ook/lambda/aws//modules/logs"
-  version = "0.2.1"
+  source  = "Young-ook/eventbridge/aws//modules/logs"
+  version = "0.0.6"
   for_each = { for log in [
     {
       type = "codebuild"
@@ -95,5 +95,14 @@ resource "local_file" "manifest" {
     ecr_uri = module.ecr["hellojs"].url
   })
   filename        = "${path.cwd}/hellojs.yaml"
+  file_permission = "0400"
+}
+
+resource "local_file" "localbuild" {
+  content = templatefile("${path.module}/apps/hellojs/localbuild.sh.tpl", {
+    region  = var.aws_region
+    ecr_uri = module.ecr["hellojs"].url
+  })
+  filename        = "${path.module}/apps/hellojs/localbuild.sh"
   file_permission = "0400"
 }
