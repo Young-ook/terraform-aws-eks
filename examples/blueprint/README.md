@@ -18,7 +18,7 @@ Run terraform:
 terraform init
 terraform apply
 ```
-Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
+Also you can use the *-var-file* option for customized paramters when you run the terraform plan/apply command.
 ```
 terraform plan -var-file fixture.tc1.tfvars
 terraform apply -var-file fixture.tc1.tfvars
@@ -140,6 +140,48 @@ kubectl -n kube-system logs -f aws-node-termination-handler-xxxxx
 2021/01/17 09:13:59 ??? Got token from IMDSv2
 ```
 
+### Cluster Autoscaler
+[Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler) is a tool that automatically adjusts the size of a Kubernetes Cluster so that all pods have a place to run and there are no unneeded nodes when one of the following conditions is true:
+* there are pods that failed to run in the cluster due to insufficient resources.
+* there are nodes in the cluster that have been underutilized for an extended period of time and their pods can be placed on other existing nodes.
+On AWS, Cluster Autoscaler utilizes Amazon EC2 Auto Scaling Groups to manage node groups. Cluster Autoscaler typically runs as a *Deployment* in your cluster. For more details, please check out [Cluster Autoscaler](https://docs.aws.amazon.com/eks/latest/userguide/cluster-autoscaler.html)
+
+![kubernetes-cluster-autoscaler-aws](../../images/kubernetes-cluster-autoscaler-aws.png)
+
+#### Verify the Cluster Autoscaler is working
+All steps are finished, check that there are pods that are *Ready* in *kube-system* namespace:
+Ensure the *cluster-autoscaler* pod is generated and running:
+
+```
+kubectl -n kube-system get po
+```
+```
+NAME                                                   READY   STATUS    RESTARTS   AGE
+aws-node-g4mh5                                         1/1     Running   0          10m
+cluster-autoscaler-xxxxxxxxx-mwjzk                     1/1     Running   0          10m
+kube-proxy-q79tk                                       1/1     Running   0          10m
+```
+If the pod is not healthy, please try to check the log:
+```
+kubectl -n kube-system logs cluster-autoscaler-xxxxxxxxx-mwjzk
+```
+
+If you want to make sure that the EC2 autoscaling group(ASG) has the tags that cluster autoscaler is looking for, you can see the latest update of cluster autoscaler. It may look like below. You can check whether cluster autoscaler is able to recognize the ASG. If cluster autoscaler is able to recognize the ASG, you will see the ASG name under NodeGroups section. If you don't even see NodeGroups section, it means that cluster autoscaler is still not able to autodiscover your ASG.
+```
+kubectl -n kube-system get cm cluster-autoscaler-status -o yaml
+```
+```
+apiVersion: v1
+data:
+  status: |+
+    Cluster-autoscaler status at 2021-01-08 04:04:55.644106199 +0000 UTC:
+    NodeGroups:
+      Name:        eks-xxxxyyyy-c03a-xxxx-1111-2dc09d308552
+      Health:      Healthy (ready=2 unready=0 notStarted=0 longNotStarted=0 registered=2 longUnregistered=0 cloudProviderTarget=2 (minSize=1, maxSize=3))
+                   LastProbeTime:      2021-01-08 04:04:55.643676127 +0000 UTC m=+6684.061091143
+                   LastTransitionTime: 2021-01-08 02:14:17.530198588 +0000 UTC m=+45.947613652
+```
+
 ## Kubernetes Utilities
 ### Metrics Server
 [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) is a scalable, efficient source of container resource metrics for Kubernetes built-in autoscaling pipelines. Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver through Metrics API for use by Horizontal Pod Autoscaler and Vertical Pod Autoscaler. Metrics API can also be accessed by kubectl top, making it easier to debug autoscaling pipelines.
@@ -255,7 +297,7 @@ If you don't want to see a confirmation question, you can use quite option for t
 terraform destroy --auto-approve
 ```
 
-**[Don't forget]** You have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
+**[DON'T FORGET]** You have to use the *-var-file* option when you run terraform destroy command to delete the aws resources created with extra variable files.
 ```
 terraform destroy -var-file fixture.tc1.tfvars
 ```
@@ -279,6 +321,9 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## AWS Graviton
 - [Amazon's Arm-based Graviton2 Against AMD and Intel](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd)
 - [Graviton2 Single Threaded Performance](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd/5)
+
+## Cluster Autoscaler
+- [EKS Cluster Autoscaler Setup](https://aws.amazon.com/premiumsupport/knowledge-center/eks-cluster-autoscaler-setup/)
 
 ## IAM Role for Service Accounts
 - [Diving into IAM Roles for Service Accounts](https://aws.amazon.com/blogs/containers/diving-into-iam-roles-for-service-accounts/)
