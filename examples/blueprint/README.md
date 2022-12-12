@@ -31,7 +31,7 @@ We need to get kubernetes config file for access the cluster that we've made usi
 ### AWS App Mesh Controller
 [AWS App Mesh](https://aws.amazon.com/app-mesh/) is a service mesh that provides application-level networking to make it easy for your services to communicate with each other across multiple types of compute infrastructure. App Mesh gives end-to-end visibility and high-availability for your applications.
 
-#### Verify the App Mesh Controller
+#### Verify your App Mesh Controller
 After all steps are finished, check all pods are *Ready* in *kube-system* namespace by default or you've changed. Ensure the *appmesh-controller* pod is generated and running:
 ```
 kubectl -n kube-system get po
@@ -68,7 +68,7 @@ The [AWS load balancer controller](https://github.com/kubernetes-sigs/aws-load-b
 
 The AWS Load Balancer Controller makes it easy for users to take advantage of the loadbalancer management. For more details, please visit [this](https://github.com/kubernetes-sigs/aws-load-balancer-controller)
 
-#### Verify the AWS Load Balancer Controller
+#### Verify your AWS Load Balancer Controller
 All steps are finished, check that there are pods that are *Ready* in *kube-system* namespace. Ensure the *aws-load-balancer-controller* pod is generated and running:
 
 ```
@@ -86,13 +86,13 @@ kubectl -n kube-system logs aws-load-balancer-controller-7dd4ff8cb-wqq58
 Use [Amazon CloudWatch Container Insights](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContainerInsights.html) to collect, aggregate, and summarize metrics and logs from your containerized applications and microservices. Container Insights is available for Amazon Elastic Container Service (Amazon ECS), Amazon Elastic Kubernetes Service (Amazon EKS), and Kubernetes platforms on Amazon EC2. Amazon ECS support includes support for Fargate. Container Insights also provides diagnostic information, such as container restart failures, to help you isolate issues and resolve them quickly. You can also set CloudWatch alarms on metrics that Container Insights collects.
 ![aws-cw-container-insights](../../images/aws-cw-container-insights.png)
 
-#### Verify the CloudWatch and FluentBit agents are running on
+#### Verify your CloudWatch and FluentBit agents
 All steps are finished, check that there are pods that are *Ready* in *kube-system* namespace. Ensure the *aws-cloudwatch-metrics*, *aws-for-fluent-bit* pods are generated and running.
 
 ### AWS Node Termination Handler
 [AWS Node Termination Handler](https://github.com/aws/aws-node-termination-handler) is a project ensures that the Kubernetes control plane responds appropriately to events that can cause your EC2 instance to become unavailable, such as EC2 maintenance events, EC2 Spot interruptions, ASG Scale-In, ASG AZ Rebalance, and EC2 Instance Termination via the API or Console. The AWS Node Termination Handler provides a connection between termination requests from AWS to Kubernetes nodes, allowing graceful draining and termination of nodes that receive interruption notifications. The termination handler uses the Kubernetes API to initiate drain and cordon actions on a node that is targeted for termination. To learn more or get started, visit the project on GitHub.
 
-#### Verify the Node Termination Handler is working
+#### Verify your Node Termination Handler
 All steps are finished, check that the pod is *Ready* in *kube-system* namespace. Ensure the *aws-node-termination-hander* pod is running:
 ```
 kubectl -n kube-system get po
@@ -148,7 +148,7 @@ On AWS, Cluster Autoscaler utilizes Amazon EC2 Auto Scaling Groups to manage nod
 
 ![kubernetes-cluster-autoscaler-aws](../../images/kubernetes-cluster-autoscaler-aws.png)
 
-#### Verify the Cluster Autoscaler is working
+#### Verify your Cluster Autoscaler
 All steps are finished, check that there are pods that are *Ready* in *kube-system* namespace:
 Ensure the *cluster-autoscaler* pod is generated and running:
 
@@ -323,7 +323,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Graviton2 Single Threaded Performance](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd/5)
 
 ## Cluster Autoscaler
-- [EKS Cluster Autoscaler Setup](https://aws.amazon.com/premiumsupport/knowledge-center/eks-cluster-autoscaler-setup/)
+- [Autoscaling](https://docs.aws.amazon.com/eks/latest/userguide/autoscaling.html)
 
 ## IAM Role for Service Accounts
 - [Diving into IAM Roles for Service Accounts](https://aws.amazon.com/blogs/containers/diving-into-iam-roles-for-service-accounts/)
