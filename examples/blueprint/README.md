@@ -182,6 +182,8 @@ data:
                    LastTransitionTime: 2021-01-08 02:14:17.530198588 +0000 UTC m=+45.947613652
 ```
 
+Then, you can use [*nginx*](./apps/README.md#nginx) to test Cluster Autoscaling(CA) and Horizonal Pod Autoscaling(HPA).
+
 ## Kubernetes Utilities
 ### Metrics Server
 [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) is a scalable, efficient source of container resource metrics for Kubernetes built-in autoscaling pipelines. Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver through [Metrics API](https://github.com/kubernetes/metrics) for use by Horizontal Pod Autoscaler and Vertical Pod Autoscaler. Metrics API can also be accessed by kubectl top, making it easier to debug autoscaling pipelines.
