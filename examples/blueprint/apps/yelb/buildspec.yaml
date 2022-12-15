@@ -2,7 +2,7 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - cd examples/app-mesh/modules/codebuild/app/
+      - cd $APP_PATH
       - $(aws ecr get-login --no-include-email)
       - echo $TAG
       - IMAGE_URI="$REPOSITORY_URI:$TAG"

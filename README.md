@@ -11,7 +11,7 @@
 - [AWS Fault Injection Simulator with Amazon EKS](https://github.com/Young-ook/terraform-aws-fis/tree/main/examples/eks)
 - [AWS Fault Injection Simulator with Amazon Aurora](https://github.com/Young-ook/terraform-aws-fis/tree/main/examples/rds)
 - [AWS Fault Injection Simulator with Amazon ElastiCache for Redis](https://github.com/Young-ook/terraform-aws-fis/tree/main/examples/redis)
-- [Amazon EMR on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/emr)
+- [Amazon EMR on Amazon EKS](https://github.com/Young-ook/terraform-aws-emr/tree/main/examples/emr-on-eks)
 - [Machine Learing with Kubeflow on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/kubeflow)
 
 ## Getting started

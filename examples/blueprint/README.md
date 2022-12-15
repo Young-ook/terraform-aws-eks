@@ -316,6 +316,9 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## Chaos Mesh
 - [Chaos Testing with AWS Fault Injection Simulator and AWS CodePipeline](https://aws.amazon.com/blogs/architecture/chaos-testing-with-aws-fault-injection-simulator-and-aws-codepipeline/)
 
+## IAM Role for Service Accounts
+- [Diving into IAM Roles for Service Accounts](https://aws.amazon.com/blogs/containers/diving-into-iam-roles-for-service-accounts/)
+
 ## Karpenter
 - [Introducing Karpenter](https://aws.amazon.com/blogs/aws/introducing-karpenter-an-open-source-high-performance-kubernetes-cluster-autoscaler/)
 - [Implement autoscaling with Karpenter](https://www.eksworkshop.com/beginner/085_scaling_karpenter/)

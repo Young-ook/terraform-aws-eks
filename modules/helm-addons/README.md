@@ -1,9 +1,6 @@
 # Helm add-ons
 
-[Helm](https://helm.sh/) is a tool for managing Charts. Charts are packages of pre-configured Kubernetes resources. Helm helps you manage Kubernetes applications — Helm Charts help you define, install, and upgrade even the most complex Kubernetes application. Charts are easy to create, version, share, and publish — so start using Helm and stop the copy-and-paste.
-
-For detailed steps when using terraform, see the topics for the following add-ons:
-* [Cluster Autoscaler](https://github.com/Young-ook/terraform-aws-eks/tree/main/examples/autoscaling)
+[Helm](https://helm.sh/) is a tool for managing Charts. Charts are packages of pre-configured Kubernetes resources. Helm helps you manage Kubernetes applications — Helm Charts help you define, install, and upgrade even the most complex Kubernetes application. Charts are easy to create, version, share, and publish — so start using Helm and stop the copy-and-paste. For detailed steps when using terraform, see the [EKS Blueprint](https://github.com/Young-ook/terraform-aws-eks/tree/main/examples/blueprint) example. 
 
 ## Setup
 ```hcl
@@ -67,4 +64,4 @@ terraform destroy
 ```
 
 # Additional Resources
-- [Helm add-ons](https://docs.aws.amazon.com/prescriptive-guidance/latest/containers-provision-eks-clusters-terraform/helm-add-ons.html)
+- [Helm add-ons and Kubernetes Cluster Autoscaler](https://docs.aws.amazon.com/prescriptive-guidance/latest/containers-provision-eks-clusters-terraform/helm-add-ons.html)
