@@ -18,7 +18,7 @@ Run terraform:
 terraform init
 terraform apply
 ```
-Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
+Also you can use the *-var-file* option for customized paramters when you run the terraform plan/apply command.
 ```
 terraform plan -var-file fixture.tc1.tfvars
 terraform apply -var-file fixture.tc1.tfvars
@@ -31,7 +31,7 @@ We need to get kubernetes config file for access the cluster that we've made usi
 ### AWS App Mesh Controller
 [AWS App Mesh](https://aws.amazon.com/app-mesh/) is a service mesh that provides application-level networking to make it easy for your services to communicate with each other across multiple types of compute infrastructure. App Mesh gives end-to-end visibility and high-availability for your applications.
 
-#### Verify the App Mesh Controller
+#### Verify your App Mesh Controller
 After all steps are finished, check all pods are *Ready* in *kube-system* namespace by default or you've changed. Ensure the *appmesh-controller* pod is generated and running:
 ```
 kubectl -n kube-system get po
@@ -68,7 +68,7 @@ The [AWS load balancer controller](https://github.com/kubernetes-sigs/aws-load-b
 
 The AWS Load Balancer Controller makes it easy for users to take advantage of the loadbalancer management. For more details, please visit [this](https://github.com/kubernetes-sigs/aws-load-balancer-controller)
 
-#### Verify the AWS Load Balancer Controller
+#### Verify your AWS Load Balancer Controller
 All steps are finished, check that there are pods that are *Ready* in *kube-system* namespace. Ensure the *aws-load-balancer-controller* pod is generated and running:
 
 ```
@@ -86,13 +86,13 @@ kubectl -n kube-system logs aws-load-balancer-controller-7dd4ff8cb-wqq58
 Use [Amazon CloudWatch Container Insights](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContainerInsights.html) to collect, aggregate, and summarize metrics and logs from your containerized applications and microservices. Container Insights is available for Amazon Elastic Container Service (Amazon ECS), Amazon Elastic Kubernetes Service (Amazon EKS), and Kubernetes platforms on Amazon EC2. Amazon ECS support includes support for Fargate. Container Insights also provides diagnostic information, such as container restart failures, to help you isolate issues and resolve them quickly. You can also set CloudWatch alarms on metrics that Container Insights collects.
 ![aws-cw-container-insights](../../images/aws-cw-container-insights.png)
 
-#### Verify the CloudWatch and FluentBit agents are running on
+#### Verify your CloudWatch and FluentBit agents
 All steps are finished, check that there are pods that are *Ready* in *kube-system* namespace. Ensure the *aws-cloudwatch-metrics*, *aws-for-fluent-bit* pods are generated and running.
 
 ### AWS Node Termination Handler
 [AWS Node Termination Handler](https://github.com/aws/aws-node-termination-handler) is a project ensures that the Kubernetes control plane responds appropriately to events that can cause your EC2 instance to become unavailable, such as EC2 maintenance events, EC2 Spot interruptions, ASG Scale-In, ASG AZ Rebalance, and EC2 Instance Termination via the API or Console. The AWS Node Termination Handler provides a connection between termination requests from AWS to Kubernetes nodes, allowing graceful draining and termination of nodes that receive interruption notifications. The termination handler uses the Kubernetes API to initiate drain and cordon actions on a node that is targeted for termination. To learn more or get started, visit the project on GitHub.
 
-#### Verify the Node Termination Handler is working
+#### Verify your Node Termination Handler
 All steps are finished, check that the pod is *Ready* in *kube-system* namespace. Ensure the *aws-node-termination-hander* pod is running:
 ```
 kubectl -n kube-system get po
@@ -140,6 +140,50 @@ kubectl -n kube-system logs -f aws-node-termination-handler-xxxxx
 2021/01/17 09:13:59 ??? Got token from IMDSv2
 ```
 
+### Cluster Autoscaler
+[Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler) is a tool that automatically adjusts the size of a Kubernetes Cluster so that all pods have a place to run and there are no unneeded nodes when one of the following conditions is true:
+* there are pods that failed to run in the cluster due to insufficient resources.
+* there are nodes in the cluster that have been underutilized for an extended period of time and their pods can be placed on other existing nodes.
+On AWS, Cluster Autoscaler utilizes Amazon EC2 Auto Scaling Groups to manage node groups. Cluster Autoscaler typically runs as a *Deployment* in your cluster. For more details, please check out [Cluster Autoscaler](https://docs.aws.amazon.com/eks/latest/userguide/cluster-autoscaler.html)
+
+![kubernetes-cluster-autoscaler-aws](../../images/kubernetes-cluster-autoscaler-aws.png)
+
+#### Verify your Cluster Autoscaler
+All steps are finished, check that there are pods that are *Ready* in *kube-system* namespace:
+Ensure the *cluster-autoscaler* pod is generated and running:
+
+```
+kubectl -n kube-system get po
+```
+```
+NAME                                                   READY   STATUS    RESTARTS   AGE
+aws-node-g4mh5                                         1/1     Running   0          10m
+cluster-autoscaler-xxxxxxxxx-mwjzk                     1/1     Running   0          10m
+kube-proxy-q79tk                                       1/1     Running   0          10m
+```
+If the pod is not healthy, please try to check the log:
+```
+kubectl -n kube-system logs cluster-autoscaler-xxxxxxxxx-mwjzk
+```
+
+If you want to make sure that the EC2 autoscaling group(ASG) has the tags that cluster autoscaler is looking for, you can see the latest update of cluster autoscaler. It may look like below. You can check whether cluster autoscaler is able to recognize the ASG. If cluster autoscaler is able to recognize the ASG, you will see the ASG name under NodeGroups section. If you don't even see NodeGroups section, it means that cluster autoscaler is still not able to autodiscover your ASG.
+```
+kubectl -n kube-system get cm cluster-autoscaler-status -o yaml
+```
+```
+apiVersion: v1
+data:
+  status: |+
+    Cluster-autoscaler status at 2021-01-08 04:04:55.644106199 +0000 UTC:
+    NodeGroups:
+      Name:        eks-xxxxyyyy-c03a-xxxx-1111-2dc09d308552
+      Health:      Healthy (ready=2 unready=0 notStarted=0 longNotStarted=0 registered=2 longUnregistered=0 cloudProviderTarget=2 (minSize=1, maxSize=3))
+                   LastProbeTime:      2021-01-08 04:04:55.643676127 +0000 UTC m=+6684.061091143
+                   LastTransitionTime: 2021-01-08 02:14:17.530198588 +0000 UTC m=+45.947613652
+```
+
+Then, you can use [*nginx*](./apps/README.md#nginx) to test Cluster Autoscaling(CA) and Horizonal Pod Autoscaling(HPA).
+
 ## Kubernetes Utilities
 ### Chaos Mesh
 [Chaos Mesh](https://chaos-mesh.org/docs/) is an open source cloud-native Chaos Engineering platform. It offers various types of fault simulation and has an enormous capability to orchestrate fault scenarios. Using Chaos Mesh, you can conveniently simulate various abnormalities that might occur in reality during the development, testing, and production environments and find potential problems in the system. To lower the threshold for a Chaos Engineering project, Chaos Mesh provides you with a visualization operation. You can easily design your Chaos scenarios on the Web UI and monitor the status of Chaos experiments.
@@ -175,7 +219,7 @@ chaos-dashboard-98c4c5f97-tx5ds             1/1     Running   0          2d5h
 ```
 
 ### Metrics Server
-[Metrics Server](https://github.com/kubernetes-sigs/metrics-server) is a scalable, efficient source of container resource metrics for Kubernetes built-in autoscaling pipelines. Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver through Metrics API for use by Horizontal Pod Autoscaler and Vertical Pod Autoscaler. Metrics API can also be accessed by kubectl top, making it easier to debug autoscaling pipelines.
+[Metrics Server](https://github.com/kubernetes-sigs/metrics-server) is a scalable, efficient source of container resource metrics for Kubernetes built-in autoscaling pipelines. Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver through [Metrics API](https://github.com/kubernetes/metrics) for use by Horizontal Pod Autoscaler and Vertical Pod Autoscaler. Metrics API can also be accessed by kubectl top, making it easier to debug autoscaling pipelines.
 
 ### Prometheus
 [Prometheus](https://prometheus.io/) is an open-source systems monitoring and alerting toolkit originally built at SoundCloud. Since its inception in 2012, many companies and organizations have adopted Prometheus, and the project has a very active developer and user community. It is now a standalone open source project and maintained independently of any company. Prometheus joined the Cloud Native Computing Foundation in 2016 as the second hosted project, after Kubernetes.
@@ -288,7 +332,7 @@ If you don't want to see a confirmation question, you can use quite option for t
 terraform destroy --auto-approve
 ```
 
-**[Don't forget]** You have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
+**[DON'T FORGET]** You have to use the *-var-file* option when you run terraform destroy command to delete the aws resources created with extra variable files.
 ```
 terraform destroy -var-file fixture.tc1.tfvars
 ```
@@ -316,6 +360,9 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## Chaos Mesh
 - [Simulate Kubernetes Resource Stress Test](https://chaos-mesh.org/docs/simulate-heavy-stress-on-kubernetes/) 
 - [Simulate AWS Faults](https://chaos-mesh.org/docs/simulate-aws-chaos/)
+
+## Cluster Autoscaler
+- [Autoscaling](https://docs.aws.amazon.com/eks/latest/userguide/autoscaling.html)
 
 ## IAM Role for Service Accounts
 - [Diving into IAM Roles for Service Accounts](https://aws.amazon.com/blogs/containers/diving-into-iam-roles-for-service-accounts/)

@@ -185,6 +185,19 @@ module "helm-addons" {
       policy_arns = [aws_iam_policy.kpt.arn]
     },
     {
+      repository     = "${path.module}/charts/"
+      name           = "cluster-autoscaler"
+      chart_name     = "cluster-autoscaler"
+      namespace      = "kube-system"
+      serviceaccount = "cluster-autoscaler"
+      values = {
+        "awsRegion"                 = var.aws_region
+        "autoDiscovery.clusterName" = module.eks.cluster.name
+      }
+      oidc        = module.eks.oidc
+      policy_arns = [aws_iam_policy.cas.arn]
+    },
+    {
       repository     = "https://kubernetes-sigs.github.io/metrics-server/"
       name           = "metrics-server"
       chart_name     = "metrics-server"
@@ -216,4 +229,11 @@ resource "aws_iam_policy" "kpt" {
   tags        = merge({ "terraform.io" = "managed" }, var.tags)
   description = format("Allow karpenter to manage AWS resources")
   policy      = file("${path.module}/karpenter-policy.json")
+}
+
+resource "aws_iam_policy" "cas" {
+  name        = "cluster-autoscaler"
+  tags        = merge({ "terraform.io" = "managed" }, var.tags)
+  description = format("Allow cluster-autoscaler to manage AWS resources")
+  policy      = file("${path.module}/cluster-autoscaler-policy.json")
 }

@@ -58,106 +58,6 @@ Run kubectl:
 kubectl delete -f https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/examples/2048/2048_full.yaml
 ```
 
-## Nginx
-### Deploy Nginx from Public Registry
-Copy below and **SAVE** as a new deployment file (nginx.yaml) on your workspace. You can edit the file if you have anything to change.
-```
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-nginx-svc
-  labels:
-    app: nginx
-spec:
-  ports:
-  - port: 80
-  selector:
-    app: nginx
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: my-nginx
-  labels:
-    app: nginx
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.14.2
-        ports:
-        - containerPort: 80
-```
-Then, apply the modified manifest.
-```
-kubectl apply -f nginx.yaml
-```
-
-To verify that the nginx pods are running properly on the multiple architecture node groups, run describe command.
-```
-kubectl describe no
-```
-
-The output will be shown below.
-```
-Name:               ip-172-xx-yx-xxx.us-west-2.compute.internal
-                    beta.kubernetes.io/instance-type=m6g.medium
-                    eks.amazonaws.com/nodegroup=eks-x86-arm64-tc2
-                    kubernetes.io/arch=arm64
-                    kubernetes.io/os=linux
-CreationTimestamp:  Fri, 20 Nov 2020 12:52:26 +0900
-System Info:
-  Operating System:           linux
-  Architecture:               arm64
-  Container Runtime Version:  docker://19.3.6
-  Kubelet Version:            v1.17.12-eks-xxxxyy
-  Kube-Proxy Version:         v1.17.12-eks-xxxxyy
-Non-terminated Pods:          (8 in total)
-  Namespace                   Name                         CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
-  ---------                   ----                         ------------  ----------  ---------------  -------------  ---
-  default                     my-nginx-xxxxyyyyww-bqpfk    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
-  default                     my-nginx-xxxxyyyyww-fzpfb    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
-  default                     my-nginx-xxxxyyyyww-kqht5    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
-  default                     my-nginx-xxxxyyyyww-m5x25    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
-  default                     my-nginx-xxxxyyyyww-tcv92    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
-Events:                       <none>
-Name:               ip-172-xx-yy-xxx.us-west-2.compute.internal
-                    beta.kubernetes.io/instance-type=m5.large
-                    eks.amazonaws.com/nodegroup=eks-x86-arm64-tc2
-                    kubernetes.io/arch=amd64
-                    kubernetes.io/os=linux
-CreationTimestamp:  Fri, 20 Nov 2020 12:52:59 +0900
-System Info:
-  Operating System:           linux
-  Architecture:               amd64
-  Container Runtime Version:  docker://19.3.6
-  Kubelet Version:            v1.17.12-eks-xxxxyy
-  Kube-Proxy Version:         v1.17.12-eks-xxxxyy
-Non-terminated Pods:          (28 in total)
-  Namespace                   Name                         CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
-  ---------                   ----                         ------------  ----------  ---------------  -------------  ---
-  default                     my-nginx-xxxxyyyyww-5wlvd    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
-  default                     my-nginx-xxxxyyyyww-626nn    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
-  default                     my-nginx-xxxxyyyyww-6h7nk    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
-  default                     my-nginx-xxxxyyyyww-dgppf    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
-  default                     my-nginx-xxxxyyyyww-fgp8r    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
-Events:                       <none>
-```
-
-### Delete the application
-Run kubectl:
-```
-kubectl delete -f nginx.yaml
-```
-
 ## Hello NodeJS
 This is a simple example of multi-arch application.
 
@@ -247,6 +147,184 @@ kubectl port-forward svc/hello-kubernetes 8080:80
 To clean up all resources or hello-kubernetes application from cluster, run kubectl:
 ```
 kubectl delete -f hellokube.yaml
+```
+
+## Nginx
+### Deploy Nginx from Public Registry
+First, we will deploy a container image and expose it as a service. Here is the details of kubernetes manifest file to deploy a simple NGINX web application and kubernetes service. The service will listen for http requests on port 80. Copy below and **SAVE** as a new deployment file (nginx.yaml) on your workspace. You can edit the file if you have anything to change.
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx-svc
+  labels:
+    app: nginx
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: nginx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+```
+
+Then, apply the modified manifest.
+```
+kubectl apply -f nginx.yaml
+```
+
+To verify that the nginx pods are running properly on the multiple architecture node groups, run describe command:
+```
+kubectl describe no
+```
+
+The output will be shown below.
+```
+Name:               ip-172-xx-yx-xxx.us-west-2.compute.internal
+                    beta.kubernetes.io/instance-type=m6g.medium
+                    eks.amazonaws.com/nodegroup=eks-x86-arm64
+                    kubernetes.io/arch=arm64
+                    kubernetes.io/os=linux
+CreationTimestamp:  Fri, 20 Nov 2020 12:52:26 +0900
+System Info:
+  Operating System:           linux
+  Architecture:               arm64
+  Container Runtime Version:  docker://19.3.6
+  Kubelet Version:            v1.17.12-eks-xxxxyy
+  Kube-Proxy Version:         v1.17.12-eks-xxxxyy
+Non-terminated Pods:          (8 in total)
+  Namespace                   Name                         CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
+  ---------                   ----                         ------------  ----------  ---------------  -------------  ---
+  default                     my-nginx-xxxxyyyyww-bqpfk    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3m2s
+```
+
+And you can see the nginx pod status using kubernetes command line tool.
+```
+kubectl get pod -l app=nginx
+```
+
+### Cluster Autoscaler (CA)
+Before you begin make sure that any Horizontal Pod Autoscaler (HPA) is removed from your kuberentes application and the desired capacity of your EC2 autoscaling group (EKS nodes) is 1. You need to reset the configuration of nginx application using *kubectl* command (e.g., kubectl delete -f nginx.yaml) if you did something on your nginx application. This is important because you want to see that the cluster autoscaling processing is working properly to automatically increase instance capacity when there is no space to launch the reserved container.
+
+```
+kubectl scale --replicas=10 deployment/my-nginx
+kubectl get po -o wide -w
+```
+```
+NAME                          READY   STATUS    RESTARTS   AGE   IP              NODE                                               NOMINATED NODE   READINESS GATES
+my-nginx-79544xxxxx-9lbhz   1/1     Running   0          41h   172.31.36.219   ip-172-31-38-165.ap-northeast-2.compute.internal   <none>           <none>
+my-nginx-79544xxxxx-r64b2   1/1     Running   0          71s   172.31.32.31    ip-172-31-38-165.ap-northeast-2.compute.internal   <none>           <none>
+my-nginx-79544xxxxx-ws6qw   0/1     Pending   0          71s   <none>          <none>                                             <none>           <none>
+my-nginx-79544xxxxx-ws6qw   0/1     Pending   0          2m13s   <none>          <none>                                             <none>           <none>
+my-nginx-79544xxxxx-ws6qw   0/1     Pending   0          2m45s   <none>          ip-172-31-54-84.ap-northeast-2.compute.internal    <none>           <none>
+my-nginx-79544xxxxx-ws6qw   0/1     ContainerCreating   0          2m45s   <none>          ip-172-31-54-84.ap-northeast-2.compute.internal    <none>           <none>
+my-nginx-79544xxxxx-ws6qw   1/1     Running             0          2m55s   172.31.60.13    ip-172-31-54-84.ap-northeast-2.compute.internal    <none>           <none>
+```
+
+### Horizontal Pod Autoscaler (HPA)
+Now, if your nginx application is up and running, you can start to create a kuberentes Horizontal Pod Autoscaler (HPA) object on your application for application autoscaling. The following command will create a HPA that maintains between 1 and 10 replicas of the Pods controlled by the nginx deployment we created in the previous step. Edit the *nginx.yaml* to add the below code snippet and **SAVE**. Then apply the saved manifest file.
+```
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-nginx
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-nginx
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+```
+```
+kubectl apply -f nginx.yaml
+```
+
+Alternatively, you can apply HPA directly to your application using the kubernetes command line tool. However, it is not recommended for production environments. Because manfest files are easier to manage the change history than live patches.
+```
+kubectl autoscale deployment my-nginx --cpu-percent=50 --min=1 --max=10
+```
+
+After a few minutes, you will see the status of autoscaler. Display the hpa status:
+```
+kubectl get hpa
+```
+```
+NAME         REFERENCE                     TARGET    MINPODS   MAXPODS   REPLICAS   AGE
+my-nginx     Deployment/my-nginx/scale     0% / 50%  1         10        1          18s
+```
+
+Now, it is time to see how the autoscaler reacts to increased load. You will start a container, and send an infinite loop of queries to the nginx service (please run it in a different terminal):
+```
+kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://my-nginx; done"
+```
+
+Within a minute or so, we should see the higher CPU load by executing:
+```
+kubectl get hpa
+```
+```
+NAME         REFERENCE                     TARGET      MINPODS   MAXPODS   REPLICAS   AGE
+my-nginx     Deployment/my-nginx/scale     250% / 50%  1         10        1          3m
+```
+Here, CPU consumption has increased to 250% of the request. As a result, the deployment was resized to 5 replicas:
+```
+kubectl get deploy my-nginx
+```
+```
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+my-nginx     5/5     5            5           9m31s
+```
+```
+kubectl get hpa
+```
+```
+NAME         REFERENCE               TARGETS    MINPODS   MAXPODS   REPLICAS   AGE
+my-nginx     Deployment/my-nginx     250%/50%   1         10        5          6m7s
+```
+```
+kubectl get pod
+```
+```
+NAME                          READY   STATUS    RESTARTS   AGE
+my-nginx-79544xxxxx-6ph8z     1/1     Running   0          56s
+my-nginx-79544xxxxx-mtbll     1/1     Running   0          56s
+my-nginx-79544xxxxx-rj8hj     1/1     Running   0          41s
+my-nginx-79544xxxxx-rj9p6     1/1     Running   0          6m27s
+my-nginx-79544xxxxx-ts5d2     1/1     Running   0          56s
+```
+
+### Delete the application
+Run kubectl:
+```
+kubectl delete -f nginx.yaml
 ```
 
 # Known Issues
