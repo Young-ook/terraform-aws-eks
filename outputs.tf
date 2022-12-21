@@ -66,13 +66,13 @@ data "aws_eks_cluster_auth" "cp" {
   name = aws_eks_cluster.cp.name
 }
 
-output "helmconfig" {
-  description = "The configurations map for Helm provider"
+output "kubeauth" {
+  description = "The kubernetes cluster authentication information for Kubernetes/Helm providers"
   sensitive   = true
   value = {
     host  = aws_eks_cluster.cp.endpoint
     token = data.aws_eks_cluster_auth.cp.token
-    ca    = aws_eks_cluster.cp.certificate_authority.0.data
+    ca    = base64decode(aws_eks_cluster.cp.certificate_authority.0.data)
   }
 }
 
