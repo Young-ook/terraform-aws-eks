@@ -48,6 +48,12 @@ module "vpc" {
       type                = "Interface"
       private_dns_enabled = true
     },
+    # For more details, please refer to this web page, https://aws.amazon.com/about-aws/whats-new/2022/12/amazon-eks-supports-aws-privatelink/
+    {
+      service             = "eks"
+      type                = "Interface"
+      private_dns_enabled = true
+    },
     {
       service = "s3"
       type    = "Gateway"
