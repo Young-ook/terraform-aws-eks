@@ -1,5 +1,9 @@
 ### default values
 
+module "aws" {
+  source = "Young-ook/spinnaker/aws//modules/aws-partitions"
+}
+
 locals {
   default_eks_config = {
     ami_type      = "AL2_x86_64"

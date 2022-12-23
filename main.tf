@@ -1,7 +1,5 @@
 ## managed kubernetes cluster
 
-data "aws_partition" "current" {}
-
 ## features
 locals {
   node_groups_enabled         = (var.node_groups != null ? ((length(var.node_groups) > 0) ? true : false) : false)
@@ -19,7 +17,7 @@ resource "aws_iam_role" "cp" {
       Action = "sts:AssumeRole"
       Effect = "Allow"
       Principal = {
-        Service = format("eks.%s", data.aws_partition.current.dns_suffix)
+        Service = format("eks.%s", module.aws.partition.dns_suffix)
       }
     }]
     Version = "2012-10-17"
@@ -27,7 +25,7 @@ resource "aws_iam_role" "cp" {
 }
 
 resource "aws_iam_role_policy_attachment" "eks-cluster" {
-  policy_arn = format("arn:%s:iam::aws:policy/AmazonEKSClusterPolicy", data.aws_partition.current.partition)
+  policy_arn = format("arn:%s:iam::aws:policy/AmazonEKSClusterPolicy", module.aws.partition.partition)
   role       = aws_iam_role.cp.id
 }
 
@@ -59,7 +57,7 @@ resource "aws_iam_role" "ng" {
       Action = "sts:AssumeRole"
       Effect = "Allow"
       Principal = {
-        Service = [format("ec2.%s", data.aws_partition.current.dns_suffix)]
+        Service = [format("ec2.%s", module.aws.partition.dns_suffix)]
       }
     }]
     Version = "2012-10-17"
@@ -74,25 +72,25 @@ resource "aws_iam_instance_profile" "ng" {
 
 resource "aws_iam_role_policy_attachment" "eks-ng" {
   count      = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
-  policy_arn = format("arn:%s:iam::aws:policy/AmazonEKSWorkerNodePolicy", data.aws_partition.current.partition)
+  policy_arn = format("arn:%s:iam::aws:policy/AmazonEKSWorkerNodePolicy", module.aws.partition.partition)
   role       = aws_iam_role.ng.0.name
 }
 
 resource "aws_iam_role_policy_attachment" "eks-cni" {
   count      = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
-  policy_arn = format("arn:%s:iam::aws:policy/AmazonEKS_CNI_Policy", data.aws_partition.current.partition)
+  policy_arn = format("arn:%s:iam::aws:policy/AmazonEKS_CNI_Policy", module.aws.partition.partition)
   role       = aws_iam_role.ng.0.name
 }
 
 resource "aws_iam_role_policy_attachment" "ecr-read" {
   count      = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
-  policy_arn = format("arn:%s:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly", data.aws_partition.current.partition)
+  policy_arn = format("arn:%s:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly", module.aws.partition.partition)
   role       = aws_iam_role.ng.0.name
 }
 
 resource "aws_iam_role_policy_attachment" "ssm-managed" {
   count      = (local.node_groups_enabled || local.managed_node_groups_enabled) && var.enable_ssm ? 1 : 0
-  policy_arn = format("arn:%s:iam::aws:policy/AmazonSSMManagedInstanceCore", data.aws_partition.current.partition)
+  policy_arn = format("arn:%s:iam::aws:policy/AmazonSSMManagedInstanceCore", module.aws.partition.partition)
   role       = aws_iam_role.ng.0.name
 }
 
@@ -380,7 +378,7 @@ resource "aws_iam_role" "fargate" {
       Action = "sts:AssumeRole"
       Effect = "Allow"
       Principal = {
-        Service = [format("eks-fargate-pods.%s", data.aws_partition.current.dns_suffix)]
+        Service = [format("eks-fargate-pods.%s", module.aws.partition.dns_suffix)]
       }
     }]
     Version = "2012-10-17"
@@ -389,7 +387,7 @@ resource "aws_iam_role" "fargate" {
 
 resource "aws_iam_role_policy_attachment" "eks-fargate" {
   count      = local.fargate_enabled ? 1 : 0
-  policy_arn = format("arn:%s:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy", data.aws_partition.current.partition)
+  policy_arn = format("arn:%s:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy", module.aws.partition.partition)
   role       = aws_iam_role.fargate.0.name
 }
 
