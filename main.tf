@@ -102,6 +102,19 @@ resource "aws_iam_role_policy_attachment" "ng-extra" {
   role       = aws_iam_role.ng.0.name
 }
 
+## bottlerocket
+locals {
+  bottlerocket_userdata = templatefile("${path.module}/templates/bottlerocket.tpl", {
+    cluster_name                 = aws_eks_cluster.cp.name
+    cluster_endpoint             = aws_eks_cluster.cp.endpoint
+    cluster_ca_data              = aws_eks_cluster.cp.certificate_authority.0.data
+    admin_container_enabled      = lookup(var.bottlerocket_config, "admin_container_enabled", local.default_bottlerocket_config.admin_container_enabled)
+    admin_container_superpowered = lookup(var.bottlerocket_config, "admin_container_superpowered", local.default_bottlerocket_config.admin_container_superpowered)
+    admin_container_source       = lookup(var.bottlerocket_config, "admin_container_source", local.default_bottlerocket_config.admin_container_source)
+    control_container_enabled    = var.enable_ssm
+  })
+}
+
 ## self-managed node groups
 
 data "aws_ami" "eks" {
@@ -147,19 +160,6 @@ data "template_cloudinit_config" "ng" {
   }
 }
 
-data "template_file" "br" {
-  template = file("${path.module}/templates/bottlerocket.tpl")
-  vars = {
-    cluster_name                 = aws_eks_cluster.cp.name
-    cluster_endpoint             = aws_eks_cluster.cp.endpoint
-    cluster_ca_data              = aws_eks_cluster.cp.certificate_authority.0.data
-    admin_container_enabled      = lookup(var.bottlerocket_config, "admin_container_enabled", local.default_bottlerocket_config.admin_container_enabled)
-    admin_container_superpowered = lookup(var.bottlerocket_config, "admin_container_superpowered", local.default_bottlerocket_config.admin_container_superpowered)
-    admin_container_source       = lookup(var.bottlerocket_config, "admin_container_source", local.default_bottlerocket_config.admin_container_source)
-    control_container_enabled    = var.enable_ssm
-  }
-}
-
 resource "aws_launch_template" "ng" {
   for_each      = { for ng in var.node_groups : ng.name => ng }
   name          = format("eks-%s", uuid())
@@ -170,7 +170,7 @@ resource "aws_launch_template" "ng" {
     length(regexall("^AL2", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
     data.template_cloudinit_config.ng[each.key].rendered :
     length(regexall("^BOTTLEROCKET", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
-    base64encode(data.template_file.br.rendered) :
+    base64encode(local.bottlerocket_userdata) :
     data.template_cloudinit_config.ng[each.key].rendered
   )
 
@@ -307,7 +307,7 @@ resource "aws_launch_template" "mng" {
     length(regexall("^AL2", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
     data.template_cloudinit_config.mng[each.key].rendered :
     length(regexall("^BOTTLEROCKET", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
-    base64encode(data.template_file.br.rendered) :
+    base64encode(local.bottlerocket_userdata) :
     data.template_cloudinit_config.mng[each.key].rendered
   )
 
