@@ -64,7 +64,7 @@ module "vpc" {
 ### eks cluster
 module "eks" {
   source              = "Young-ook/eks/aws"
-  version             = "1.7.11"
+  version             = "2.0.0"
   name                = var.name
   tags                = var.tags
   subnets             = slice(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), 0, 3)
@@ -82,8 +82,9 @@ module "aws" {
 
 ### eks-addons
 module "eks-addons" {
-  source = "../../modules/eks-addons"
-  tags   = var.tags
+  source  = "Young-ook/eks/aws//modules/eks-addons"
+  version = "2.0.0"
+  tags    = var.tags
   addons = [
     {
       name     = "vpc-cni"
@@ -107,7 +108,8 @@ module "eks-addons" {
 ### helm-addons
 module "helm-addons" {
   depends_on = [module.eks-addons]
-  source     = "../../modules/helm-addons"
+  source     = "Young-ook/eks/aws//modules/helm-addons"
+  version    = "2.0.0"
   tags       = var.tags
   addons = [
     {
