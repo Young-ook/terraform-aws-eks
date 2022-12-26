@@ -102,7 +102,7 @@ resource "local_file" "manifest" {
   content = templatefile(lookup(each.value, "filepath"), {
     ecr_uri = module.ecr[each.key].url
   })
-  filename        = "${path.cwd}/hellojs.yaml"
+  filename        = "${path.module}/apps/${each.key}/${each.key}.yaml"
   file_permission = "0400"
 }
 
