@@ -229,19 +229,19 @@ resource "aws_iam_policy" "lbc" {
   name        = "aws-loadbalancer-controller"
   tags        = merge({ "terraform.io" = "managed" }, var.tags)
   description = format("Allow aws-load-balancer-controller to manage AWS resources")
-  policy      = file("${path.module}/aws-loadbalancer-controller-policy.json")
+  policy      = file("${path.module}/policies/aws-loadbalancer-controller-policy.json")
 }
 
 resource "aws_iam_policy" "kpt" {
   name        = "karpenter"
   tags        = merge({ "terraform.io" = "managed" }, var.tags)
   description = format("Allow karpenter to manage AWS resources")
-  policy      = file("${path.module}/karpenter-policy.json")
+  policy      = file("${path.module}/policies/karpenter-policy.json")
 }
 
 resource "aws_iam_policy" "cas" {
   name        = "cluster-autoscaler"
   tags        = merge({ "terraform.io" = "managed" }, var.tags)
   description = format("Allow cluster-autoscaler to manage AWS resources")
-  policy      = file("${path.module}/cluster-autoscaler-policy.json")
+  policy      = file("${path.module}/policies/cluster-autoscaler-policy.json")
 }
