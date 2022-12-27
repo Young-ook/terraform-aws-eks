@@ -10,9 +10,9 @@ provider "aws" {
 
 provider "helm" {
   kubernetes {
-    host                   = module.eks.helmconfig.host
-    token                  = module.eks.helmconfig.token
-    cluster_ca_certificate = base64decode(module.eks.helmconfig.ca)
+    host                   = module.eks.kubeauth.host
+    token                  = module.eks.kubeauth.token
+    cluster_ca_certificate = module.eks.kubeauth.ca
   }
 }
 
@@ -64,7 +64,7 @@ module "vpc" {
 ### eks cluster
 module "eks" {
   source              = "Young-ook/eks/aws"
-  version             = "1.7.11"
+  version             = "2.0.0"
   name                = var.name
   tags                = var.tags
   subnets             = slice(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), 0, 3)
@@ -82,8 +82,9 @@ module "aws" {
 
 ### eks-addons
 module "eks-addons" {
-  source = "../../modules/eks-addons"
-  tags   = var.tags
+  source  = "Young-ook/eks/aws//modules/eks-addons"
+  version = "2.0.0"
+  tags    = var.tags
   addons = [
     {
       name     = "vpc-cni"
@@ -107,7 +108,8 @@ module "eks-addons" {
 ### helm-addons
 module "helm-addons" {
   depends_on = [module.eks-addons]
-  source     = "../../modules/helm-addons"
+  source     = "Young-ook/eks/aws//modules/helm-addons"
+  version    = "2.0.0"
   tags       = var.tags
   addons = [
     {
@@ -227,19 +229,19 @@ resource "aws_iam_policy" "lbc" {
   name        = "aws-loadbalancer-controller"
   tags        = merge({ "terraform.io" = "managed" }, var.tags)
   description = format("Allow aws-load-balancer-controller to manage AWS resources")
-  policy      = file("${path.module}/aws-loadbalancer-controller-policy.json")
+  policy      = file("${path.module}/policy.aws-loadbalancer-controller.json")
 }
 
 resource "aws_iam_policy" "kpt" {
   name        = "karpenter"
   tags        = merge({ "terraform.io" = "managed" }, var.tags)
   description = format("Allow karpenter to manage AWS resources")
-  policy      = file("${path.module}/karpenter-policy.json")
+  policy      = file("${path.module}/policy.karpenter.json")
 }
 
 resource "aws_iam_policy" "cas" {
   name        = "cluster-autoscaler"
   tags        = merge({ "terraform.io" = "managed" }, var.tags)
   description = format("Allow cluster-autoscaler to manage AWS resources")
-  policy      = file("${path.module}/cluster-autoscaler-policy.json")
+  policy      = file("${path.module}/policy.cluster-autoscaler.json")
 }
