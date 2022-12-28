@@ -79,7 +79,7 @@ resource "aws_ecr_lifecycle_policy" "repo" {
 
 resource "aws_ecr_repository" "repo" {
   name = local.repo
-  tags = merge(local.default-tags, var.tags)
+  tags = merge(var.tags, local.default-tags)
 
   image_tag_mutability = var.image_tag_mutability
   image_scanning_configuration {
