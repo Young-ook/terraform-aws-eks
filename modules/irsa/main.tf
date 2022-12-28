@@ -6,7 +6,7 @@ locals {
 resource "aws_iam_role" "irsa" {
   name = local.name
   path = var.path
-  tags = merge(local.default-tags, var.tags)
+  tags = merge(var.tags, local.default-tags)
   assume_role_policy = jsonencode({
     Statement = [{
       Action = "sts:AssumeRoleWithWebIdentity"
