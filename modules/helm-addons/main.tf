@@ -35,5 +35,5 @@ module "irsa" {
   oidc_url       = lookup(lookup(each.value, "oidc", {}), "url", local.default_oidc_config["url"])
   oidc_arn       = lookup(lookup(each.value, "oidc", {}), "arn", local.default_oidc_config["arn"])
   policy_arns    = lookup(each.value, "policy_arns", local.default_irsa_config["policy_arns"])
-  tags           = merge({ Name = each.key }, local.default-tags, var.tags)
+  tags           = merge({ Name = each.key }, var.tags, local.default-tags)
 }
