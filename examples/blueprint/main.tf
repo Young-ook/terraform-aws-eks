@@ -108,6 +108,18 @@ module "eks-addons" {
         format("arn:%s:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy", module.aws.partition.partition),
       ]
     },
+    {
+      name           = "adot"
+      namespace      = "default"
+      serviceaccount = "adot-collector"
+      eks_name       = module.eks.cluster.name
+      oidc           = module.eks.oidc
+      policy_arns = [
+        format("arn:%s:iam::aws:policy/AmazonPrometheusRemoteWriteAccess", module.aws.partition.partition),
+        format("arn:%s:iam::aws:policy/AWSXrayWriteOnlyAccess", module.aws.partition.partition),
+        format("arn:%s:iam::aws:policy/CloudWatchAgentServerPolicy", module.aws.partition.partition),
+      ]
+    },
   ]
 }
 
