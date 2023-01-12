@@ -5,6 +5,7 @@ resource "aws_eks_addon" "addon" {
   addon_version            = lookup(each.value, "version", local.default_addon_config["version"])
   cluster_name             = lookup(each.value, "eks_name", local.default_addon_config["eks_name"])
   service_account_role_arn = lookup(module.irsa, each.key, null) == null ? null : module.irsa[each.key].arn
+  resolve_conflicts        = lookup(each.value, "resolve_conflicts", local.default_addon_config["resolve_conflicts"])
   tags                     = merge({ Name = each.key }, local.default-tags, var.tags)
 }
 

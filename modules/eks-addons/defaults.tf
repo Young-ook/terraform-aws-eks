@@ -7,6 +7,10 @@ locals {
     eks_name       = null
     namespace      = "default"
     serviceaccount = null
+
+    # Define how to resolve parameter value conflicts
+    # Allowed values: NONE | OVERWRITE | PRESERVE
+    resolve_conflicts = "NONE"
   }
   default_oidc_config = {
     url = ""
