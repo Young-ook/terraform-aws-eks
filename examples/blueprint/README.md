@@ -320,6 +320,7 @@ Possible values:
 - [Nginx](./apps/README.md#nginx)
 - [Hello NodeJS](./apps/README.md#hello-nodejs)
 - [Hello Kuberentes](./apps/README.md#hello-kubernetes)
+- [Podinfo](https://github.com/stefanprodan/podinfo)
 
 ## Clean up
 To destroy all infrastrcuture, run terraform:

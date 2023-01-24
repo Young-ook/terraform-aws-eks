@@ -83,7 +83,7 @@ module "aws" {
 ### eks-addons
 module "eks-addons" {
   source  = "Young-ook/eks/aws//modules/eks-addons"
-  version = "2.0.0"
+  version = "2.0.3"
   tags    = var.tags
   addons = [
     {
@@ -99,8 +99,14 @@ module "eks-addons" {
       eks_name = module.eks.cluster.name
     },
     {
-      name     = "aws-ebs-csi-driver"
-      eks_name = module.eks.cluster.name
+      name           = "aws-ebs-csi-driver"
+      namespace      = "kube-system"
+      serviceaccount = "ebs-csi-controller-sa"
+      eks_name       = module.eks.cluster.name
+      oidc           = module.eks.oidc
+      policy_arns = [
+        format("arn:%s:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy", module.aws.partition.partition),
+      ]
     },
   ]
 }
