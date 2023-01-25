@@ -25,7 +25,7 @@ terraform apply -var-file fixture.tc1.tfvars
 ```
 
 ### Update kubeconfig
-We need to get kubernetes config file for access the cluster that we've made using terraform. After terraform apply, you will see the bash command on the outputs. For more details, please refer to the [user guide](https://github.com/Young-ook/terraform-aws-eks#generate-kubernetes-config). 
+We need to get kubernetes config file for access the cluster that we've made using terraform. After terraform apply, you will see the bash command on the outputs. For more details, please refer to the [user guide](https://github.com/Young-ook/terraform-aws-eks#generate-kubernetes-config).
 
 ## Kubernetes Controllers
 ### AWS App Mesh Controller
