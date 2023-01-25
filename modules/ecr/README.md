@@ -3,7 +3,7 @@
 
 ## Quickstart
 ### Setup
-```hcl
+```
 module "ecr" {
   source  = "Young-ook/eks/aws//modules/ecr"
   name    = "example"
@@ -39,6 +39,6 @@ For more default, please refer to this user guide [Amazon ECR interface VPC Endp
 ### Using VPC endpoint policies to control Amazon ECR access
 To improve the security of network between AWS managed container registry and customer's VPC, In January 2019, AWS announced support for AWS PrivateLink on Amazon ECR. When you enable AWS PrivateLink for Amazon ECR, VPC endpoints appear as elastic network interfaces with a private IP address inside your VPC. For more details on how AWS PrivateLink works on Amazon ECR, please visit this [blog post](https://aws.amazon.com/blogs/compute/setting-up-aws-privatelink-for-amazon-ecs-and-amazon-ecr/).
 
-![VPC Endpoints](https://github.com/Young-ook/terraform-aws-eks/blob/main/images/ecr-vpc-endpoints.png)
+![aws-ecr-vpc-endpoints](../../images/aws-ecr-vpc-endpoints.png)
 
 Here is example to apply custom policies on the VPC endpoints for more specific traffic control. Please read this [blog](https://aws.amazon.com/blogs/containers/using-vpc-endpoint-policies-to-control-amazon-ecr-access/), if you want to know how to do.
