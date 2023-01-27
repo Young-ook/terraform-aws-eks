@@ -3,7 +3,7 @@ module "frigga" {
   source     = "Young-ook/spinnaker/aws//modules/frigga"
   version    = "2.3.5"
   name       = var.name == null || var.name == "" ? "irsa" : var.name
-  petname    = var.name == null || var.name == "" ? true : false
+  petname    = true
   max_length = 64
 }
 
