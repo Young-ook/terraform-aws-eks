@@ -8,7 +8,7 @@
 ## Examples
 - [Amazon EKS Blueprint](https://github.com/Young-ook/terraform-aws-eks/tree/main/examples/blueprint)
 - [Amazon EMR on Amazon EKS](https://github.com/Young-ook/terraform-aws-emr/tree/main/examples/emr-on-eks)
-- [Chaos Engineering with AWS Fault Injection Simulator](https://github.com/Young-ook/terraform-aws-fis)
+- [AWS FIS Blueprint (Chaos Engineering)](https://github.com/Young-ook/terraform-aws-fis/blob/main/examples/blueprint)
 - [Machine Learing on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/mlops)
 
 ## Getting started
@@ -108,5 +108,6 @@ Error: configmaps "aws-auth" already exists
 ```
 
 # Additional Resources
+## Amazon EKS
 - [Amazon EKS Best Practices Guides](https://aws.github.io/aws-eks-best-practices/)
 - [Seamlessly Migrate Workloads from EKS Self-managed node groups to managed node groups](https://aws.amazon.com/blogs/containers/seamlessly-migrate-workloads-from-eks-self-managed-node-group-to-eks-managed-node-groups/)
