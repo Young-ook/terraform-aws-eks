@@ -9,7 +9,7 @@
 - [Amazon EKS Blueprint](https://github.com/Young-ook/terraform-aws-eks/tree/main/examples/blueprint)
 - [Amazon EMR on Amazon EKS](https://github.com/Young-ook/terraform-aws-emr/tree/main/examples/emr-on-eks)
 - [Chaos Engineering with AWS Fault Injection Simulator](https://github.com/Young-ook/terraform-aws-fis)
-- [Machine Learing with Kubeflow on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/kubeflow)
+- [Machine Learing on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/mlops)
 
 ## Getting started
 ### AWS CLI
