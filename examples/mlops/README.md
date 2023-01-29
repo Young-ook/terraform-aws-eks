@@ -98,3 +98,5 @@ terraform destroy -var-file fixture.tc1.tfvars
 ```
 
 # Additional Resources
+## Kubeflow on AWS
+- [Kubeflow on AWS](https://github.com/awslabs/kubeflow-manifests)
