@@ -10,9 +10,10 @@ provider "aws" {
 
 # vpc
 module "vpc" {
-  source = "Young-ook/vpc/aws"
-  name   = var.name
-  tags   = var.tags
+  source  = "Young-ook/vpc/aws"
+  version = "1.0.3"
+  name    = var.name
+  tags    = var.tags
   vpc_config = {
     azs         = var.azs
     cidr        = "10.10.0.0/16"
@@ -24,6 +25,7 @@ module "vpc" {
 # eks
 module "eks" {
   source              = "Young-ook/eks/aws"
+  version             = "2.0.3"
   name                = var.name
   tags                = var.tags
   subnets             = slice(values(module.vpc.subnets["private"]), 0, 3)
