@@ -1,5 +1,6 @@
 locals {
-  oidc_fully_qualified_subjects = format("system:serviceaccount:%s:%s", var.namespace, var.serviceaccount)
+  oidc_fully_qualified_audiences = "sts.amazonaws.com"
+  oidc_fully_qualified_subjects  = join(":", ["system:serviceaccount", var.namespace, var.serviceaccount])
 }
 
 # security/policy
@@ -16,7 +17,8 @@ resource "aws_iam_role" "irsa" {
       }
       Condition = {
         StringEquals = {
-          format("%s:sub", var.oidc_url) = local.oidc_fully_qualified_subjects
+          join(":", [var.oidc_url, "aud"]) = local.oidc_fully_qualified_audiences
+          join(":", [var.oidc_url, "sub"]) = local.oidc_fully_qualified_subjects
         }
       }
     }]
