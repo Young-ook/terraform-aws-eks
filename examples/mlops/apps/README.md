@@ -6,7 +6,7 @@ The following diagram shows a simple example of a specific ML workflow that you 
 ![kubeflow-e2e-tutorial](../../../images/kubeflow-e2e-tutorial.png)
 
 Follow these instructions to run the MNIST tutorial on AWS
-1. Follow the [AWS instructions](https://www.kubeflow.org/docs/distributions/aws/) to deploy Kubeflow on AWS
+1. Follow the [instructions](../README.md) to deploy Kubeflow on AWS
 1. Launch a Jupyter notebook
    * The tutorial has been tested using the Jupyter Tensorflow 1.15 image
 1. Launch a terminal in Jupyter and clone the kubeflow examples repo
