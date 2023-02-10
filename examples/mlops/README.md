@@ -7,6 +7,7 @@ Machine learning is a part of artificial intelligence (AI) and computer science 
 [Kubeflow](https://www.kubeflow.org/) is an open-source software project that provides a simple, portable, and scalable way of running Machine Learning workloads on Kubernetes. Below is the kubeflow platform diagram.
 
 ![kubeflow-platform-overview](../../images/kubeflow-platform-overview.png)
+![kubeflow-on-aws-arch](../../images/kubeflow-on-aws-arch.png)
 
 ## Setup
 ### Prerequisites

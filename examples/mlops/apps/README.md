@@ -2,6 +2,9 @@
 
 # Applications
 ## MNIST on Kubeflow on AWS
+The following diagram shows a simple example of a specific ML workflow that you can use to train and serve a model trained on the MNIST dataset:
+![kubeflow-e2e-tutorial](../../../images/kubeflow-e2e-tutorial.png)
+
 Follow these instructions to run the MNIST tutorial on AWS
 1. Follow the [AWS instructions](https://www.kubeflow.org/docs/distributions/aws/) to deploy Kubeflow on AWS
 1. Launch a Jupyter notebook
