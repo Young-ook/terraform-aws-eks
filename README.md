@@ -111,3 +111,4 @@ Error: configmaps "aws-auth" already exists
 ## Amazon EKS
 - [Amazon EKS Best Practices Guides](https://aws.github.io/aws-eks-best-practices/)
 - [Seamlessly Migrate Workloads from EKS Self-managed node groups to managed node groups](https://aws.amazon.com/blogs/containers/seamlessly-migrate-workloads-from-eks-self-managed-node-group-to-eks-managed-node-groups/)
+- [EKS Workshop](https://www.eksworkshop.com/)
