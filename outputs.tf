@@ -55,7 +55,7 @@ output "kubeconfig" {
   description = "Bash script to update kubeconfig file"
   value = join(" ", [
     "bash -e",
-    format("%s/script/update-kubeconfig.sh", path.module),
+    format("%s/scripts/update-kubeconfig.sh", path.module),
     format("-r %s", data.aws_region.current.name),
     format("-n %s", aws_eks_cluster.cp.name),
     "-k kubeconfig",
