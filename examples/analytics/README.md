@@ -3,9 +3,18 @@
 
 ![aws-emr-on-eks-diagram](../../images/aws-emr-on-eks-diagram.png)
 
-EMR on EKS decouples the analytics job from the services and infrastructure that are processing the job by using a container-based approach. You can focus more on developing your application and less on operating the infrastructure as EMR on EKS dynamically configures the infrastructure based on the compute, memory, and application dependencies of the job. Infrastructure teams can centrally manage a common compute platform to consolidate EMR workloads with other container-based applications. Multiple teams, organizations, or business units can simultaneously and independently run their analytics processes on the shared infrastructure while maintaining isolation enabled by Amazon EKS and AWS Identity and Access Management (IAM)
+Amazon EMR on Amazon EKS decouples the analytics job from the services and infrastructure that are processing the job by using a container-based approach. You can focus more on developing your application and less on operating the infrastructure as EMR on EKS dynamically configures the infrastructure based on the compute, memory, and application dependencies of the job. Infrastructure teams can centrally manage a common compute platform to consolidate EMR workloads with other container-based applications. Multiple teams, organizations, or business units can simultaneously and independently run their analytics processes on the shared infrastructure while maintaining isolation enabled by Amazon EKS and AWS Identity and Access Management (IAM). When you submit a job to Amazon EMR, your job definition contains all of its application-specific parameters. Amazon EMR uses these parameters to instruct Amazon EKS about which pods and containers to deploy. Amazon EKS then brings online the computing resources from Amazon EC2 and AWS Fargate required to run the job. With this loose coupling of services, you can run multiple, securely isolated jobs simultaneously. You can also benchmark the same job with different compute backends or spread your job across multiple Availability Zones to improve availability.
+
+The following diagram illustrates how Amazon EMR on EKS works with other AWS services.
+![aws-emr-on-eks-arch](../../images/aws-emr-on-eks-arch.png)
+
+If you already use Amazon EMR, you can now run Amazon EMR based applications with other types of applications on the same Amazon EKS cluster. This deployment option also improves resource utilization and simplifies infrastructure management across multiple Availability Zones. If you already run big data frameworks on Amazon EKS, you can now use Amazon EMR to automate provisioning and management, and run Apache Spark more quickly.
 
 If you already run Apache Spark on Amazon EKS, you can get all of the benefits of Amazon EMR like automatic provisioning and scaling and the ability to use the latest fully managed versions of open source big data analytics frameworks. You get an optimized EMR runtime for Apache Spark with 3X faster performance than open source Apache Spark on EKS, a serverless data science experience with EMR Studio and Apache Spark UI, fine grained data access control, and support for data encryption. Your Spark jobs start in seconds vs minutes when compared to EC2 based deployments.
+
+The following diagram shows the two different deployment models for Amazon EMR.
+![aws-emr-on-eks-deployment](../../images/aws-emr-on-eks-deployment.png)
+
 
 ## Download example
 Download this example on your workspace
@@ -71,11 +80,21 @@ Delete virtual EMR cluster first:
 bash -e ./delete-emr-virtual-cluster.sh
 ```
 
-Run terraform:
+To destroy all infrastrcuture, run terraform:
 ```
 terraform destroy
 ```
-Don't forget you have to use the `-var-file` option when you run terraform destroy command to delete the aws resources created with extra variable files.
+
+If you don't want to see a confirmation question, you can use quite option for terraform destroy command
 ```
-terraform destroy -var-file tc1.tfvars
+terraform destroy --auto-approve
 ```
+
+**[DON'T FORGET]** You have to use the *-var-file* option when you run terraform destroy command to delete the aws resources created with extra variable files.
+```
+terraform destroy -var-file fixture.tc1.tfvars
+```
+
+# Additional Resources
+## Amazon EMR on Amazon EKS
+- [Amazon EMR on Amazon EKS Developer Guide](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/emr-eks.html)
