@@ -25,6 +25,7 @@ module "vpc" {
 # eks
 module "eks" {
   source             = "Young-ook/eks/aws"
+  version            = "2.0.3"
   name               = var.name
   tags               = var.tags
   subnets            = slice(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), 0, 3)
