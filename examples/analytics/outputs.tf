@@ -31,7 +31,7 @@ output "create_emr_containers" {
   description = "Bash script to create emr containers virtual cluster"
   value = join(" ", [
     "bash -e",
-    format("%s/create-emr-virtual-cluster.sh", path.module),
+    format("%s/create-emr-containers.sh", path.module),
   ])
 }
 
@@ -39,6 +39,6 @@ output "delete_emr_containers" {
   description = "Bash script to delete emr containers virtual cluster"
   value = join(" ", [
     "bash -e",
-    format("%s/delete-emr-virtual-cluster.sh", path.module),
+    format("%s/delete-emr-containers.sh", path.module),
   ])
 }
