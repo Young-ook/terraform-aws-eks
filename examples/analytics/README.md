@@ -53,13 +53,13 @@ bash -e .terraform/modules/eks/script/update-kubeconfig.sh -r ap-northeast-2 -n 
 export KUBECONFIG=kubeconfig
 ```
 
-### Enabling Access for Amazon EMR
+### Enabling access for Amazon EMR
 In order to allow EMR to perform operations on the Kubernetes API, its Service-Linked Role (SLR) needs to be granted the required RBAC permissions. *eksctl* provides a command that creates the required RBAC resources for EMR, and updates the aws-auth ConfigMap to bind the role with the SLR for EMR. Copy the command from terraform outputs and paste it to the your workspace for run:
 ```
 eksctl create iamidentitymapping --cluster eks-emr --service-name emr-containers --namespace default
 ```
 
-### Create EMR containers virtual cluster
+### Create an EMR virtual cluster
 Run terraform:
 ```
 terraform apply -target module.emr
