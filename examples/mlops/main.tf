@@ -46,7 +46,7 @@ resource "local_file" "kfinst" {
   content = templatefile("${path.module}/templates/kfinst.tpl", {
     aws_region = var.aws_region
     eks_name   = module.eks.cluster.name
-    eks_role   = module.eks.role.arn
+    eks_role   = module.eks.role.managed_node_groups.arn
     kubeconfig = module.eks.kubeconfig
   })
   filename        = "${path.module}/kfinst.sh"
