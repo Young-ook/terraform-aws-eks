@@ -33,7 +33,7 @@ Then you are in **analytics** directory under your current workspace. There is a
 Run terraform:
 ```
 terraform init
-terraform apply -target module.vpc -target module.eks -target module.s3
+terraform apply -target module.airflow
 ```
 
 ### Update kubeconfig
@@ -62,7 +62,7 @@ eksctl create iamidentitymapping --cluster eks-emr --service-name emr-containers
 ### Create an EMR virtual cluster
 Run terraform:
 ```
-terraform apply -target module.emr
+terraform apply -target module.emr -target module.s3
 ```
 
 ## Clean up
