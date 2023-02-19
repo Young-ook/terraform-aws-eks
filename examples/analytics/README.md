@@ -33,12 +33,7 @@ Then you are in **analytics** directory under your current workspace. There is a
 Run terraform:
 ```
 terraform init
-terraform apply
-```
-Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
-```
-terraform plan -var-file fixture.tc1.tfvars
-terraform apply -var-file fixture.tc1.tfvars
+terraform apply -target module.vpc -target module.eks -target module.s3
 ```
 
 ### Update kubeconfig
@@ -46,8 +41,6 @@ We need to get kubernetes config file for access the cluster that we've made usi
 ```
 Outputs:
 
-create_emr_containers = "bash -e ./create-emr-containers.sh"
-delete_emr_containers = "bash -e ./delete-emr-containers.sh"
 enable_emr_access = "eksctl create iamidentitymapping --cluster eks-emr --service-name emr-containers --namespace default"
 kubeconfig = "bash -e .terraform/modules/eks/script/update-kubeconfig.sh -r ap-northeast-2 -n eks-emr -k kubeconfig"
 ```
@@ -66,18 +59,13 @@ In order to allow EMR to perform operations on the Kubernetes API, its Service-L
 eksctl create iamidentitymapping --cluster eks-emr --service-name emr-containers --namespace default
 ```
 
-### Create an EMR Virtual Cluster
-To create a virtual cluster on your EMR service, copy the *create_emr_containers* script from the terraform outputs and run on your workspace:
+### Create EMR containers virtual cluster
+Run terraform:
 ```
-bash -e ./create-emr-containers.sh
+terraform apply -target module.emr
 ```
 
 ## Clean up
-As you've created your virtual cluster, copy *delete_emr_containers* script from the terraform outputs and run:
-```
-bash -e ./delete-emr-containers.sh
-```
-
 To destroy all infrastrcuture, run terraform:
 ```
 terraform destroy
