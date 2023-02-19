@@ -67,3 +67,27 @@ resource "local_file" "delete-emr-virtual-cluster-cli" {
   filename        = "${path.module}/delete-emr-virtual-cluster.sh"
   file_permission = "0600"
 }
+
+### artifact/bucket
+module "s3" {
+  source        = "Young-ook/sagemaker/aws//modules/s3"
+  version       = "0.3.2"
+  name          = var.name
+  tags          = var.tags
+  force_destroy = true
+  lifecycle_rules = [
+    {
+      id     = "s3-intelligent-tiering"
+      status = "Enabled"
+      filter = {
+        prefix = ""
+      }
+      transition = [
+        {
+          days          = 0
+          storage_class = "INTELLIGENT_TIERING"
+        },
+      ]
+    },
+  ]
+}
