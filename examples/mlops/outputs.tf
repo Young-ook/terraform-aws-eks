@@ -3,7 +3,10 @@ output "kubeconfig" {
   value       = module.eks.kubeconfig
 }
 
-output "features" {
-  description = "Features configurations of the AWS EKS cluster"
-  value       = module.eks.features
+output "kubeflow" {
+  description = "Bash script to manage kubeflow"
+  value = {
+    kfinst   = "bash kfinst.sh"
+    kfuninst = "bash kfuninst.sh"
+  }
 }

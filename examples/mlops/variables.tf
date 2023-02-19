@@ -4,19 +4,20 @@
 variable "aws_region" {
   description = "The aws region to deploy"
   type        = string
-  default     = "us-east-1"
+  default     = "ap-northeast-2"
 }
 
 variable "azs" {
   description = "A list of availability zones for the vpc to deploy resources"
   type        = list(string)
-  default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
+  default     = ["ap-northeast-2a", "ap-northeast-2b", "ap-northeast-2c"]
 }
 
 ### kubernetes cluster
 variable "kubernetes_version" {
   description = "The target version of kubernetes"
   type        = string
+  default     = null
 }
 
 variable "node_groups" {
@@ -38,6 +39,7 @@ variable "fargate_profiles" {
 variable "name" {
   description = "The logical name of the module instance"
   type        = string
+  default     = null
 }
 
 ### tags
