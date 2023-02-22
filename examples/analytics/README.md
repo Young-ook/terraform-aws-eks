@@ -98,3 +98,4 @@ terraform destroy -var-file fixture.tc1.tfvars
 # Additional Resources
 ## Amazon EMR on Amazon EKS
 - [Amazon EMR on Amazon EKS Developer Guide](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/emr-eks.html)
+- [Best practices for running Spark on Amazon EKS](https://aws.amazon.com/blogs/containers/best-practices-for-running-spark-on-amazon-eks/)
