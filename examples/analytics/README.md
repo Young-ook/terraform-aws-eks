@@ -1,3 +1,5 @@
+[[English](README.md)] [[한국어](README.ko.md)]
+
 # Amazon EMR (Elastic Map Reduce) on Amazon EKS
 [Amazon EMR](https://aws.amazon.com/emr/) is a managed cluster platform that simplifies running big data frameworks, such as Apache Hadoop and Apache Spark, on AWS to process and analyze vast amounts of data. With this deployment, you can easily run and scale Apache Spark, Hive, Presto, and other big data workloads with Amazon EMR.
 
@@ -15,71 +17,55 @@ If you already run Apache Spark on Amazon EKS, you can get all of the benefits o
 The following diagram shows the two different deployment models for Amazon EMR.
 ![aws-emr-on-eks-deployment](../../images/aws-emr-on-eks-deployment.png)
 
+## Setup
+### Prerequisites
+This module requires *eksctl* which is an open-source cli tool for EKS cluster management. In this example, we will use *eksctl* to create kubernetes access control objects for EMR integration. Follow the [instructions](https://github.com/weaveworks/eksctl#installation) for eksctl installation. And if you don't have the terraform and kubernetes tools in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
 
-## Download example
+### Download
 Download this example on your workspace
-```sh
-git clone https://github.com/Young-ook/terraform-aws-emr
-cd terraform-aws-emr/examples/emr-on-eks
+```
+git clone https://github.com/Young-ook/terraform-aws-eks
+cd terraform-aws-eks/examples/analytics
 ```
 
-## Prerequisites
-This module requires *eksctl* which is an open-source cli tool for EKS cluster management. In this example, we will use *eksctl* to create kubernetes access control objects for EMR integration. Follow the [instructions](https://github.com/weaveworks/eksctl#installation) for eksctl installation.
+Then you are in **analytics** directory under your current workspace. There is an exmaple that shows how to use terraform configurations to create and manage an EKS cluster and Addon utilities on your AWS account.
 
-## Setup
-[This](main.tf) is an example of terraform configuration file to create an Amazon EMR cluster on Amazon EKS. Check out and apply it using terraform command.
-
-If you don't have the terraform and kubernetes tools in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
-
-### Create an EKS Cluster
 Run terraform:
 ```
 terraform init
-terraform apply
-```
-Also you can use the `-var-file` option for customized paramters when you run the terraform plan/apply command.
-```
-terraform plan -var-file fixture.tc1.tfvars
-terraform apply -var-file fixture.tc1.tfvars
+terraform apply -target module.vpc -target module.eks -target module.s3
 ```
 
 ### Update kubeconfig
-Update and download kubernetes config file to local. You can see the bash command like below after terraform apply is complete. These are utility scripts and commands for managing EMR and EKS clusters. It looks like below.
+We need to get kubernetes config file for access the cluster that we've made using terraform. After terraform apply, you will see the bash command on the outputs. These scripts will help you setup your virtual EMR cluster on your EKS cluster. It looks like below.
 ```
 Outputs:
 
-create_emr_containers = "bash -e ./create-emr-virtual-cluster.sh"
-delete_emr_containers = "bash -e ./delete-emr-virtual-cluster.sh"
 enable_emr_access = "eksctl create iamidentitymapping --cluster eks-emr --service-name emr-containers --namespace default"
 kubeconfig = "bash -e .terraform/modules/eks/script/update-kubeconfig.sh -r ap-northeast-2 -n eks-emr -k kubeconfig"
 ```
 
-Copy and run it to save the kubernetes configuration file to your local workspace. And export it as an environment variable to apply to the terminal.
+For more details about *kubeconfig* script, please refer to the [user guide](https://github.com/Young-ook/terraform-aws-eks#generate-kubernetes-config).
+
+This is an example:
 ```
 bash -e .terraform/modules/eks/script/update-kubeconfig.sh -r ap-northeast-2 -n eks-emr -k kubeconfig
 export KUBECONFIG=kubeconfig
 ```
 
-### Enabling Access for Amazon EMR
-In order to allow EMR to perform operations on the Kubernetes API, its Service-Linked Role (SLR) needs to be granted the required RBAC permissions. *eksctl* provides a command that creates the required RBAC resources for EMR, and updates the aws-auth ConfigMap to bind the role with the SLR for EMR.
-
-Copy the command from terraform outputs. Paste to the your workspace and run:
+### Enabling access for Amazon EMR
+In order to allow EMR to perform operations on the Kubernetes API, its Service-Linked Role (SLR) needs to be granted the required RBAC permissions. *eksctl* provides a command that creates the required RBAC resources for EMR, and updates the aws-auth ConfigMap to bind the role with the SLR for EMR. Copy the command from terraform outputs and paste it to the your workspace for run:
 ```
 eksctl create iamidentitymapping --cluster eks-emr --service-name emr-containers --namespace default
 ```
 
-### Create an EMR Virtual Cluster
-You can see the path to the script on terraform outputs. One for creating virtual clusters and one for deleting. Copy and run:
+### Create an EMR virtual cluster
+Run terraform:
 ```
-bash -e ./create-emr-virtual-cluster.sh
+terraform apply -target module.emr
 ```
 
 ## Clean up
-Delete virtual EMR cluster first:
-```
-bash -e ./delete-emr-virtual-cluster.sh
-```
-
 To destroy all infrastrcuture, run terraform:
 ```
 terraform destroy
@@ -100,3 +86,4 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Amazon EMR on Amazon EKS Developer Guide](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/emr-eks.html)
 - [Best practices for running Spark on Amazon EKS](https://aws.amazon.com/blogs/containers/best-practices-for-running-spark-on-amazon-eks/)
 - [Run Apache Spark with Amazon EMR on EKS backed by Amazon FSx for Lustre storage](https://aws.amazon.com/blogs/big-data/run-apache-spark-with-amazon-emr-on-eks-backed-by-amazon-fsx-for-lustre-storage/)
+- [Troubleshooting Amazon EMR on EKS identity and access](https://docs.aws.amazon.com/emr/latest/EMR-on-EKS-DevelopmentGuide/security_iam_troubleshoot.html)

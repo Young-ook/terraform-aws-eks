@@ -1,4 +1,4 @@
-# Amazon EMR on Amazon EKS
+### Analytics on Amazon EKS
 
 terraform {
   required_version = "~> 1.0"
@@ -8,7 +8,7 @@ provider "aws" {
   region = var.aws_region
 }
 
-# vpc
+### network/vpc
 module "vpc" {
   source  = "Young-ook/vpc/aws"
   version = "1.0.3"
@@ -22,9 +22,10 @@ module "vpc" {
   }
 }
 
-# eks
+### platform/eks
 module "eks" {
   source             = "Young-ook/eks/aws"
+  version            = "2.0.3"
   name               = var.name
   tags               = var.tags
   subnets            = slice(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), 0, 3)
@@ -41,28 +42,35 @@ module "eks" {
   ]
 }
 
-resource "local_file" "create-emr-virtual-cluster-request-json" {
-  content = templatefile("${path.module}/templates/create-emr-virtual-cluster-request.tpl", {
-    emr_name = var.name
-    eks_name = module.eks.cluster.name
-  })
-  filename        = "${path.module}/create-emr-virtual-cluster-request.json"
-  file_permission = "0600"
+### artifact/bucket
+module "s3" {
+  source        = "Young-ook/sagemaker/aws//modules/s3"
+  version       = "0.3.2"
+  name          = var.name
+  tags          = var.tags
+  force_destroy = true
+  lifecycle_rules = [
+    {
+      id     = "s3-intelligent-tiering"
+      status = "Enabled"
+      filter = {
+        prefix = ""
+      }
+      transition = [
+        {
+          days          = 0
+          storage_class = "INTELLIGENT_TIERING"
+        },
+      ]
+    },
+  ]
 }
 
-resource "local_file" "create-emr-virtual-cluster-cli" {
-  depends_on = [local_file.create-emr-virtual-cluster-request-json, ]
-  content = templatefile("${path.module}/templates/create-emr-virtual-cluster.tpl", {
-    aws_region = var.aws_region
-  })
-  filename        = "${path.module}/create-emr-virtual-cluster.sh"
-  file_permission = "0600"
-}
-
-resource "local_file" "delete-emr-virtual-cluster-cli" {
-  content = templatefile("${path.module}/templates/delete-emr-virtual-cluster.tpl", {
-    aws_region = var.aws_region
-  })
-  filename        = "${path.module}/delete-emr-virtual-cluster.sh"
-  file_permission = "0600"
+### platform/emr
+module "emr" {
+  source = "./modules/emr-containers"
+  name   = var.name
+  container_providers = {
+    id = module.eks.cluster.name
+  }
 }
