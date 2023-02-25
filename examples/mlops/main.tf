@@ -1,4 +1,4 @@
-# Machine Learning with Kubeflow
+### Machine Learning with Kubeflow
 
 terraform {
   required_version = "~> 1.0"
@@ -8,7 +8,7 @@ provider "aws" {
   region = var.aws_region
 }
 
-# vpc
+### vpc
 module "vpc" {
   source  = "Young-ook/vpc/aws"
   version = "1.0.3"
@@ -22,7 +22,7 @@ module "vpc" {
   }
 }
 
-# eks
+### eks
 module "eks" {
   source             = "Young-ook/eks/aws"
   version            = "2.0.3"
@@ -34,27 +34,26 @@ module "eks" {
   managed_node_groups = [
     {
       name          = "kubeflow"
-      desired_size  = 5
       min_size      = 1
       max_size      = 9
-      instance_type = "t3.medium"
+      desired_size  = 4
+      instance_type = "t3.large"
     }
   ]
 }
 
-resource "local_file" "kfinst" {
-  content = templatefile("${path.module}/templates/kfinst.tpl", {
-    aws_region = var.aws_region
-    eks_name   = module.eks.cluster.name
-    eks_role   = module.eks.role.managed_node_groups.arn
-    kubeconfig = module.eks.kubeconfig
-  })
-  filename        = "${path.module}/kfinst.sh"
-  file_permission = "0700"
+### helm-addons
+provider "helm" {
+  kubernetes {
+    host                   = module.eks.kubeauth.host
+    token                  = module.eks.kubeauth.token
+    cluster_ca_certificate = module.eks.kubeauth.ca
+  }
 }
 
-resource "local_file" "kfuninst" {
-  content         = templatefile("${path.module}/templates/kfuninst.tpl", {})
-  filename        = "${path.module}/kfuninst.sh"
-  file_permission = "0700"
+module "kubeflow" {
+  depends_on         = [module.eks]
+  source             = "./modules/kubeflow"
+  tags               = var.tags
+  kubeflow_helm_repo = var.kubeflow_helm_repo
 }
