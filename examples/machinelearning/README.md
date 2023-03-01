@@ -21,7 +21,7 @@ This module requires *yq* which is a lightweight command-line YAML, JSON, and XM
 Download this example on your workspace
 ```
 git clone https://github.com/Young-ook/terraform-aws-eks
-cd terraform-aws-eks/examples/mlops
+cd terraform-aws-eks/examples/machinelearning
 ```
 
 Then you are in **mlops** directory under your current workspace. There is an exmaple that shows how to use terraform configurations to create and manage an EKS cluster and Addon utilities on your AWS account. In this example, we will install Kubeflow on Amazon EKS, run a single-node training and inference using TensorFlow.
