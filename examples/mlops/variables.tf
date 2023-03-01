@@ -13,15 +13,15 @@ variable "azs" {
   default     = ["ap-northeast-2a", "ap-northeast-2b", "ap-northeast-2c"]
 }
 
-### kubernetes cluster
+### kubernetes
 variable "kubernetes_version" {
   description = "The target version of kubernetes"
   type        = string
-  default     = null
+  default     = "1.22"
 }
 
 variable "node_groups" {
-  description = "Node groups definition"
+  description = "Self mamanged node groups definition"
   default     = []
 }
 
@@ -33,6 +33,13 @@ variable "managed_node_groups" {
 variable "fargate_profiles" {
   description = "Amazon Fargate for EKS profiles"
   default     = []
+}
+
+### kubeflow
+variable "kubeflow_helm_repo" {
+  description = "Path to the repository of helm charts to install kubeflow components"
+  type        = string
+  default     = "./kubeflow-manifests/charts/"
 }
 
 ### description
