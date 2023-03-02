@@ -72,7 +72,7 @@ provider "helm" {
 module "airflow" {
   depends_on = [module.eks-addons]
   source     = "Young-ook/eks/aws//modules/helm-addons"
-  version    = "2.0.3"
+  version    = "2.0.4"
   tags       = var.tags
   addons = [
     {
@@ -83,6 +83,10 @@ module "airflow" {
       chart_version  = "1.7.0"
       namespace      = "airflow"
       serviceaccount = "airflow"
+
+      ### since airflow migration process, need to turn off waiting of the terraform helm release
+      ### for more details, https://github.com/hashicorp/terraform-provider-helm/issues/742
+      wait = false
     },
   ]
 }
