@@ -10,6 +10,8 @@ locals {
     serviceaccount   = null
     cleanup_on_fail  = true
     create_namespace = true
+    wait             = true
+    wait_for_jobs    = false
     values           = {}
   }
   default_oidc_config = {
