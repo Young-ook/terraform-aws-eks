@@ -8,6 +8,8 @@ resource "helm_release" "chart" {
   namespace        = lookup(each.value, "namespace", local.default_helm_config["namespace"])
   create_namespace = lookup(each.value, "create_namespace", local.default_helm_config["create_namespace"])
   cleanup_on_fail  = lookup(each.value, "cleanup_on_fail", local.default_helm_config["cleanup_on_fail"])
+  wait             = try(each.value["wait"], local.default_helm_config["wait"])
+  wait_for_jobs    = try(each.value["wait_for_jobs"], local.default_helm_config["wait_for_jobs"])
 
   dynamic "set" {
     for_each = merge(
