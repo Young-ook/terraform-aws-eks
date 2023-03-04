@@ -117,8 +117,9 @@ module "s3" {
 
 ### platform/emr
 module "emr" {
-  source = "./modules/emr-containers"
-  name   = var.name
+  depends_on = [module.s3]
+  source     = "./modules/emr-containers"
+  name       = var.name
   container_providers = {
     id = module.eks.cluster.name
   }

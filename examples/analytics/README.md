@@ -62,8 +62,26 @@ eksctl create iamidentitymapping --cluster eks-emr --service-name emr-containers
 ### Create an EMR virtual cluster
 Run terraform:
 ```
-terraform apply -target module.emr -target module.s3
+terraform apply -target module.emr
 ```
+
+### Access Airflow
+Run below command to check the status.
+```
+kubectl -n airflow get all
+```
+
+Everything looks good, move forward to the next step. Run port-forward commend to access airflow dashboard:
+```
+kubectl -n airflow port-forward svc/airflow-webserver 8080:8080
+```
+
+Open `localhost:8080` in your favorite browswer. You will see the login page.
+
+**[WARNING]** In this example, we use a default user (`admin`) and password (`admin`). For any production airflow deployment, you should change the default password.
+
+![airflow-login](../../images/airflow-login.png)
+![airflow-dag](../../images/airflow-dag.png)
 
 ## Clean up
 To destroy all infrastrcuture, run terraform:
