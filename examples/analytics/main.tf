@@ -42,6 +42,55 @@ module "eks" {
   ]
 }
 
+### eks-addons
+module "eks-addons" {
+  depends_on = [module.eks]
+  source     = "Young-ook/eks/aws//modules/eks-addons"
+  version    = "2.0.3"
+  tags       = var.tags
+  addons = [
+    {
+      name           = "aws-ebs-csi-driver"
+      namespace      = "kube-system"
+      serviceaccount = "ebs-csi-controller-sa"
+      eks_name       = module.eks.cluster.name
+      oidc           = module.eks.oidc
+      policy_arns    = ["arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"]
+    },
+  ]
+}
+
+### helm-addons
+provider "helm" {
+  kubernetes {
+    host                   = module.eks.kubeauth.host
+    token                  = module.eks.kubeauth.token
+    cluster_ca_certificate = module.eks.kubeauth.ca
+  }
+}
+
+module "airflow" {
+  depends_on = [module.eks-addons]
+  source     = "Young-ook/eks/aws//modules/helm-addons"
+  version    = "2.0.4"
+  tags       = var.tags
+  addons = [
+    {
+      ### for more details, https://airflow.apache.org/docs/helm-chart/stable/index.html
+      repository     = "https://airflow.apache.org"
+      name           = "airflow"
+      chart_name     = "airflow"
+      chart_version  = "1.7.0"
+      namespace      = "airflow"
+      serviceaccount = "airflow"
+
+      ### since airflow migration process, need to turn off waiting of the terraform helm release
+      ### for more details, https://github.com/hashicorp/terraform-provider-helm/issues/742
+      wait = false
+    },
+  ]
+}
+
 ### artifact/bucket
 module "s3" {
   source        = "Young-ook/sagemaker/aws//modules/s3"
@@ -68,8 +117,9 @@ module "s3" {
 
 ### platform/emr
 module "emr" {
-  source = "./modules/emr-containers"
-  name   = var.name
+  depends_on = [module.s3]
+  source     = "./modules/emr-containers"
+  name       = var.name
   container_providers = {
     id = module.eks.cluster.name
   }
