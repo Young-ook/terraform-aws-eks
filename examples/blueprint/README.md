@@ -374,6 +374,9 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## IAM Role for Service Accounts
 - [Diving into IAM Roles for Service Accounts](https://aws.amazon.com/blogs/containers/diving-into-iam-roles-for-service-accounts/)
 
+## Karmada
+- [Karmada](https://github.com/karmada-io/karmada)
+
 ## Karpenter
 - [Introducing Karpenter](https://aws.amazon.com/blogs/aws/introducing-karpenter-an-open-source-high-performance-kubernetes-cluster-autoscaler/)
 - [Implement autoscaling with Karpenter](https://www.eksworkshop.com/beginner/085_scaling_karpenter/)
