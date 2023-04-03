@@ -21,3 +21,13 @@ output "enable_emr_access" {
     format("eksctl create iamidentitymapping --cluster %s --service-name emr-containers --namespace default", module.eks.cluster.name),
   ])
 }
+
+output "run_emr_job" {
+  description = "Bash script to run a basic pyspark job on your virtual EMR cluster"
+  value = join(" ", [
+    "bash -e",
+    format("%s/apps/pi/basic-pyspark-job.sh", path.module),
+    format("-c %s", module.emr.cluster["id"]),
+    format("-r %s", module.eks.role["managed_node_groups"].arn),
+  ])
+}
