@@ -1,13 +1,13 @@
 #!/bin/bash
 
 ### envs
-EMR_VIRTUAL_CLUSTER_ID=''     # Terraform output variable is `emrcontainers_virtual_cluster_id`
-EMR_JOB_EXECUTION_ROLE_ARN='' # Terraform output variable is emr_on_eks_role_arn
+EMR_VIRTUAL_CLUSTER_ID=''
+EMR_JOB_EXECUTION_ROLE_ARN=''
 JOB_NAME='pi'
 EMR_EKS_RELEASE_LABEL='emr-6.8.0-latest'
 
 function print_usage() {
-  echo "Usage: $0 -k <kubeconfig-path> -c(cluster) <emr-cluster-id> -r(role) <emr-job-execution-role-arn>"
+  echo "Usage: $0 -c(cluster) <emr-cluster-id> -r(role) <emr-job-execution-role-arn>"
 }
 
 function process_args() {
