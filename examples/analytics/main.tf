@@ -34,7 +34,7 @@ module "eks" {
   managed_node_groups = [
     {
       name          = "spark"
-      desired_size  = 3
+      desired_size  = 5
       min_size      = 3
       max_size      = 9
       instance_type = "m5.large"
