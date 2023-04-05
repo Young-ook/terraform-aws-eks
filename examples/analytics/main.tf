@@ -124,3 +124,30 @@ module "emr" {
     id = module.eks.cluster.name
   }
 }
+
+### security/policy
+resource "aws_iam_role" "emr-job-execution" {
+  name = "emr-job-execution"
+  tags = merge(var.tags, { "terraform.io" = "managed" })
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "elasticmapreduce.amazonaws.com"
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "emr-job-execution" {
+  policy_arn = aws_iam_policy.emr-job-execution.id
+  role       = aws_iam_role.emr-job-execution.name
+}
+
+resource "aws_iam_policy" "emr-job-execution" {
+  name   = "emr-job-execution"
+  tags   = merge(var.tags, { "terraform.io" = "managed" })
+  policy = file("${path.module}/policy.emr-job-execution.json")
+}

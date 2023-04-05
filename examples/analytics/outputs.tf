@@ -28,6 +28,6 @@ output "run_emr_job" {
     "bash -e",
     format("%s/apps/pi/basic-pyspark-job.sh", path.module),
     format("-c %s", module.emr.cluster["id"]),
-    format("-r %s", module.eks.role["managed_node_groups"].arn),
+    format("-r %s", aws_iam_role.emr-job-execution.arn),
   ])
 }
