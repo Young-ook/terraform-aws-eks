@@ -30,10 +30,12 @@ cd terraform-aws-eks/examples/analytics
 
 Then you are in **analytics** directory under your current workspace. There is an exmaple that shows how to use terraform configurations to create and manage an EKS cluster and Addon utilities on your AWS account.
 
+In order to allow EMR to perform operations on the Kubernetes API, its Service-Linked Role (SLR) needs to be granted the required RBAC permissions. *eksctl* provides a command that creates the required RBAC resources for EMR, and updates the aws-auth ConfigMap to bind the role with the SLR for EMR. This example will create Kubernetes Role, RoleBinding and *aws-auth* ConfigMap resource automatically using eksctl on your local workspace.
+
 Run terraform:
 ```
 terraform init
-terraform apply -target module.airflow
+terraform apply
 ```
 
 ### Update kubeconfig
@@ -41,7 +43,6 @@ We need to get kubernetes config file for access the cluster that we've made usi
 ```
 Outputs:
 
-enable_emr_access = "eksctl create iamidentitymapping --cluster eks-emr --service-name emr-containers --namespace default"
 kubeconfig = "bash -e .terraform/modules/eks/script/update-kubeconfig.sh -r ap-northeast-2 -n eks-emr -k kubeconfig"
 ```
 
@@ -51,18 +52,6 @@ This is an example:
 ```
 bash -e .terraform/modules/eks/script/update-kubeconfig.sh -r ap-northeast-2 -n eks-emr -k kubeconfig
 export KUBECONFIG=kubeconfig
-```
-
-### Enabling access for Amazon EMR
-In order to allow EMR to perform operations on the Kubernetes API, its Service-Linked Role (SLR) needs to be granted the required RBAC permissions. *eksctl* provides a command that creates the required RBAC resources for EMR, and updates the aws-auth ConfigMap to bind the role with the SLR for EMR. Copy the command from terraform outputs and paste it to the your workspace for run:
-```
-eksctl create iamidentitymapping --cluster eks-emr --service-name emr-containers --namespace default
-```
-
-### Create an EMR virtual cluster
-Run terraform:
-```
-terraform apply -target module.emr
 ```
 
 ### Access Airflow
