@@ -36,7 +36,7 @@ resource "null_resource" "eksctl" {
 
 resource "aws_emrcontainers_virtual_cluster" "emr" {
   depends_on = [null_resource.eksctl]
-  name       = var.name
+  name       = module.frigga.name
   tags       = merge(var.tags, local.default-tags)
 
   container_provider {
@@ -53,7 +53,7 @@ resource "aws_emrcontainers_virtual_cluster" "emr" {
 
 ### security/policy
 resource "aws_iam_role" "emrjob" {
-  name = var.name
+  name = module.frigga.name
   tags = merge(var.tags, local.default-tags)
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -73,7 +73,7 @@ resource "aws_iam_role_policy_attachment" "emrjob" {
 }
 
 resource "aws_iam_policy" "emrjob" {
-  name   = var.name
+  name   = module.frigga.name
   tags   = merge(var.tags, local.default-tags)
   policy = templatefile("${path.module}/templates/emrjob-policy.tpl", {})
 }
