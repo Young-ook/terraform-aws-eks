@@ -122,6 +122,6 @@ module "emr" {
   name       = module.eks.cluster.name
   container_providers = {
     id        = module.eks.cluster.name
-    namespace = "spark"
+    namespace = "default"
   }
 }
