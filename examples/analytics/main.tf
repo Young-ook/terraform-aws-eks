@@ -121,7 +121,8 @@ module "emr" {
   source     = "./modules/emr-containers"
   name       = var.name
   container_providers = {
-    id = module.eks.cluster.name
+    id        = module.eks.cluster.name
+    namespace = "spark"
   }
 }
 
