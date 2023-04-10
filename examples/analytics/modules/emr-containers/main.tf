@@ -25,7 +25,7 @@ resource "null_resource" "enable-emr-access" {
 
 resource "aws_emrcontainers_virtual_cluster" "emr" {
   depends_on = [null_resource.enable-emr-access]
-  name       = module.frigga.name
+  name       = var.name
   tags       = merge(var.tags, local.default-tags)
 
   container_provider {
@@ -38,4 +38,31 @@ resource "aws_emrcontainers_virtual_cluster" "emr" {
       }
     }
   }
+}
+
+### security/policy
+resource "aws_iam_role" "emrjob" {
+  name = var.name
+  tags = merge(var.tags, local.default-tags)
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "elasticmapreduce.amazonaws.com"
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "emrjob" {
+  policy_arn = aws_iam_policy.emrjob.id
+  role       = aws_iam_role.emrjob.name
+}
+
+resource "aws_iam_policy" "emrjob" {
+  name   = var.name
+  tags   = merge(var.tags, local.default-tags)
+  policy = templatefile("${path.module}/templates/emrjob-policy.tpl", {})
 }
