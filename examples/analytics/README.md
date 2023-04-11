@@ -17,6 +17,9 @@ If you already run Apache Spark on Amazon EKS, you can get all of the benefits o
 The following diagram shows the two different deployment models for Amazon EMR.
 ![aws-emr-on-eks-deployment](../../images/aws-emr-on-eks-deployment.png)
 
+## Spark on AWS considerations
+![spark-on-aws-considerations](../../images/spark-on-aws-considerations.png)
+
 ## Setup
 ### Prerequisites
 This module requires *eksctl* which is an open-source cli tool for EKS cluster management. In this example, we will use *eksctl* to create kubernetes access control objects for EMR integration. Follow the [instructions](https://github.com/weaveworks/eksctl#installation) for eksctl installation. And if you don't have the terraform and kubernetes tools in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
