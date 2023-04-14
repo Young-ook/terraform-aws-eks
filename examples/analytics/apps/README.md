@@ -2,5 +2,6 @@
 
 # Applications
 ## Pi
+![aws-emr-on-eks-job-pyspark-pi](../../../images/aws-emr-on-eks-job-pyspark-pi.png)
 
 # Known Issues

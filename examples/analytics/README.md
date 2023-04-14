@@ -24,6 +24,8 @@ The following diagram shows the two different deployment models for Amazon EMR.
 ### Prerequisites
 This module requires *eksctl* which is an open-source cli tool for EKS cluster management. In this example, we will use *eksctl* to create kubernetes access control objects for EMR integration. Follow the [instructions](https://github.com/weaveworks/eksctl#installation) for eksctl installation. And if you don't have the terraform and kubernetes tools in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
 
+:warning: **This example requires the eksctl version 0.135.0 or higher**
+
 ### Download
 Download this example on your workspace
 ```

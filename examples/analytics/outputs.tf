@@ -3,12 +3,14 @@ output "kubeconfig" {
   value       = module.eks.kubeconfig
 }
 
-output "run_emr_job" {
+output "apps" {
   description = "Bash script to run a basic pyspark job on your virtual EMR cluster"
-  value = join(" ", [
-    "bash -e",
-    format("%s/apps/pi/basic-pyspark-job.sh", path.module),
-    format("-c %s", module.emr.cluster["id"]),
-    format("-r %s", aws_iam_role.emr-job-execution.arn),
-  ])
+  value = {
+    pyspark_pi = join(" ", [
+      "bash -e",
+      format("%s/apps/pi/basic-pyspark-job.sh", path.module),
+      format("-c %s", module.emr.cluster["id"]),
+      format("-r %s", module.emr.role["job"].arn),
+    ])
+  }
 }
