@@ -118,7 +118,8 @@ module "s3" {
 ### platform/emr
 module "emr" {
   depends_on = [module.s3]
-  source     = "./modules/emr-containers"
+  source     = "Young-ook/emr/aws//modules/emr-containers"
+  version    = "0.0.2"
   name       = module.eks.cluster.name
   container_providers = {
     id        = module.eks.cluster.name
