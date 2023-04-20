@@ -82,9 +82,11 @@ module "aws" {
 
 ### eks-addons
 module "eks-addons" {
-  source  = "Young-ook/eks/aws//modules/eks-addons"
-  version = "2.0.3"
-  tags    = var.tags
+  ### the adot-addon requires a cert-manager from helm-addons
+  depends_on = [module.helm-addons]
+  source     = "Young-ook/eks/aws//modules/eks-addons"
+  version    = "2.0.3"
+  tags       = var.tags
   addons = [
     {
       name     = "vpc-cni"
@@ -125,11 +127,23 @@ module "eks-addons" {
 
 ### helm-addons
 module "helm-addons" {
-  depends_on = [module.eks-addons]
+  depends_on = [module.eks]
   source     = "Young-ook/eks/aws//modules/helm-addons"
   version    = "2.0.0"
   tags       = var.tags
   addons = [
+    {
+      ### for more details, https://cert-manager.io/docs/installation/helm/
+      repository       = "https://charts.jetstack.io"
+      name             = "cert-manager"
+      chart_name       = "cert-manager"
+      version          = "v1.10.0"
+      namespace        = "cert-manager"
+      create_namespace = true
+      values = {
+        "installCRDs" = "true"
+      }
+    },
     {
       repository     = "https://aws.github.io/eks-charts"
       name           = "appmesh-controller"
