@@ -6,6 +6,13 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
+
+  // This is necessary so that tags required for eks can be applied to the vpc without changes to the vpc wiping them out.
+  // https://registry.terraform.io/providers/hashicorp/aws/latest/docs/guides/resource-tagging
+  // https://stackoverflow.com/questions/57495581/terraform-eks-tagging
+  ignore_tags {
+    key_prefixes = ["kubernetes.io/", "karpenter.sh/"]
+  }
 }
 
 provider "helm" {
@@ -276,4 +283,18 @@ resource "aws_iam_policy" "cas" {
   tags        = merge({ "terraform.io" = "managed" }, var.tags)
   description = format("Allow cluster-autoscaler to manage AWS resources")
   policy      = file("${path.module}/policy.cluster-autoscaler.json")
+}
+
+### karpenter discovery tags
+resource "aws_ec2_tag" "karpenter-subnets" {
+  for_each    = toset(slice(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), 0, 3))
+  resource_id = each.value
+  key         = "karpenter.sh/discovery"
+  value       = module.eks.cluster.name
+}
+
+resource "aws_ec2_tag" "karpenter-security-groups" {
+  resource_id = module.eks.cluster.control_plane.vpc_config.0.cluster_security_group_id
+  key         = "karpenter.sh/discovery"
+  value       = module.eks.cluster.name
 }
