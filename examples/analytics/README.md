@@ -1,6 +1,10 @@
 [[English](README.md)] [[한국어](README.ko.md)]
 
-# Amazon EMR (Elastic Map Reduce) on Amazon EKS
+# Analytics on Amazon EKS
+## Spark on AWS considerations
+![spark-on-aws-considerations](../../images/spark-on-aws-considerations.png)
+
+## Amazon EMR (Elastic Map Reduce) on Amazon EKS
 [Amazon EMR](https://aws.amazon.com/emr/) is a managed cluster platform that simplifies running big data frameworks, such as Apache Hadoop and Apache Spark, on AWS to process and analyze vast amounts of data. With this deployment, you can easily run and scale Apache Spark, Hive, Presto, and other big data workloads with Amazon EMR.
 
 ![aws-emr-on-eks-diagram](../../images/aws-emr-on-eks-diagram.png)
@@ -16,9 +20,6 @@ If you already run Apache Spark on Amazon EKS, you can get all of the benefits o
 
 The following diagram shows the two different deployment models for Amazon EMR.
 ![aws-emr-on-eks-deployment](../../images/aws-emr-on-eks-deployment.png)
-
-## Spark on AWS considerations
-![spark-on-aws-considerations](../../images/spark-on-aws-considerations.png)
 
 ## Setup
 ### Prerequisites
