@@ -379,7 +379,8 @@ terraform destroy -var-file fixture.tc1.tfvars
 
 ## Karpenter
 - [Introducing Karpenter](https://aws.amazon.com/blogs/aws/introducing-karpenter-an-open-source-high-performance-kubernetes-cluster-autoscaler/)
-- [Implement autoscaling with Karpenter](https://www.eksworkshop.com/beginner/085_scaling_karpenter/)
+- [Karpenter Hands-on Lab](https://www.eksworkshop.com/docs/autoscaling/compute/karpenter/)
+- [Migrating from Cluster Autoscaler](https://karpenter.sh/v0.27.3/getting-started/migrating-from-cas/)
 
 ## Prometheus
 - [Deploy Promethus using Helm](https://www.eksworkshop.com/intermediate/240_monitoring/deploy-prometheus/)
