@@ -21,14 +21,6 @@ provider "aws" {
   }
 }
 
-provider "helm" {
-  kubernetes {
-    host                   = module.eks.kubeauth.host
-    token                  = module.eks.kubeauth.token
-    cluster_ca_certificate = module.eks.kubeauth.ca
-  }
-}
-
 ### vpc
 module "vpc" {
   source  = "Young-ook/vpc/aws"
@@ -74,6 +66,20 @@ module "vpc" {
   ]
 }
 
+### karpenter discovery tags
+resource "aws_ec2_tag" "karpenter-subnets" {
+  for_each    = toset(slice(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), 0, 3))
+  resource_id = each.value
+  key         = "karpenter.sh/discovery"
+  value       = module.eks.cluster.name
+}
+
+resource "aws_ec2_tag" "karpenter-security-groups" {
+  resource_id = module.eks.cluster.control_plane.vpc_config.0.cluster_security_group_id
+  key         = "karpenter.sh/discovery"
+  value       = module.eks.cluster.name
+}
+
 ### eks cluster
 module "eks" {
   source              = "Young-ook/eks/aws"
@@ -88,222 +94,19 @@ module "eks" {
   node_groups         = var.node_groups
 }
 
-### aws partitions
-module "aws" {
-  source = "Young-ook/spinnaker/aws//modules/aws-partitions"
+### kubernetes addons
+provider "helm" {
+  kubernetes {
+    host                   = module.eks.kubeauth.host
+    token                  = module.eks.kubeauth.token
+    cluster_ca_certificate = module.eks.kubeauth.ca
+  }
 }
 
-### eks-addons
-module "eks-addons" {
-  ### the adot-addon requires a cert-manager from helm-addons
-  depends_on = [module.helm-addons]
-  source     = "Young-ook/eks/aws//modules/eks-addons"
-  version    = "2.0.3"
-  tags       = var.tags
-  addons = [
-    {
-      name     = "vpc-cni"
-      eks_name = module.eks.cluster.name
-    },
-    {
-      name     = "coredns"
-      eks_name = module.eks.cluster.name
-    },
-    {
-      name     = "kube-proxy"
-      eks_name = module.eks.cluster.name
-    },
-    {
-      name           = "aws-ebs-csi-driver"
-      namespace      = "kube-system"
-      serviceaccount = "ebs-csi-controller-sa"
-      eks_name       = module.eks.cluster.name
-      oidc           = module.eks.oidc
-      policy_arns = [
-        format("arn:%s:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy", module.aws.partition.partition),
-      ]
-    },
-    {
-      name           = "adot"
-      namespace      = "default"
-      serviceaccount = "adot-collector"
-      eks_name       = module.eks.cluster.name
-      oidc           = module.eks.oidc
-      policy_arns = [
-        format("arn:%s:iam::aws:policy/AmazonPrometheusRemoteWriteAccess", module.aws.partition.partition),
-        format("arn:%s:iam::aws:policy/AWSXrayWriteOnlyAccess", module.aws.partition.partition),
-        format("arn:%s:iam::aws:policy/CloudWatchAgentServerPolicy", module.aws.partition.partition),
-      ]
-    },
-  ]
-}
-
-### helm-addons
-module "helm-addons" {
+module "kubernetes-addons" {
   depends_on = [module.eks]
-  source     = "Young-ook/eks/aws//modules/helm-addons"
-  version    = "2.0.0"
+  source     = "./modules/kubernetes-addons"
   tags       = var.tags
-  addons = [
-    {
-      ### for more details, https://cert-manager.io/docs/installation/helm/
-      repository       = "https://charts.jetstack.io"
-      name             = "cert-manager"
-      chart_name       = "cert-manager"
-      version          = "v1.10.0"
-      namespace        = "cert-manager"
-      create_namespace = true
-      values = {
-        "installCRDs" = "true"
-      }
-    },
-    {
-      repository     = "https://aws.github.io/eks-charts"
-      name           = "appmesh-controller"
-      chart_name     = "appmesh-controller"
-      namespace      = "kube-system"
-      serviceaccount = "appmesh-controller"
-      values = {
-        "region"           = var.aws_region
-        "tracing.enabled"  = true
-        "tracing.provider" = "x-ray"
-      }
-      oidc = module.eks.oidc
-      policy_arns = [
-        format("arn:%s:iam::aws:policy/AWSAppMeshEnvoyAccess", module.aws.partition.partition),
-        format("arn:%s:iam::aws:policy/AWSCloudMapFullAccess", module.aws.partition.partition),
-        format("arn:%s:iam::aws:policy/AWSXRayDaemonWriteAccess", module.aws.partition.partition),
-      ]
-    },
-    {
-      repository     = "https://aws.github.io/eks-charts"
-      name           = "aws-cloudwatch-metrics"
-      chart_name     = "aws-cloudwatch-metrics"
-      namespace      = "kube-system"
-      serviceaccount = "aws-cloudwatch-metrics"
-      values = {
-        "clusterName" = module.eks.cluster.name
-      }
-      oidc = module.eks.oidc
-      policy_arns = [
-        format("arn:%s:iam::aws:policy/CloudWatchAgentServerPolicy", module.aws.partition.partition)
-      ]
-    },
-    {
-      repository     = "https://aws.github.io/eks-charts"
-      name           = "aws-for-fluent-bit"
-      chart_name     = "aws-for-fluent-bit"
-      namespace      = "kube-system"
-      serviceaccount = "aws-for-fluent-bit"
-      values = {
-        "cloudWatch.enabled"      = true
-        "cloudWatch.region"       = var.aws_region
-        "cloudWatch.logGroupName" = format("/aws/containerinsights/%s/application", module.eks.cluster.name)
-        "firehose.enabled"        = false
-        "kinesis.enabled"         = false
-        "elasticsearch.enabled"   = false
-      }
-      oidc = module.eks.oidc
-      policy_arns = [
-        format("arn:%s:iam::aws:policy/CloudWatchAgentServerPolicy", module.aws.partition.partition)
-      ]
-    },
-    {
-      repository     = "https://aws.github.io/eks-charts"
-      name           = "aws-load-balancer-controller"
-      chart_name     = "aws-load-balancer-controller"
-      namespace      = "kube-system"
-      serviceaccount = "aws-load-balancer-controller"
-      values = module.eks.features.fargate_enabled ? {
-        "vpcId"       = module.vpc.vpc.id
-        "clusterName" = module.eks.cluster.name
-        } : {
-        "clusterName" = module.eks.cluster.name
-      }
-      oidc        = module.eks.oidc
-      policy_arns = [aws_iam_policy.lbc.arn]
-    },
-    {
-      ### If you are getting a 403 forbidden error, try 'docker logout public.ecr.aws'
-      ### https://karpenter.sh/preview/troubleshooting/#helm-error-when-pulling-the-chart
-      repository     = null
-      name           = "karpenter"
-      chart_name     = "oci://public.ecr.aws/karpenter/karpenter"
-      chart_version  = "v0.27.1"
-      namespace      = "kube-system"
-      serviceaccount = "karpenter"
-      values = {
-        "settings.aws.clusterName"            = module.eks.cluster.name
-        "settings.aws.clusterEndpoint"        = module.eks.cluster.control_plane.endpoint
-        "settings.aws.defaultInstanceProfile" = module.eks.instance_profile.node_groups == null ? module.eks.instance_profile.managed_node_groups.arn : module.eks.instance_profile.node_groups.arn
-      }
-      oidc        = module.eks.oidc
-      policy_arns = [aws_iam_policy.kpt.arn]
-    },
-    {
-      repository     = "${path.module}/charts/"
-      name           = "cluster-autoscaler"
-      chart_name     = "cluster-autoscaler"
-      namespace      = "kube-system"
-      serviceaccount = "cluster-autoscaler"
-      values = {
-        "awsRegion"                 = var.aws_region
-        "autoDiscovery.clusterName" = module.eks.cluster.name
-      }
-      oidc        = module.eks.oidc
-      policy_arns = [aws_iam_policy.cas.arn]
-    },
-    {
-      repository     = "https://kubernetes-sigs.github.io/metrics-server/"
-      name           = "metrics-server"
-      chart_name     = "metrics-server"
-      namespace      = "kube-system"
-      serviceaccount = "metrics-server"
-      values = {
-        "args[0]" = "--kubelet-preferred-address-types=InternalIP"
-      }
-    },
-    {
-      repository     = "https://aws.github.io/eks-charts"
-      name           = "aws-node-termination-handler"
-      chart_name     = "aws-node-termination-handler"
-      namespace      = "kube-system"
-      serviceaccount = "aws-node-termination-handler"
-    },
-  ]
-}
-
-resource "aws_iam_policy" "lbc" {
-  name        = "aws-loadbalancer-controller"
-  tags        = merge({ "terraform.io" = "managed" }, var.tags)
-  description = format("Allow aws-load-balancer-controller to manage AWS resources")
-  policy      = file("${path.module}/policy.aws-loadbalancer-controller.json")
-}
-
-resource "aws_iam_policy" "kpt" {
-  name        = "karpenter"
-  tags        = merge({ "terraform.io" = "managed" }, var.tags)
-  description = format("Allow karpenter to manage AWS resources")
-  policy      = file("${path.module}/policy.karpenter.json")
-}
-
-resource "aws_iam_policy" "cas" {
-  name        = "cluster-autoscaler"
-  tags        = merge({ "terraform.io" = "managed" }, var.tags)
-  description = format("Allow cluster-autoscaler to manage AWS resources")
-  policy      = file("${path.module}/policy.cluster-autoscaler.json")
-}
-
-### karpenter discovery tags
-resource "aws_ec2_tag" "karpenter-subnets" {
-  for_each    = toset(slice(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), 0, 3))
-  resource_id = each.value
-  key         = "karpenter.sh/discovery"
-  value       = module.eks.cluster.name
-}
-
-resource "aws_ec2_tag" "karpenter-security-groups" {
-  resource_id = module.eks.cluster.control_plane.vpc_config.0.cluster_security_group_id
-  key         = "karpenter.sh/discovery"
-  value       = module.eks.cluster.name
+  eks        = module.eks
+  vpc        = module.vpc
 }
