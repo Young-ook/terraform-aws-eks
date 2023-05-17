@@ -2,7 +2,7 @@
 
 locals {
   default_helm_config = {
-    repository       = "https://helm.sh"
+    repository       = null
     name             = null
     version          = null
     chart            = null
