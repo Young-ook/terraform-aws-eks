@@ -2,6 +2,12 @@
 
 terraform {
   required_version = "~> 1.0"
+  required_providers {
+    helm = {
+      source  = "hashicorp/helm"
+      version = ">= 2.9"
+    }
+  }
 }
 
 provider "aws" {
@@ -218,15 +224,18 @@ module "helm-addons" {
       policy_arns = [aws_iam_policy.lbc.arn]
     },
     {
-      repository     = "https://charts.karpenter.sh"
+      ### If you are getting a 403 forbidden error, try 'docker logout public.ecr.aws'
+      ### https://karpenter.sh/preview/troubleshooting/#helm-error-when-pulling-the-chart
+      repository     = null
       name           = "karpenter"
-      chart_name     = "karpenter"
+      chart_name     = "oci://public.ecr.aws/karpenter/karpenter"
+      chart_version  = "v0.27.1"
       namespace      = "kube-system"
       serviceaccount = "karpenter"
       values = {
-        "clusterName"                = module.eks.cluster.name
-        "clusterEndpoint"            = module.eks.cluster.control_plane.endpoint
-        "aws.defaultInstanceProfile" = module.eks.instance_profile.node_groups == null ? module.eks.instance_profile.managed_node_groups.arn : module.eks.instance_profile.node_groups.arn
+        "settings.aws.clusterName"            = module.eks.cluster.name
+        "settings.aws.clusterEndpoint"        = module.eks.cluster.control_plane.endpoint
+        "settings.aws.defaultInstanceProfile" = module.eks.instance_profile.node_groups == null ? module.eks.instance_profile.managed_node_groups.arn : module.eks.instance_profile.node_groups.arn
       }
       oidc        = module.eks.oidc
       policy_arns = [aws_iam_policy.kpt.arn]
