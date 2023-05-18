@@ -190,8 +190,9 @@ data:
 
 카오스 메시를 설치하기 위하여 헬름(Helm) 패키지 매니저를 사용할 수 있습니다. 간단하게 *helm-addons* 에 카오스 메시 차트를 추가하해주고 테라폼 변경 사항을 반영하면 됩니다. 아래에 예제가 있습니다.
 ```
-module "helm-addons" {
+module "chaos-mesh" {
   source     = "Young-ook/eks/aws//modules/helm-addons"
+  version    = "2.0.4"
   tags       = var.tags
   addons = [
     {
@@ -225,8 +226,9 @@ chaos-dashboard-98c4c5f97-tx5ds             1/1     Running   0          2d5h
 
 프로메테우스를 설치하기 위하여 헬름 패키지 매니저를 사용할 수 있습니다. 간단하게 *helm-addons* 에 프로메테우스 차트를 추가하해주고 테라폼 변경 사항을 반영하면 됩니다. 아래에 예제가 있습니다.
 ```
-module "helm-addons" {
+module "prometheus" {
   source     = "Young-ook/eks/aws//modules/helm-addons"
+  version    = "2.0.4"
   tags       = var.tags
   addons = [
     {
@@ -248,7 +250,7 @@ module "helm-addons" {
 ### AWS 파게이트(Fargate)
 AWS 파게이트(Fargate)는 컨테이너에 필요에 맞춰 적절한 컴퓨팅 용량을 제공하는 기술입니다. AWS 파게이트와 같이 애플리케이션 구동을 위한 서버에 대한 관리를 자동화 한 것을 서버리스 (Serverless)라고 부릅니다. 파게이트를 사용하면 더 이상 컨테이너를 실행하기 위해 가상 머신 그륩을 프로비저닝, 구성 또는 확장할 필요가 없습니다. 따라서 서버 유형을 선택하거나, 노드 그룹을 확장할 시기를 결정하거나, 클러스터 패킹을 최적화할 필요가 없습니다. 파게이트에서 어떤 포드를 시작할지, 그리고 파게이트 프로파일로 어떻게 실행할지 제어할 수 있습니다. 파게이트에서 실행되는 각 포드는 자체 격리 경계를 가지며 기본 커널, CPU 리소스, 메모리 리소스 또는 탄력적 네트워크 인터페이스를 다른 포드와 공유하지 않습니다. 자세한 내용은 [다음](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html)을 참조하세요.
 
-AWS 파게이트로 서버리스 노드 그룹의 예제를 실행하려면, AWS 파게이트 기반 인스턴스만 사용하도록 구성하는 별도의 환경 변수 템플릿을 사용해야 합니다. main.tf 파일을 편집하여 *helm-addons* 에서 *aws-load-balancer-controller*, *metrics-server*를 제외한 나머지를 삭제합니다. 그리고 *eks-addons* 에서 *vpc-cni*를 제외한 나머지를 제거하고 파일을 저장합니다. 만약 방금 언급한 애드온들을 제거하지 않으면 오류가 발생할 것입니다. 이제 파게이트를 생성하는 terraform 명령을 실행합니다:
+AWS 파게이트로 서버리스 노드 그룹의 예제를 실행하려면, AWS 파게이트 기반 인스턴스만 사용하도록 구성하는 별도의 환경 변수 템플릿을 사용해야 합니다. *kubernetes-addons* 디렉토리 아래에 있는 main.tf 파일을 편집하여 *helm-addons* 중 *aws-load-balancer-controller*, *metrics-server*를 제외한 나머지를 삭제합니다. 그리고 *eks-addons* 에서 *vpc-cni*를 제외한 나머지를 제거하고 파일을 저장합니다. 만약 방금 언급한 애드온들을 제거하지 않으면 오류가 발생할 것입니다. 이제 파게이트를 생성하는 terraform 명령을 실행합니다:
 ```
 terraform apply -var-file fixture.fargate.tfvars
 ```
