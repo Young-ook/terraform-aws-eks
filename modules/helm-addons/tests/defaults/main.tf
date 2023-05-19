@@ -44,5 +44,26 @@ module "main" {
         "args[0]" = "--kubelet-preferred-address-types=InternalIP"
       }
     },
+    {
+      name           = "karpenter"
+      chart_name     = "oci://public.ecr.aws/karpenter/karpenter"
+      chart_version  = "v0.27.1"
+      namespace      = "karpenter"
+      serviceaccount = "karpenter"
+      values = {
+        "settings.aws.clusterName"            = module.eks.cluster.name
+        "settings.aws.clusterEndpoint"        = module.eks.cluster.control_plane.endpoint
+        "settings.aws.defaultInstanceProfile" = module.eks.instance_profile.node_groups.arn
+      }
+      oidc        = module.eks.oidc
+      policy_arns = [aws_iam_policy.kpt.arn]
+    },
   ]
+}
+
+resource "aws_iam_policy" "kpt" {
+  name        = "karpenter"
+  tags       = { test = "helm-addons" }
+  description = format("Allow karpenter to manage AWS resources")
+  policy      = file("${path.module}/policy.karpenter.json")
 }
