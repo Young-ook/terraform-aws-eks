@@ -248,6 +248,26 @@ module "prometheus" {
 }
 ```
 
+### Apache Airflow
+[Apache Airflow](https://airflow.apache.org/) is an open-source workflow management platform for data engineering pipelines. Airflow’s extensible Python framework enables you to build workflows connecting with virtually any technology. A web interface helps manage the state of your workflows. Airflow is deployable in many ways, varying from a single process on your laptop to a distributed setup to support even the biggest workflows. It started at Airbnb in October 2014 as a solution to manage the company's increasingly complex workflows.
+
+Run below command to check the status.
+```
+kubectl -n airflow get all
+```
+
+Everything looks good, move forward to the next step. Run port-forward commend to access airflow dashboard:
+```
+kubectl -n airflow port-forward svc/airflow-webserver 8080:8080
+```
+
+Open `localhost:8080` in your favorite browswer. You will see the login page.
+
+**[WARNING]** In this example, we use a default user (`admin`) and password (`admin`). For any production airflow deployment, you should change the default password.
+
+![airflow-login](../../images/airflow-login.png)
+![airflow-dag](../../images/airflow-dag.png)
+
 ## Computing options
 ### AWS Fargate (Serverless)
 AWS Fargate is a technology that provides on-demand, right-sized compute capacity for containers. With AWS Fargate, you no longer have to provision, configure, or scale groups of virtual machines to run containers. This removes the need to choose server types, decide when to scale your node groups, or optimize cluster packing. You can control which pods start on Fargate and how they run with Fargate profiles. Each pod running on Fargate has its own isolation boundary and does not share the underlying kernel, CPU resources, memory resources, or elastic network interface with another pod. For more information, please refer [this](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html).
