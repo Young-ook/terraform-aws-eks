@@ -374,6 +374,9 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## IAM Role for Service Accounts
 - [Diving into IAM Roles for Service Accounts](https://aws.amazon.com/blogs/containers/diving-into-iam-roles-for-service-accounts/)
 
+## Istio
+- [Istio Concepts and Examples](https://istio.io/latest/docs/)
+
 ## Karmada
 - [Karmada](https://github.com/karmada-io/karmada)
 
