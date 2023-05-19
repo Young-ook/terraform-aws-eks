@@ -189,10 +189,11 @@ Then, you can use [*nginx*](./apps/README.md#nginx) to test Cluster Autoscaling(
 ### Chaos Mesh
 [Chaos Mesh](https://chaos-mesh.org/docs/) is an open source cloud-native Chaos Engineering platform. It offers various types of fault simulation and has an enormous capability to orchestrate fault scenarios. Using Chaos Mesh, you can conveniently simulate various abnormalities that might occur in reality during the development, testing, and production environments and find potential problems in the system. To lower the threshold for a Chaos Engineering project, Chaos Mesh provides you with a visualization operation. You can easily design your Chaos scenarios on the Web UI and monitor the status of Chaos experiments.
 
-You can install chaos mesh on your kubernetes cluster by helm which is a clustered application package manager. Simply add your helm chart configuration into addons list variable in *helm-addons* module. And apply terraform configuration changes. Here is an example.
+You can install chaos mesh on your kubernetes cluster by helm which is a clustered application package manager. Simply add your helm chart configuration using *helm-addons* module. And apply terraform configuration changes. Here is an example.
 ```
-module "helm-addons" {
+module "chaos-mesh" {
   source     = "Young-ook/eks/aws//modules/helm-addons"
+  version    = "2.0.4"
   tags       = var.tags
   addons = [
     {
@@ -225,10 +226,11 @@ chaos-dashboard-98c4c5f97-tx5ds             1/1     Running   0          2d5h
 ### Prometheus
 [Prometheus](https://prometheus.io/) is an open-source systems monitoring and alerting toolkit originally built at SoundCloud. Since its inception in 2012, many companies and organizations have adopted Prometheus, and the project has a very active developer and user community. It is now a standalone open source project and maintained independently of any company. Prometheus joined the Cloud Native Computing Foundation in 2016 as the second hosted project, after Kubernetes.
 
-You can install prometheus on your kubernetes cluster by helm which is a clustered application package manager. Simply add your helm chart configuration into addons list variable in *helm-addons* module. And apply terraform configuration changes to install prometheus monitoring tool. Here is an example.
+You can install prometheus on your kubernetes cluster by helm which is a clustered application package manager. Simply add your helm chart configuration using *helm-addons* module or add your configuration into the existing *helm-addons* module. And apply terraform configuration changes to install prometheus monitoring tool. Here is an example.
 ```
-module "helm-addons" {
+module "prometheus" {
   source     = "Young-ook/eks/aws//modules/helm-addons"
+  version    = "2.0.4"
   tags       = var.tags
   addons = [
     {
@@ -250,7 +252,7 @@ module "helm-addons" {
 ### AWS Fargate (Serverless)
 AWS Fargate is a technology that provides on-demand, right-sized compute capacity for containers. With AWS Fargate, you no longer have to provision, configure, or scale groups of virtual machines to run containers. This removes the need to choose server types, decide when to scale your node groups, or optimize cluster packing. You can control which pods start on Fargate and how they run with Fargate profiles. Each pod running on Fargate has its own isolation boundary and does not share the underlying kernel, CPU resources, memory resources, or elastic network interface with another pod. For more information, please refer [this](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html).
 
-To run an example of serverless node groups with AWS Fargate, use the another fixture template that configures to only use AWS Fargate based instances. Edit main.tf file to remove all *helm-addons* except *aws-load-balancer-controller*, *metrics-server* from the map of *helm-addons*. And remove all *eks-addons* except *vpc-cni* and save the file. If you don't remove it, you will get an error that the terraform configuration can't get the instance profile data from the output of the eks module. Run terraform command with fargate fixtures:
+To run an example of serverless node groups with AWS Fargate, use the another fixture template that configures to only use AWS Fargate based instances. Edit main.tf file under the *kubernetes-addons* directory to remove all *helm-addons* except *aws-load-balancer-controller*, *metrics-server* from the map of *helm-addons*. And remove all *eks-addons* except *vpc-cni* and save the file. If you don't remove it, you will get an error that the terraform configuration can't get the instance profile data from the output of the eks module. Run terraform command with fargate fixtures:
 ```
 terraform apply -var-file fixture.fargate.tfvars
 ```
