@@ -1,15 +1,16 @@
 ### application/chart
 resource "helm_release" "chart" {
-  for_each         = { for addon in var.addons : addon.name => addon }
-  name             = each.key
-  chart            = lookup(each.value, "chart_name", local.default_helm_config["chart"])
-  version          = lookup(each.value, "chart_version", local.default_helm_config["version"])
-  repository       = lookup(each.value, "repository", local.default_helm_config["repository"])
-  namespace        = lookup(each.value, "namespace", local.default_helm_config["namespace"])
-  create_namespace = lookup(each.value, "create_namespace", local.default_helm_config["create_namespace"])
-  cleanup_on_fail  = lookup(each.value, "cleanup_on_fail", local.default_helm_config["cleanup_on_fail"])
-  wait             = try(each.value["wait"], local.default_helm_config["wait"])
-  wait_for_jobs    = try(each.value["wait_for_jobs"], local.default_helm_config["wait_for_jobs"])
+  for_each          = { for addon in var.addons : addon.name => addon }
+  name              = each.key
+  chart             = lookup(each.value, "chart_name", local.default_helm_config["chart"])
+  version           = lookup(each.value, "chart_version", local.default_helm_config["version"])
+  repository        = lookup(each.value, "repository", local.default_helm_config["repository"])
+  namespace         = lookup(each.value, "namespace", local.default_helm_config["namespace"])
+  create_namespace  = lookup(each.value, "create_namespace", local.default_helm_config["create_namespace"])
+  cleanup_on_fail   = lookup(each.value, "cleanup_on_fail", local.default_helm_config["cleanup_on_fail"])
+  wait              = try(each.value["wait"], local.default_helm_config["wait"])
+  wait_for_jobs     = try(each.value["wait_for_jobs"], local.default_helm_config["wait_for_jobs"])
+  dependency_update = try(each.value["dependency_update"], local.default_helm_config["dependency_update"])
 
   dynamic "set" {
     for_each = merge(
