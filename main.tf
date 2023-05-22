@@ -253,7 +253,7 @@ resource "aws_autoscaling_group" "ng" {
 
   dynamic "tag" {
     for_each = merge(
-      { "eks:nodegroup-name" = join("-", [aws_eks_cluster.cp.name, each.key]) },
+      { "eks:nodegroup-name" = join("-", [each.key]) },
       local.eks-tag,
     )
     content {
