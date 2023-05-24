@@ -257,10 +257,8 @@ minio:
   resources:
     requests:
       memory: 512Mi
-#  service:
-#    type: ClusterIP
-  accessKey: minioadmin
-  secretKey: minioadmin
+  accessKey: spinnakeradmin
+  secretKey: spinnakeradmin
   defaultBucket:
     enabled: true
     name: "spinnaker"
@@ -269,7 +267,6 @@ minio:
   replicas: 1
   mode: standalone
   persistence:
-#   size: 10Gi
 # Uncomment if you don't want to create a PVC for minio
     enabled: false
 
