@@ -3,7 +3,6 @@ name: spinnaker
 description: Open source, multi-cloud continuous delivery platform for releasing software changes with high velocity and confidence.
 type: application
 version: 1.0.0
-appVersion: 1.24.4
 dependencies:
 - name: minio
   version: 5.0.9

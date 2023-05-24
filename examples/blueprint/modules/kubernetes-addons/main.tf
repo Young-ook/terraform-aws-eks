@@ -187,6 +187,7 @@ module "spinnaker" {
       namespace         = "spinnaker"
       dependency_update = true
       values = {
+        "spinnaker.version"  = "1.30.0"
         "halyard.image.tag"  = "1.44.0"
         "minio.rootUser"     = "spinnakeradmin"
         "minio.rootPassword" = "spinnakeradmin"
