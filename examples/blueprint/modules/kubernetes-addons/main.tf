@@ -183,7 +183,6 @@ module "spinnaker" {
       repository        = "${path.module}/charts/"
       name              = "spinnaker"
       chart_name        = "spinnaker"
-      chart_version     = "1.29.4"
       namespace         = "spinnaker"
       dependency_update = true
       values = {
