@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ template "spinnaker.fullname" . }}-install-using-hal
+  name: {{ template "spinnaker.fullname" . }}-halyard-job
   labels:
 {{ include "spinnaker.standard-labels" . | indent 4 }}
   annotations:
