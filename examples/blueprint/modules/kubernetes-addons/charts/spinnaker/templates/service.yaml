@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "spinnaker.fullname" . }}-halyard
+  name: spin-halyard
   labels:
 {{ include "spinnaker.standard-labels" . | indent 4 }}
     component: halyard

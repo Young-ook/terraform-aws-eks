@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ .Release.Name }}-install-using-hal"
+  name: {{ template "spinnaker.fullname" . }}-install-using-hal
   labels:
 {{ include "spinnaker.standard-labels" . | indent 4 }}
   annotations:

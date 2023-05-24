@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "spinnaker.fullname" . }}-halyard
+  name: spin-halyard
   labels:
 {{ include "spinnaker.standard-labels" . | indent 4 }}
 spec:
-  serviceName: {{ template "spinnaker.fullname" . }}-halyard
+  serviceName: spin-halyard
   replicas: 1
   selector:
     matchLabels:
