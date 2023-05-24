@@ -35,9 +35,9 @@ data:
   config.sh: |
     # Spinnaker version
     {{ if .Values.halyard.bom }}
-    $HAL_COMMAND config version edit --version local:{{ .Chart.AppVersion }}
+    $HAL_COMMAND config version edit --version local:{{ .Chart.Version }}
     {{ else }}
-    $HAL_COMMAND config version edit --version {{ .Chart.AppVersion }}
+    $HAL_COMMAND config version edit --version {{ .Chart.Version }}
     {{ end }}
 
     # Storage
