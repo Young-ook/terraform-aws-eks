@@ -57,7 +57,7 @@ provider "helm" {
 }
 
 module "kubeflow" {
-  depends_on         = [module.eks]
+  depends_on         = [module.ebs-csi]
   source             = "./modules/kubeflow"
   tags               = var.tags
   kubeflow_helm_repo = var.kubeflow_helm_repo
