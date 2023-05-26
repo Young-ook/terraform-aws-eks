@@ -173,28 +173,6 @@ module "ctl" {
   ]
 }
 
-module "airflow" {
-  depends_on = [module.eks-addons]
-  source     = "Young-ook/eks/aws//modules/helm-addons"
-  version    = "2.0.4"
-  tags       = var.tags
-  addons = [
-    {
-      ### for more details, https://airflow.apache.org/docs/helm-chart/stable/index.html
-      repository     = "https://airflow.apache.org"
-      name           = "airflow"
-      chart_name     = "airflow"
-      chart_version  = "1.7.0"
-      namespace      = "airflow"
-      serviceaccount = "airflow"
-
-      ### since airflow migration process, need to turn off waiting of the terraform helm release
-      ### for more details, https://github.com/hashicorp/terraform-provider-helm/issues/742
-      wait = false
-    },
-  ]
-}
-
 ### eks-addons
 module "eks-addons" {
   ### the adot-addon requires a cert-manager from helm-addons

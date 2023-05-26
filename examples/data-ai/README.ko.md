@@ -46,23 +46,23 @@ We need to get kubernetes config file for access the cluster that we've made usi
 
 
 ## Kubernetes Utilities
-### Apache Airflow
-[Apache Airflow](https://airflow.apache.org/) is an open-source workflow management platform for data engineering pipelines. Airflow’s extensible Python framework enables you to build workflows connecting with virtually any technology. A web interface helps manage the state of your workflows. Airflow is deployable in many ways, varying from a single process on your laptop to a distributed setup to support even the biggest workflows. It started at Airbnb in October 2014 as a solution to manage the company's increasingly complex workflows.
+### Apache 에어플로우(Airflow)
+[Apache 에어플로우(Airflow)](https://airflow.apache.org/)는 데이터 엔지니어링 파이프라인을 위한 오픈소스 워크플로우 관리 플랫폼입니다. Airflow의 확장 가능한 Python 프레임워크를 사용하면 거의 모든 기술과 연결되는 워크플로를 구축할 수 있습니다. 또한 웹 인터페이스를 통행 워크플로 상태를 관리할 수 있습니다. 에어플로우는 랩톱의 단일 프로세스부터 대규모 워크플로를 지원하는 분산 환경까지 다양한 방식으로 배포할 수 있습니다. 에어플로우는 2014년 10월에 Airbnb의 복잡해지는 워크플로우 관리를 위한 솔루션으로 시작하였습니다.
 
-#### Access Airflow dashboard
-Run below command to check the status.
+#### 에어플로우 접속하기
+설치가 되었다면, 다음과 같은 명령을 통해 상태를 확인할 수 있습니다.
 ```
 kubectl -n airflow get all
 ```
 
-Everything looks good, move forward to the next step. Run port-forward commend to access airflow dashboard:
+모든 설정이 문제 없어 보인다면, 다음 단계로 이동해도 좋습니다. 에어플로우 대시보드에 연결하기 위해서 포트 포워딩을 실행합니다:
 ```
 kubectl -n airflow port-forward svc/airflow-webserver 8080:8080
 ```
 
-Open `localhost:8080` in your favorite browswer. You will see the login page.
+브라우저에서 `localhost:8080` 주소를 열면, 로그인 화면을 볼 수 있습니다.
 
-**[WARNING]** In this example, we use a default user (`admin`) and password (`admin`). For any production airflow deployment, you should change the default password.
+**[경고]** 이 예제에서는 기존 사용자(`admin`)와 암호(`admin`)를 사용합니다. 운영환경을 위해 애어플로우를 설치한 경우라면, 반드시 초기 비밀번호를 변경해야 합니다.
 
 ![airflow-login](../../images/airflow-login.png)
 ![airflow-dag](../../images/airflow-dag.png)
@@ -96,26 +96,26 @@ Open `localhost:8080` in your favorite browswer. You will see the login page.
 Kubeflow fairing streamlines the process of building, training, and deploying machine learning (ML) training jobs in a hybrid cloud environment. By using Kubeflow fairing and adding a few lines of code, you can run your ML training job locally or in the cloud, directly from Python code or a Jupyter notebook. If you want to run hands-on lab about kubeflow fairing with AWS, please follow [the instructions](https://www.eksworkshop.com/advanced/420_kubeflow/fairing/).
 
 
-## Applications
+## 애플리케이션
 - [MNIST on Kubeflow](./apps/README.md#mnist-on-kubeflow)
 
-## Clean up
-To destroy all resources, run terraform:
+## 정리
+예제를 삭제하기 위하여 테라폼 명령을 실행합니다:
 ```
 terraform destroy
 ```
 
-If you don't want to see a confirmation question, you can use quite option for terraform destroy command
+삭제 명령을 수행하기 전에 재차 확인하는 과정이 있는데, 이 부분을 바로 넘기려면 테라폼 옵션을 활용할 수 있습니다.
 ```
 terraform destroy --auto-approve
 ```
 
-**[DON'T FORGET]** You have to use the *-var-file* option when you run terraform destroy command to delete the aws resources created with extra variable files.
+**[주의]** 여러 분이 자원을 생성할 때 *-var-file*을 사용했다면, 삭제 할 때에도 반드시 같은 변수 파일을 옵션으로 지정해야 합니다.
 ```
 terraform destroy -var-file fixture.tc1.tfvars
 ```
 
-# Additional Resources
+# 추가 정보
 ## Kubeflow on AWS
 - [Kubeflow on AWS](https://awslabs.github.io/kubeflow-manifests/docs/about/)
 - [Enabling hybrid ML workflows on Amazon EKS and Amazon SageMaker with one-click Kubeflow on AWS deployment](https://aws.amazon.com/blogs/machine-learning/enabling-hybrid-ml-workflows-on-amazon-eks-and-amazon-sagemaker-with-one-click-kubeflow-on-aws-deployment/)
