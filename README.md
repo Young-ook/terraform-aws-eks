@@ -109,6 +109,17 @@ Error: configmaps "aws-auth" already exists
  343: resource "kubernetes_config_map" "aws-auth" {
 ```
 
+## Invalid apiVersion
+You might see an *invalid apiVersion* error message when you try to run your kubernetes-cli command after cli upgrade
+```
+error: exec plugin: invalid apiVersion "client.authentication.k8s.io/v1alpha1"
+```
+
+To fix this issue, you probably need to downgrade to 1.23.6. Download the *kubectl* binary file. Then, make it executable and replace it with the exisiting *kubectl* binary. This is an example that shows you How to do that on you Intel macOS. If you are using Apple Silicon M1, try changing the architecture parameter to *arm64*.
+```
+curl -LO "https://dl.k8s.io/release/v1.23.6/bin/darwin/amd64/kubectl"
+```
+
 # Additional Resources
 ## Amazon EKS
 - [Amazon EKS Best Practices Guides](https://aws.github.io/aws-eks-best-practices/)
