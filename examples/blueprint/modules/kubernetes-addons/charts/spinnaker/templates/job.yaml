@@ -69,11 +69,6 @@ spec:
         configMap:
           name: {{ template "spinnaker.fullname" . }}-additional-scripts
       {{- end }}
-      {{- if .Values.halyard.bom }}
-      - name: halyard-bom
-        configMap:
-          name: {{ template "spinnaker.fullname" . }}-halyard-bom
-      {{- end }}
       {{- if and .Values.s3.enabled .Values.s3.accessKey .Values.s3.secretKey }}
       - name: s3-secrets
         secret:
@@ -106,10 +101,6 @@ spec:
         {{- if .Values.halyard.additionalScripts.create }}
         - name: additional-scripts
           mountPath: /opt/halyard/additionalScripts
-        {{- end }}
-        {{- if .Values.halyard.bom }}
-        - name: halyard-bom
-          mountPath: /opt/halyard/bom
         {{- end }}
         {{- if and .Values.s3.enabled .Values.s3.accessKey .Values.s3.secretKey }}
         - name: s3-secrets
