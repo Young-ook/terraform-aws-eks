@@ -77,7 +77,7 @@ output "kubeauth" {
 }
 
 output "features" {
-  description = "Features configurations for the EKS"
+  description = "Feature configurations of EKS"
   value = {
     "managed_node_groups_enabled" = local.managed_node_groups_enabled
     "node_groups_enabled"         = local.node_groups_enabled
