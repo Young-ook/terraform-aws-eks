@@ -176,7 +176,7 @@ module "ctl" {
 module "spinnaker" {
   depends_on = [module.eks-addons]
   source     = "Young-ook/eks/aws//modules/helm-addons"
-  version    = "2.0.4"
+  version    = "2.0.6"
   tags       = var.tags
   addons = [
     {
