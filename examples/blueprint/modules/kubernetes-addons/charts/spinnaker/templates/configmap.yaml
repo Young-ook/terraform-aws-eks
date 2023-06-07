@@ -202,8 +202,9 @@ Render settings for each service by merging predefined defaults with values pass
 
 data:
 {{ $settings | toYaml | indent 2 }}
----
+
 {{ if .Values.halyard.serviceConfigs -}}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -231,3 +232,20 @@ Render local configuration for each service with values passed by
 data:
 {{ $settings | toYaml | indent 2 }}
 {{- end -}}
+
+{{ if .Values.halyard.additionalScripts.create -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "spinnaker.fullname" . }}-additional-scripts
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+data:
+{{- if  and .Values.halyard.additionalScripts.create .Values.halyard.additionalScripts.data }}
+{{- range $index, $content := .Values.halyard.additionalScripts.data }}
+  {{ $index }}: |-
+{{ tpl $content $ | indent 4 }}
+{{- end }}
+{{- end }}
+{{- end }}
