@@ -278,9 +278,9 @@ serviceAccount:
   create: true
   # The name of the ServiceAccounts to use.
   # If left blank it is auto-generated from the fullname of the release
-  halyardName:
-  spinnakerName:
-  serviceAccountAnnotations: {}
+  name: spinnaker
+  annotations: {}
+
 securityContext:
   # Specifies permissions to write for user/group
   runAsUser: 1000

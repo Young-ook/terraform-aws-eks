@@ -11,8 +11,8 @@ roleRef:
 subjects:
 - namespace: {{ .Release.Namespace }}
   kind: ServiceAccount
-  {{- if .Values.serviceAccount.halyardName }}
-  name: {{ .Values.serviceAccount.halyardName }}
+  {{- if .Values.serviceAccount.name }}
+  name: {{ .Values.serviceAccount.name }}
   {{- else }}
   name: {{ template "spinnaker.fullname" . }}-halyard
   {{- end }}
