@@ -10,10 +10,11 @@ locals {
   name = module.frigga.name
   default-tags = merge(
     { "terraform.io" = "managed" },
+    { "Name" = local.name },
   )
 }
 
-## kubernetes tags
+### kubernetes tags
 locals {
   eks-shared-tag = {
     format("kubernetes.io/cluster/%s", local.name) = "shared"
