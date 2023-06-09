@@ -1,0 +1,303 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "spinnaker.fullname" . }}-halyard-init-script
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+data:
+  init.sh: |
+    #!/bin/bash
+
+    # Override Halyard daemon's listen address
+    cp /opt/halyard/config/* /tmp/config
+    printf 'server.address: 0.0.0.0\n' > /tmp/config/halyard-local.yml
+
+    # Use Redis deployed via the dependent Helm chart
+    rm -rf /tmp/spinnaker/.hal/default/service-settings
+    mkdir -p /tmp/spinnaker/.hal/default/service-settings
+    cp /tmp/service-settings/* /tmp/spinnaker/.hal/default/service-settings/
+
+    rm -rf /tmp/spinnaker/.hal/default/profiles
+    mkdir -p /tmp/spinnaker/.hal/default/profiles
+    cp /tmp/additionalProfileConfigMaps/* /tmp/spinnaker/.hal/default/profiles/
+
+    {{- if .Values.halyard.serviceConfigs }}
+    for filename in /tmp/service-configs/*; do
+      basename=$(basename -- "$filename")
+      fname="${basename#*_}"
+      servicename="${basename%%_*}"
+
+      mkdir -p "/tmp/spinnaker/.hal/.boms/$servicename"
+      cp "$filename" "/tmp/spinnaker/.hal/.boms/$servicename/$fname"
+    done
+    {{- end }}
+
+    {{- if hasKey .Values.halyard "additionalInitScript" }}
+    # additionalInitScript
+    {{ tpl .Values.halyard.additionalInitScript $ | indent 4 }}
+    {{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "spinnaker.fullname" . }}-halyard-config
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+data:
+  install.sh: |
+    #!/bin/bash
+
+    # Wait for the Hal daemon to be ready
+    export DAEMON_ENDPOINT=http://{{ template "spinnaker.fullname" . }}-halyard:8064
+    export HAL_COMMAND="hal --daemon-endpoint $DAEMON_ENDPOINT"
+    until $HAL_COMMAND --ready; do sleep 10 ; done
+
+    bash -xe /opt/halyard/scripts/config.sh
+
+    {{- if .Values.halyard.additionalScripts.enabled }}
+    bash /opt/halyard/additional/{{ .Values.halyard.additionalScripts.configMapKey }}
+    {{- end }}
+
+    {{- if  and .Values.halyard.additionalScripts.create .Values.halyard.additionalScripts.data }}
+    {{- range $index, $script := .Values.halyard.additionalScripts.data }}
+    bash -xe /opt/halyard/additionalScripts/{{ $index }}
+    {{- end }}
+    {{- end }}
+
+    $HAL_COMMAND deploy apply
+    {{- if .Values.halyard.additionalInstallParameters }} \
+      {{- .Values.halyard.additionalInstallParameters | join " \\\n" | nindent 6 }}
+    {{- end }}
+  clean.sh: |
+    export HAL_COMMAND='hal --daemon-endpoint http://{{ template "spinnaker.fullname" . }}-halyard:8064'
+    $HAL_COMMAND deploy clean -q
+  config.sh: |
+    # Spinnaker version
+    $HAL_COMMAND config version edit --version {{ .Values.spinnaker.version }}
+
+    # Storage
+    {{ if .Values.minio.enabled }}
+    echo {{ .Values.minio.secretKey }} | $HAL_COMMAND config storage s3 edit \
+        --endpoint http://{{ .Release.Name }}-minio:9000 \
+        --access-key-id {{ .Values.minio.accessKey }} \
+        --secret-access-key --bucket {{ .Values.minio.defaultBucket.name }} \
+        --path-style-access true
+    $HAL_COMMAND config storage edit --type s3
+    {{ end }}
+    {{ if .Values.s3.enabled }}
+    {{- if .Values.s3.secretKey -}} cat /opt/s3/secretKey | {{- end }} $HAL_COMMAND config storage s3 edit \
+      --bucket {{ .Values.s3.bucket }} \
+      {{- if .Values.s3.rootFolder }}
+      --root-folder {{ .Values.s3.rootFolder }} \
+      {{- end }}
+      {{- if .Values.s3.region }}
+      --region {{ .Values.s3.region }} \
+      {{- end }}
+      {{- if .Values.s3.endpoint }}
+      --endpoint {{ .Values.s3.endpoint }} \
+      {{- end }}
+      {{- if .Values.s3.assumeRole }}
+      --assume-role {{ .Values.s3.assumeRole }} \
+      {{- end }}
+      {{- if .Values.s3.accessKey }}
+      --access-key-id "$(cat /opt/s3/accessKey)" \
+      {{- end }}
+      {{- if .Values.s3.secretKey }}
+      --secret-access-key \
+      {{- end }}
+      {{- range .Values.s3.extraArgs }}
+      {{- . }} \
+      {{- end }}
+
+    $HAL_COMMAND config storage edit --type s3
+    {{ end }}
+
+    # Docker Registry
+    $HAL_COMMAND config provider docker-registry enable
+    {{- range $index, $registry := .Values.dockerRegistries }}
+
+    if $HAL_COMMAND config provider docker-registry account get {{ $registry.name }}; then
+      PROVIDER_COMMAND='edit'
+    else
+      PROVIDER_COMMAND='add'
+    fi
+
+    $HAL_COMMAND config provider docker-registry account $PROVIDER_COMMAND {{ $registry.name }} --address {{ $registry.address }} \
+      {{ if $registry.username -}} --username {{ $registry.username }} \
+      {{ if $registry.passwordCommand -}} --password-command "{{ $registry.passwordCommand }}"{{ else -}} --password-file /opt/registry/passwords/{{ $registry.name }}{{- end }} \
+      {{ if $registry.email -}} --email {{ $registry.email }}{{- end -}}{{- end }} \
+      {{ if $registry.repositories -}} --repositories {{ range $index, $repository := $registry.repositories }}{{if $index}},{{end}}{{- $repository }}{{- end }}{{- end }}
+
+    {{- end }}
+
+    $HAL_COMMAND config provider kubernetes enable
+    {{- range $index, $context := .Values.kubeConfig.contexts }}
+
+    if $HAL_COMMAND config provider kubernetes account get {{ $context }}; then
+      PROVIDER_COMMAND='edit'
+    else
+      PROVIDER_COMMAND='add'
+    fi
+
+    $HAL_COMMAND config provider kubernetes account $PROVIDER_COMMAND {{ $context }} --docker-registries dockerhub \
+                --context {{ $context }} {{ if not $.Values.kubeConfig.enabled }}--service-account true{{ end }} \
+                {{ if $.Values.kubeConfig.enabled }}--kubeconfig-file {{ template "spinnaker.kubeconfig" $ }}{{ end }} \
+                {{ if $.Values.kubeConfig.onlySpinnakerManaged.enabled }}--only-spinnaker-managed true{{ end }} \
+                {{ if not $.Values.kubeConfig.checkPermissionsOnStartup }}--check-permissions-on-startup false{{ end }} \
+                {{ if $.Values.kubeConfig.nameSpaces }}--namespaces={{ template "nameSpaces" $ }}{{ end }} \
+                {{ if not $.Values.kubeConfig.nameSpaces }}--omit-namespaces={{ template "omittedNameSpaces" $ }}{{ end }} \
+                {{ if $.Values.kubeConfig.omittedKinds }}--omit-kinds={{ template "omittedKinds" $ }}{{ end }} \
+                {{ if $.Values.kubeConfig.kinds }}--kinds={{ template "k8sKinds" $ }}{{ end }} \
+                {{ if $.Values.kubeConfig.liveManifestCalls }}--live-manifest-calls true{{ end }} \
+                --provider-version v2
+    {{- end }}
+    $HAL_COMMAND config deploy edit --account-name {{ .Values.kubeConfig.deploymentContext }} --type distributed \
+                           --location {{ .Release.Namespace }}
+    # Use Deck to route to Gate
+    $HAL_COMMAND config security api edit --no-validate --override-base-url /gate
+    {{- range $index, $feature := .Values.spinnakerFeatureFlags }}
+    $HAL_COMMAND config features edit --{{ $feature }} true
+    {{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "spinnaker.fullname" . }}-service-settings
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+
+{{/*
+Render settings for each service by merging predefined defaults with values passed by
+.Values.halyard.additionalServiceSettings
+*/}}
+{{- $settings := dict -}}
+
+{{/* Defaults: gate service */}}
+{{- if .Values.ingress.enabled -}}
+{{- $gateDefaults := dict -}}
+{{- $_ := set $gateDefaults "kubernetes" (dict "useExecHealthCheck" false "serviceType" "NodePort") -}}
+{{- $_ := set $settings "gate.yml" $gateDefaults -}}
+{{- end -}}
+
+{{/* Defaults: deck service */}}
+{{- $deckDefaults := dict -}}
+{{- $_ := set $deckDefaults "env" (dict "API_HOST" "http://spin-gate:8084") -}}
+{{- if .Values.ingress.enabled -}}
+{{- $_ := set $deckDefaults "kubernetes" (dict "useExecHealthCheck" false "serviceType" "NodePort") -}}
+{{- end -}}
+{{- $_ := set $settings "deck.yml" $deckDefaults -}}
+
+{{- /* Merge dictionaries with passed values */}}
+{{- if .Values.halyard.additionalServiceSettings -}}
+{{- $_ := mergeOverwrite $settings .Values.halyard.additionalServiceSettings -}}
+{{- end -}}
+
+{{- /* Convert the content of settings key to YAML string */}}
+{{- range $filename, $content := $settings -}}
+{{- if not (typeIs "string" $content) -}}
+{{- $_ := set $settings $filename ($content | toYaml) -}}
+{{- end -}}
+{{- end -}}
+
+data:
+{{ $settings | toYaml | indent 2 }}
+
+{{ if .Values.halyard.serviceConfigs -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "spinnaker.fullname" . }}-service-configs
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+
+{{/*
+Render local configuration for each service with values passed by
+.Values.halyard.serviceConfigs
+*/}}
+{{- $settings := dict -}}
+
+{{- if .Values.halyard.serviceConfigs -}}
+{{- $_ := mergeOverwrite $settings .Values.halyard.serviceConfigs -}}
+{{- end -}}
+
+{{- /* Convert the content of settings key to YAML string */}}
+{{- range $filename, $content := $settings -}}
+{{- if not (typeIs "string" $content) -}}
+{{- $_ := set $settings $filename ($content | toYaml) -}}
+{{- end -}}
+{{- end -}}
+
+data:
+{{ $settings | toYaml | indent 2 }}
+{{- end -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "spinnaker.fullname" . }}-additional-profile-config-maps
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+{{/*
+Render profiles for each service by merging predefined defaults with values passed by
+.Values.halyard.additionalProfileConfigMaps.data
+*/}}
+{{- $profiles := dict "gate-local.yml" dict -}}
+
+{{- /* Defaults: Disable S3 versioning on Front50 if Minio storage is used */}}
+{{- /* https://www.spinnaker.io/setup/install/storage/minio/#editing-your-storage-settings */}}
+{{- if .Values.minio.enabled -}}
+{{- $_ := set $profiles "front50-local.yml" (dict "spinnaker" (dict "s3" (dict "versioning" false))) -}}
+{{- end -}}
+
+{{- /* Defaults: Add special settings for gate if GCE or ALB ingress is used */}}
+{{- /* https://github.com/spinnaker/spinnaker/issues/1630#issuecomment-467359999 */}}
+{{- if index $.Values.ingress "annotations" -}}
+{{- if eq (index $.Values.ingress.annotations "kubernetes.io/ingress.class" | default "") "gce" "alb" "nsx" }}
+{{- $tomcatProxySettings := dict -}}
+{{- $_ := set $tomcatProxySettings "protocolHeader" "X-Forwarded-Proto" -}}
+{{- $_ := set $tomcatProxySettings "remoteIpHeader" "X-Forwarded-For" -}}
+{{- $_ := set $tomcatProxySettings "internalProxies" ".*" -}}
+{{- $_ := set $tomcatProxySettings "httpsServerPort" "X-Forwarded-Port" -}}
+{{- $_ := set $profiles "gate-local.yml" (dict "server" (dict "tomcat" $tomcatProxySettings)) -}}
+{{- end -}}
+{{- end -}}
+
+{{- /* Merge dictionaries with passed values */}}
+{{- $customProfilesEnabled := .Values.halyard.additionalProfileConfigMaps.create | default true -}}
+{{- if and $customProfilesEnabled .Values.halyard.additionalProfileConfigMaps.data -}}
+{{- $_ := mergeOverwrite $profiles .Values.halyard.additionalProfileConfigMaps.data -}}
+{{- end -}}
+
+{{- /* Convert the content of profiles to string unless it's already a string */}}
+{{- range $filename, $content := $profiles -}}
+{{- if not (typeIs "string" $content) -}}
+{{- $_ := set $profiles $filename ($content | toYaml) -}}
+{{- end -}}
+{{- end -}}
+
+{{- /* Pass content of profiles through tpl */}}
+{{- range $filename, $content := $profiles -}}
+{{- $_ := set $profiles $filename (tpl $content $) -}}
+{{- end -}}
+
+data:
+{{ $profiles | toYaml | indent 2 }}
+
+{{ if .Values.halyard.additionalScripts.create -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "spinnaker.fullname" . }}-additional-scripts
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+data:
+{{- if  and .Values.halyard.additionalScripts.create .Values.halyard.additionalScripts.data }}
+{{- range $index, $content := .Values.halyard.additionalScripts.data }}
+  {{ $index }}: |-
+{{ tpl $content $ | indent 4 }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -50,8 +50,8 @@ roleRef:
   name: {{ template "spinnaker.fullname" . }}-halyard-psp
 subjects:
 - kind: ServiceAccount
-  {{- if .Values.serviceAccount.halyardName }}
-  name: {{ .Values.serviceAccount.halyardName }}
+  {{- if .Values.serviceAccount.name }}
+  name: {{ .Values.serviceAccount.name }}
   {{- else }}
   name: {{ template "spinnaker.fullname" . }}-halyard
   {{- end }}

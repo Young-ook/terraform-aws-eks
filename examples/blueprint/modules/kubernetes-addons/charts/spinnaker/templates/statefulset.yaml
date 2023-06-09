@@ -14,7 +14,6 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/configmap/halyard-init-script.yaml") . | sha256sum }}
       {{- if .Values.halyard.annotations }}
 {{ toYaml .Values.halyard.annotations | indent 8 }}
       {{- end }}
@@ -22,10 +21,10 @@ spec:
 {{ include "spinnaker.standard-labels" . | indent 8 }}
         component: halyard
     spec:
-      {{- if .Values.serviceAccount.halyardName }}
-      serviceAccountName: {{ .Values.serviceAccount.halyardName }}
+      {{- if .Values.serviceAccount.name }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       {{- else }}
-      serviceAccountName: {{ template "spinnaker.fullname" . }}-halyard
+      serviceAccountName: {{ template "spinnaker.fullname" . }}
       {{- end }}
       securityContext:
         runAsUser: {{ .Values.securityContext.runAsUser }}
