@@ -8,3 +8,25 @@ For detailed steps when using the AWS Management Console, AWS CLI, and eksctl, s
 - [kube-proxy](https://docs.aws.amazon.com/eks/latest/userguide/managing-kube-proxy.html)
 - [Amazon EBS CSI](https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html)
 - [ADOT](https://docs.aws.amazon.com/eks/latest/userguide/opentelemetry.html)
+
+## Setup
+### Prerequisites
+This module requires *terraform*. If you don't have the terraform tool in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
+
+### Quickstart
+```
+module "eks-addons" {
+  source     = "Young-ook/eks/aws//modules/eks-addons"
+  addons = [
+    {
+      name     = "vpc-cni"
+      eks_name = var.eks.cluster.name
+    },
+  ]
+}
+```
+Run terraform:
+```
+terraform init
+terraform apply
+```
