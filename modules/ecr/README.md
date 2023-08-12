@@ -1,8 +1,12 @@
 # Amazon ECR (Elastic Container Registry)
 [Amazon Elastic Container Registry](https://aws.amazon.com/ecr/) is a fully managed container registry that makes it easy to store, manage, share, and deploy your container images and artifacts anywhere. Amazon ECR eliminates the need to operate your own container repositories or worry about scaling the underlying infrastructure. Amazon ECR hosts your images in a highly available and high-performance architecture, allowing you to reliably deploy images for your container applications. You can share container software privately within your organization or publicly worldwide for anyone to discover and download. This module will create an ECR on AWS.
 
-## Quickstart
-### Setup
+
+## Setup
+### Prerequisites
+This module requires *terraform*. If you don't have the terraform tool in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
+
+### Quickstart
 ```
 module "ecr" {
   source  = "Young-ook/eks/aws//modules/ecr"
