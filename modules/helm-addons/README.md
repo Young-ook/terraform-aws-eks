@@ -3,12 +3,11 @@
 [Helm](https://helm.sh/) is a tool for managing Charts. Charts are packages of pre-configured Kubernetes resources. Helm helps you manage Kubernetes applications — Helm Charts help you define, install, and upgrade even the most complex Kubernetes application. Charts are easy to create, version, share, and publish — so start using Helm and stop the copy-and-paste. For detailed steps when using terraform, see the [EKS Blueprint](https://github.com/Young-ook/terraform-aws-eks/tree/main/examples/blueprint) example. 
 
 ## Setup
-```
-module "eks" {
-  source       = "Young-ook/eks/aws"
-  name         = "eks"
-}
+### Prerequisites
+This module requires *terraform*. If you don't have the terraform tool in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
 
+### Quickstart
+```
 provider "helm" {
   kubernetes {
     host                   = module.eks.kubeauth.host
@@ -20,23 +19,6 @@ provider "helm" {
 module "helm_addons" {
   source = "Young-ook/eks/aws//modules/helm_addons"
   addons = [
-    {
-      repository     = "https://aws.github.io/eks-charts"
-      name           = "appmesh-controller"
-      chart_name     = "appmesh-controller"
-      namespace      = "aws-addons"
-      serviceaccount = "appmesh-controller"
-      values = {
-        "region"           = var.aws_region
-        "tracing.enabled"  = true
-        "tracing.provider" = "x-ray"
-      }
-      oidc = module.eks.oidc
-      policy_arns = [
-        format("arn:%s:iam::aws:policy/AWSCloudMapFullAccess", module.aws.partition.partition),
-        format("arn:%s:iam::aws:policy/AWSAppMeshFullAccess", module.aws.partition.partition),
-      ]
-    },
     {
       repository     = "https://kubernetes-sigs.github.io/metrics-server/"
       name           = "metrics-server"
@@ -50,8 +32,7 @@ module "helm_addons" {
   ]
 }
 ```
-
-Run the terraform code to make a change on your environment.
+Run terraform:
 ```
 terraform init
 terraform apply
