@@ -4,14 +4,15 @@ With [IAM roles for service accounts](https://docs.aws.amazon.com/eks/latest/use
 ![aws-iam-role-for-sa](../../images/aws-iam-role-for-sa.png)
 
 ## Setup
+### Prerequisites
+This module requires *terraform*. If you don't have the terraform tool in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
+
 ### Create an IAM Role
 The IAM roles for Service Accounts (IRSA) feature is available on new Amazon EKS Kubernetes version 1.14 clusters. Please make sure your EKS cluster version is 1.14 or higher to enable IAM roles for (Kubernetes) service accounts.
 This is AWS documentation for [IRSA]( https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html)
 ```
 module "irsa" {
-  source         = "Young-ook/eks/aws//modules/iam-role-for-serviceaccount"
-  version        = "1.7.10"
-  name           = join("-", ["irsa", var.name, "s3-readonly"])
+  source         = "Young-ook/eks/aws//modules/irsa"
   namespace      = "default"
   serviceaccount = "s3-readonly"
   oidc_url       = module.eks.oidc.url
