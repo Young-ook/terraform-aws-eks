@@ -38,7 +38,7 @@ terraform init
 terraform apply
 ```
 
-# Clean up
+## Clean up
 Run terraform:
 ```
 terraform destroy
