@@ -116,6 +116,8 @@ terraform destroy -var-file fixture.tc1.tfvars
 ```
 
 # Additional Resources
+## AWS Trainium
+- [Scaling distributed training with AWS Trainium and Amazon EKS](https://aws.amazon.com/blogs/machine-learning/scaling-distributed-training-with-aws-trainium-and-amazon-eks/)
 ## Kubeflow on AWS
 - [Kubeflow on AWS](https://awslabs.github.io/kubeflow-manifests/docs/about/)
 - [Enabling hybrid ML workflows on Amazon EKS and Amazon SageMaker with one-click Kubeflow on AWS deployment](https://aws.amazon.com/blogs/machine-learning/enabling-hybrid-ml-workflows-on-amazon-eks-and-amazon-sagemaker-with-one-click-kubeflow-on-aws-deployment/)
