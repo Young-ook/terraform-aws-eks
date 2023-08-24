@@ -123,3 +123,4 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Enabling hybrid ML workflows on Amazon EKS and Amazon SageMaker with one-click Kubeflow on AWS deployment](https://aws.amazon.com/blogs/machine-learning/enabling-hybrid-ml-workflows-on-amazon-eks-and-amazon-sagemaker-with-one-click-kubeflow-on-aws-deployment/)
 ## Data Platform
 - [Building a Modern Data Platform on Amazon EKS](https://youtu.be/7AHuMNqbR7o)
+- [Data on EKS(DoEKS)](https://awslabs.github.io/data-on-eks/docs/introduction/intro)
