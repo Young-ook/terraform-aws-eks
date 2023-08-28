@@ -9,9 +9,9 @@
 
 ## Examples
 - [Amazon EKS Blueprint](https://github.com/Young-ook/terraform-aws-eks/tree/main/examples/blueprint)
-- [Amazon EMR Blueprint](https://github.com/Young-ook/terraform-aws-emr/tree/main/examples/blueprint)
 - [AWS FIS Blueprint (Chaos Engineering)](https://github.com/Young-ook/terraform-aws-fis/blob/main/examples/blueprint)
 - [Data on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/data-ai)
+- [Data Lake Blueprint](https://github.com/Young-ook/terraform-aws-emr/tree/main/examples/blueprint)
 
 ## Getting started
 ### AWS CLI
