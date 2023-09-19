@@ -17,7 +17,7 @@ cd terraform-aws-eks/examples/blueprint
 
 작업이 끝나면 **blueprint** 디렉토리를 볼 수 있습니다. 디렉토리 안에 있는 예제에는 EKS 클러스터와 추가 요소를 설치하고 관리하기 위한 테라폼 설정 파일과 기타 자원이 있습니다. 다음 단계로 넘어가기 전에 테라폼과 쿠브쿠틀이 제대로 설치 되어 있는 지 확인합니다. 완료하였다면, 다음 단계로 이동합니다.
 
-테라폼 실행:
+테라폼을 실행합니다:
 ```
 terraform init
 terraform apply
