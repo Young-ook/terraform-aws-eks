@@ -173,7 +173,7 @@ module "ctl" {
   ]
 }
 
-module "spinnaker" {
+module "devops" {
   depends_on = [module.eks-addons]
   source     = "Young-ook/eks/aws//modules/helm-addons"
   version    = "2.0.6"
@@ -191,6 +191,13 @@ module "spinnaker" {
         "minio.rootUser"     = "spinnakeradmin"
         "minio.rootPassword" = "spinnakeradmin"
       }
+    },
+    {
+      repository     = "https://charts.chaos-mesh.org"
+      name           = "chaos-mesh"
+      chart_name     = "chaos-mesh"
+      namespace      = "chaos-mesh"
+      serviceaccount = "chaos-mesh-controller"
     },
   ]
 }
