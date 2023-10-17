@@ -266,6 +266,22 @@ Open `localhost:9000` in your favorite browswer. You will see the login page.
 
 ![spin-cluster-mgmt](../../images/spin-cluster-mgmt.png)
 
+### Chaos Mesh
+[Chaos Mesh](https://chaos-mesh.org/docs/) is an open source cloud-native Chaos Engineering platform. It offers various types of fault simulation and has an enormous capability to orchestrate fault scenarios. Using Chaos Mesh, you can conveniently simulate various abnormalities that might occur in reality during the development, testing, and production environments and find potential problems in the system. AWS FIS supports ChaosMesh and Litmus experiments for containerized applications running on Amazon Elastic Kubernetes Service (EKS). Using the new Kubernetes custom resource action for AWS FIS, you can control ChaosMesh and Litmus chaos experiments from within an AWS FIS experiment, enabling you to coordinate fault injection workflows among multiple tools. For example, you can run a stress test on a pod’s CPU using ChaosMesh or Litmus faults while terminating a randomly selected percentage of cluster nodes using AWS FIS fault actions.
+
+#### Access Chaos Mesh
+In your local workspace, run kubernetes command to connect to your chaos-mesh dashboard through a proxy:
+```
+kubectl -n chaos-mesh port-forward svc/chaos-dashboard 2333:2333
+```
+If you are run this example in your Cloud9 IDE, you have to change the local port to 8080 instead of 2333.
+```
+kubectl -n chaos-mesh port-forward svc/chaos-dashboard 8080:2333
+```
+Open `http://localhost:2333` on your web browser. If you are in your Cloud9 IDE, click *Preview* and *Preview Running Application*. This shows chaos mesh dashboard login page. When you access your chaos mesh dashboard, first, you have to create user accounts and bind permissions. Follow the [Manage User Permissions](https://chaos-mesh.org/docs/manage-user-permissions/) instructions to create a new user and generate access token.
+
+![cm-dashboard-login](../../images/cm-dashboard-login.png)
+
 ## Computing options
 ### AWS Fargate (Serverless)
 AWS Fargate is a technology that provides on-demand, right-sized compute capacity for containers. With AWS Fargate, you no longer have to provision, configure, or scale groups of virtual machines to run containers. This removes the need to choose server types, decide when to scale your node groups, or optimize cluster packing. You can control which pods start on Fargate and how they run with Fargate profiles. Each pod running on Fargate has its own isolation boundary and does not share the underlying kernel, CPU resources, memory resources, or elastic network interface with another pod. For more information, please refer [this](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html).
