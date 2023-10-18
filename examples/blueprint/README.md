@@ -220,6 +220,19 @@ chaos-daemon-jb8xh                          1/1     Running   0          2d5h
 chaos-dashboard-98c4c5f97-tx5ds             1/1     Running   0          2d5h
 ```
 
+#### Access Chaos Mesh
+In your local workspace, run kubernetes command to connect to your chaos-mesh dashboard through a proxy:
+```
+kubectl -n chaos-mesh port-forward svc/chaos-dashboard 2333:2333
+```
+If you are run this example in your Cloud9 IDE, you have to change the local port to 8080 instead of 2333.
+```
+kubectl -n chaos-mesh port-forward svc/chaos-dashboard 8080:2333
+```
+Open `http://localhost:2333` on your web browser. If you are in your Cloud9 IDE, click *Preview* and *Preview Running Application*. This shows chaos mesh dashboard login page. When you access your chaos mesh dashboard, first, you have to create user accounts and bind permissions. Follow the [Manage User Permissions](https://chaos-mesh.org/docs/manage-user-permissions/) instructions to create a new user and generate access token.
+
+![cm-dashboard-login](../../images/cm-dashboard-login.png)
+
 ### Metrics Server
 [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) is a scalable, efficient source of container resource metrics for Kubernetes built-in autoscaling pipelines. Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver through [Metrics API](https://github.com/kubernetes/metrics) for use by Horizontal Pod Autoscaler and Vertical Pod Autoscaler. Metrics API can also be accessed by kubectl top, making it easier to debug autoscaling pipelines.
 
@@ -265,22 +278,6 @@ kubectl -n spinnaker port-forward svc/spin-deck 9000:9000
 Open `localhost:9000` in your favorite browswer. You will see the login page.
 
 ![spin-cluster-mgmt](../../images/spin-cluster-mgmt.png)
-
-### Chaos Mesh
-[Chaos Mesh](https://chaos-mesh.org/docs/) is an open source cloud-native Chaos Engineering platform. It offers various types of fault simulation and has an enormous capability to orchestrate fault scenarios. Using Chaos Mesh, you can conveniently simulate various abnormalities that might occur in reality during the development, testing, and production environments and find potential problems in the system. AWS FIS supports ChaosMesh and Litmus experiments for containerized applications running on Amazon Elastic Kubernetes Service (EKS). Using the new Kubernetes custom resource action for AWS FIS, you can control ChaosMesh and Litmus chaos experiments from within an AWS FIS experiment, enabling you to coordinate fault injection workflows among multiple tools. For example, you can run a stress test on a pod’s CPU using ChaosMesh or Litmus faults while terminating a randomly selected percentage of cluster nodes using AWS FIS fault actions.
-
-#### Access Chaos Mesh
-In your local workspace, run kubernetes command to connect to your chaos-mesh dashboard through a proxy:
-```
-kubectl -n chaos-mesh port-forward svc/chaos-dashboard 2333:2333
-```
-If you are run this example in your Cloud9 IDE, you have to change the local port to 8080 instead of 2333.
-```
-kubectl -n chaos-mesh port-forward svc/chaos-dashboard 8080:2333
-```
-Open `http://localhost:2333` on your web browser. If you are in your Cloud9 IDE, click *Preview* and *Preview Running Application*. This shows chaos mesh dashboard login page. When you access your chaos mesh dashboard, first, you have to create user accounts and bind permissions. Follow the [Manage User Permissions](https://chaos-mesh.org/docs/manage-user-permissions/) instructions to create a new user and generate access token.
-
-![cm-dashboard-login](../../images/cm-dashboard-login.png)
 
 ## Computing options
 ### AWS Fargate (Serverless)
