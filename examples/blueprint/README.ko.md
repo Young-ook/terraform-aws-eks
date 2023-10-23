@@ -218,6 +218,19 @@ chaos-daemon-jb8xh                          1/1     Running   0          2d5h
 chaos-dashboard-98c4c5f97-tx5ds             1/1     Running   0          2d5h
 ```
 
+#### 카오스 메시 접속
+실행 중인 환경에서 쿠버네티스 명령을 사용하면 프록시를 통해 카오스 메시 대시보드에 접속할 수 있습니다:
+```
+kubectl -n chaos-mesh port-forward svc/chaos-dashboard 2333:2333
+```
+만약, Cloud9 환경이라면, 로컬 포트를 2333 대신 8080으로 변경해서 쿠버네티스 명령을 실행햐야 합니다.
+```
+kubectl -n chaos-mesh port-forward svc/chaos-dashboard 8080:2333
+```
+웹브라우저에서 `http://localhost:2333` 주소를 열어 접속합니다. Cloud9 환경이라면, *Preview* 와 *Preview Running Application* 을 눌러서 새탭에 뜨는 웹브라우저 화면을 통해 접속합니다. 카오스 메시 대시보드의 로그인 (login) 화면을 볼 수 있으며, 만약 첫 번째 접속이라면 권한이 부여된 사용자 계정을 먼저 생성해야 합니다. 다음의 [Manage User Permissions](https://chaos-mesh.org/docs/manage-user-permissions/) 안내를 따라 새로운 사용자와 접속 토큰(token)을 생성합니다.
+
+![cm-dashboard-login](../../images/cm-dashboard-login.png)
+
 ### 메트릭 서버(Metrics Server)
 [메트릭 서버(Metrics Server)](https://github.com/kubernetes-sigs/metrics-server)는 쿠버네티스에 내장되어 있는 오토스케일링 파이프라인을 위한 확장 가능하고 효율적인 컨테이너 자원 지표 수집 서비스 입니다. 메트릭 서버는 큐블렛(Kubelet)으로부터 자원의 정보를 수집하여 수직적 포드 오토스케일러 및 수평적 오토스케일러를 위하여 [메트릭 API](https://github.com/kubernetes/metrics) 를 통해 지표를 노출시킵니다. 메트릭 API는 또한, kubectl top 명령으로도 접근할 수 있으며, 이는 오토스케일링 파이프라인의 디버그를 쉽게 할 수 있도록 도와줍니다.
 
