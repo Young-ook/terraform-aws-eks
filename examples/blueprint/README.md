@@ -220,6 +220,19 @@ chaos-daemon-jb8xh                          1/1     Running   0          2d5h
 chaos-dashboard-98c4c5f97-tx5ds             1/1     Running   0          2d5h
 ```
 
+#### Access Chaos Mesh
+In your local workspace, run kubernetes command to connect to your chaos-mesh dashboard through a proxy:
+```
+kubectl -n chaos-mesh port-forward svc/chaos-dashboard 2333:2333
+```
+If you are run this example in your Cloud9 IDE, you have to change the local port to 8080 instead of 2333.
+```
+kubectl -n chaos-mesh port-forward svc/chaos-dashboard 8080:2333
+```
+Open `http://localhost:2333` on your web browser. If you are in your Cloud9 IDE, click *Preview* and *Preview Running Application*. This shows chaos mesh dashboard login page. When you access your chaos mesh dashboard, first, you have to create user accounts and bind permissions. Follow the [Manage User Permissions](https://chaos-mesh.org/docs/manage-user-permissions/) instructions to create a new user and generate access token.
+
+![cm-dashboard-login](../../images/cm-dashboard-login.png)
+
 ### Metrics Server
 [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) is a scalable, efficient source of container resource metrics for Kubernetes built-in autoscaling pipelines. Metrics Server collects resource metrics from Kubelets and exposes them in Kubernetes apiserver through [Metrics API](https://github.com/kubernetes/metrics) for use by Horizontal Pod Autoscaler and Vertical Pod Autoscaler. Metrics API can also be accessed by kubectl top, making it easier to debug autoscaling pipelines.
 

@@ -69,7 +69,7 @@ module "ci" {
 module "ecr" {
   for_each     = { for proj in local.projects : proj.repo => proj... }
   source       = "Young-ook/eks/aws//modules/ecr"
-  version      = "1.7.11"
+  version      = "2.0.3"
   name         = each.key
   scan_on_push = false
 }
