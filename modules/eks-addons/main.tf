@@ -1,12 +1,13 @@
 ### application/addons
 resource "aws_eks_addon" "addon" {
-  for_each                 = { for addon in var.addons : addon.name => addon }
-  addon_name               = each.key
-  addon_version            = lookup(each.value, "version", local.default_addon_config["version"])
-  cluster_name             = lookup(each.value, "eks_name", local.default_addon_config["eks_name"])
-  service_account_role_arn = lookup(module.irsa, each.key, null) == null ? null : module.irsa[each.key].arn
-  resolve_conflicts        = lookup(each.value, "resolve_conflicts", local.default_addon_config["resolve_conflicts"])
-  tags                     = merge(local.default-tags, { Name = each.key }, var.tags)
+  for_each                    = { for addon in var.addons : addon.name => addon }
+  addon_name                  = each.key
+  addon_version               = lookup(each.value, "version", local.default_addon_config["version"])
+  cluster_name                = lookup(each.value, "eks_name", local.default_addon_config["eks_name"])
+  service_account_role_arn    = lookup(module.irsa, each.key, null) == null ? null : module.irsa[each.key].arn
+  resolve_conflicts_on_create = lookup(each.value, "resolve_conflicts_on_create", local.default_addon_config["resolve_conflicts_on_create"])
+  resolve_conflicts_on_update = lookup(each.value, "resolve_conflicts_on_update", local.default_addon_config["resolve_conflicts_on_update"])
+  tags                        = merge(local.default-tags, { Name = each.key }, var.tags)
 }
 
 ### security/policy
