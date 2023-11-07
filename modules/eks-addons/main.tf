@@ -13,7 +13,7 @@ resource "aws_eks_addon" "addon" {
 module "irsa" {
   for_each       = { for addon in var.addons : addon.name => addon if lookup(addon, "oidc", null) != null }
   source         = "Young-ook/eks/aws//modules/irsa"
-  version        = "2.0.1"
+  version        = "2.0.4"
   name           = each.key
   namespace      = lookup(each.value, "namespace", local.default_addon_config["namespace"])
   serviceaccount = lookup(each.value, "serviceaccount", local.default_addon_config["serviceaccount"])
