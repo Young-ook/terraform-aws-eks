@@ -30,8 +30,8 @@ resource "helm_release" "chart" {
 ### security/policy
 module "irsa" {
   for_each       = { for addon in var.addons : addon.name => addon if lookup(addon, "oidc", null) != null }
-  source         = "Young-ook/eks/aws//modules/iam-role-for-serviceaccount"
-  version        = "1.7.10"
+  source         = "Young-ook/eks/aws//modules/irsa"
+  version        = "2.0.4"
   name           = each.key
   namespace      = lookup(each.value, "namespace", local.default_helm_config["namespace"])
   serviceaccount = lookup(each.value, "serviceaccount", local.default_helm_config["serviceaccount"])
