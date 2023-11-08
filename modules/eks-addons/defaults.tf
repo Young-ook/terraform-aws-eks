@@ -9,8 +9,8 @@ locals {
     serviceaccount = null
 
     # Define how to resolve parameter value conflicts
-    # Allowed values: NONE | OVERWRITE | PRESERVE
-    resolve_conflicts = "NONE"
+    resolve_conflicts_on_create = "NONE" # Allowed values: NONE | OVERWRITE
+    resolve_conflicts_on_update = "NONE" # Allowed values: NONE | OVERWRITE | PRESERVE
   }
   default_oidc_config = {
     url = ""
