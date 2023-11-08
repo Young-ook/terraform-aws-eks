@@ -23,7 +23,7 @@ variable "azs" {
 variable "kubernetes_version" {
   description = "The target version of kubernetes"
   type        = string
-  default     = "1.27"
+  default     = "1.28"
 }
 
 variable "fargate_profiles" {

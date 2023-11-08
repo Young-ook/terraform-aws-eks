@@ -86,9 +86,22 @@ kubectl -n kube-system logs aws-load-balancer-controller-7dd4ff8cb-wqq58
 
 Use [Amazon CloudWatch Container Insights](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContainerInsights.html) to collect, aggregate, and summarize metrics and logs from your containerized applications and microservices. Container Insights is available for Amazon Elastic Container Service (Amazon ECS), Amazon Elastic Kubernetes Service (Amazon EKS), and Kubernetes platforms on Amazon EC2. Amazon ECS support includes support for Fargate. Container Insights also provides diagnostic information, such as container restart failures, to help you isolate issues and resolve them quickly. You can also set CloudWatch alarms on metrics that Container Insights collects.
 ![aws-cw-container-insights](../../images/aws-cw-container-insights.png)
+![aws-cw-container-insights-perf](../../images/aws-cw-container-insights-perf.png)
 
-#### Verify your CloudWatch and FluentBit agents
-All steps are finished, check that there are pods that are *Ready* in *kube-system* namespace. Ensure the *aws-cloudwatch-metrics*, *aws-for-fluent-bit* pods are generated and running.
+#### Verify your CloudWatch agents
+All steps are finished, check that there are pods that are *Ready* in *amazon-cloudwatch* namespace. Ensure the *cloudwatch-agent*, *fluent-bit* pods are generated and running.
+```
+NAME                                                              READY   STATUS    RESTARTS   AGE
+amazon-cloudwatch-observability-controller-manager-5f84466r6p92   1/1     Running   0          29m
+cloudwatch-agent-8rjmt                                            1/1     Running   0          29m
+cloudwatch-agent-f7rn8                                            1/1     Running   0          29m
+cloudwatch-agent-pdn9h                                            1/1     Running   0          29m
+cloudwatch-agent-zxk7r                                            1/1     Running   0          29m
+fluent-bit-264ws                                                  1/1     Running   0          29m
+fluent-bit-sgj5d                                                  1/1     Running   0          29m
+fluent-bit-vgsgc                                                  1/1     Running   0          29m
+fluent-bit-xhxq8                                                  1/1     Running   0          29m
+```
 
 ### AWS Node Termination Handler
 [AWS Node Termination Handler](https://github.com/aws/aws-node-termination-handler) is a project ensures that the Kubernetes control plane responds appropriately to events that can cause your EC2 instance to become unavailable, such as EC2 maintenance events, EC2 Spot interruptions, ASG Scale-In, ASG AZ Rebalance, and EC2 Instance Termination via the API or Console. The AWS Node Termination Handler provides a connection between termination requests from AWS to Kubernetes nodes, allowing graceful draining and termination of nodes that receive interruption notifications. The termination handler uses the Kubernetes API to initiate drain and cordon actions on a node that is targeted for termination. To learn more or get started, visit the project on GitHub.
@@ -387,6 +400,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 
 ## Amazon CloudWatch Container Insights
 - [Amazon CloudWatch Container Insights for Amazon ECS](https://aws.amazon.com/blogs/mt/introducing-container-insights-for-amazon-ecs)
+- [Announcing Container Insights with Enhanced Observability for Amazon EKS](https://aws.amazon.com/blogs/mt/new-container-insights-with-enhanced-observability-for-amazon-eks/)
 
 ## Amazon EKS Add-ons
 - [Metrics and traces collection using Amazon EKS add-ons for AWS Distro for OpenTelemetry (ADOT)](https://aws.amazon.com/blogs/containers/metrics-and-traces-collection-using-amazon-eks-add-ons-for-aws-distro-for-opentelemetry/)

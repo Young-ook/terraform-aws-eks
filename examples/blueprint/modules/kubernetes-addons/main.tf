@@ -84,39 +84,6 @@ module "ctl" {
     },
     {
       repository     = "https://aws.github.io/eks-charts"
-      name           = "aws-cloudwatch-metrics"
-      chart_name     = "aws-cloudwatch-metrics"
-      namespace      = "kube-system"
-      serviceaccount = "aws-cloudwatch-metrics"
-      values = {
-        "clusterName" = var.eks.cluster.name
-      }
-      oidc = var.eks.oidc
-      policy_arns = [
-        format("arn:%s:iam::aws:policy/CloudWatchAgentServerPolicy", module.aws.partition.partition)
-      ]
-    },
-    {
-      repository     = "https://aws.github.io/eks-charts"
-      name           = "aws-for-fluent-bit"
-      chart_name     = "aws-for-fluent-bit"
-      namespace      = "kube-system"
-      serviceaccount = "aws-for-fluent-bit"
-      values = {
-        "cloudWatch.enabled"      = true
-        "cloudWatch.region"       = module.aws.region.id
-        "cloudWatch.logGroupName" = format("/aws/containerinsights/%s/application", var.eks.cluster.name)
-        "firehose.enabled"        = false
-        "kinesis.enabled"         = false
-        "elasticsearch.enabled"   = false
-      }
-      oidc = var.eks.oidc
-      policy_arns = [
-        format("arn:%s:iam::aws:policy/CloudWatchAgentServerPolicy", module.aws.partition.partition)
-      ]
-    },
-    {
-      repository     = "https://aws.github.io/eks-charts"
       name           = "aws-node-termination-handler"
       chart_name     = "aws-node-termination-handler"
       namespace      = "kube-system"
@@ -240,6 +207,17 @@ module "eks-addons" {
       oidc           = var.eks.oidc
       policy_arns = [
         format("arn:%s:iam::aws:policy/AmazonPrometheusRemoteWriteAccess", module.aws.partition.partition),
+        format("arn:%s:iam::aws:policy/AWSXrayWriteOnlyAccess", module.aws.partition.partition),
+        format("arn:%s:iam::aws:policy/CloudWatchAgentServerPolicy", module.aws.partition.partition),
+      ]
+    },
+    {
+      name           = "amazon-cloudwatch-observability"
+      namespace      = "amazon-cloudwatch"
+      serviceaccount = "cloudwatch-agent"
+      eks_name       = var.eks.cluster.name
+      oidc           = var.eks.oidc
+      policy_arns = [
         format("arn:%s:iam::aws:policy/AWSXrayWriteOnlyAccess", module.aws.partition.partition),
         format("arn:%s:iam::aws:policy/CloudWatchAgentServerPolicy", module.aws.partition.partition),
       ]

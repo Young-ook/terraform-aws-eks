@@ -87,9 +87,22 @@ kubectl -n kube-system logs aws-load-balancer-controller-7dd4ff8cb-wqq58
 
 또한 [Amazon 클라우드 와치 컨테이너 인사이츠](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContainerInsights.html) 여러 분의 마이크로서비스와 컨테이너 애플리케이션의 지표와 로그를 수집 및 요약해 줍니다. 컨테이너 인사이츠는 Amazon ECS, Amazon EKS, 그리고 Amazon EC2 위에서 실행되는 쿠버네티스를 지원합니다. Amazon ECS 지원항목에 서버리스 컴퓨팅 환경인 AWS Fargate에 대한 지원도 포함되어 있습니다. 컨테이너 인사이츠는 또한 컨테이너 재시작 실패와 같은 진단 정보를 제공하여 여러 분이 문제를 빠르게 격리하고 해결할 수 있도록 돕습니다. 또한, 여러 분은 컨터이너 인사이츠에서 수집한 지표를 활용하여 클라우드 와치 알람을 발생시킬 수도 있습니다.
 ![aws-cw-container-insights](../../images/aws-cw-container-insights.png)
+![aws-cw-container-insights-perf](../../images/aws-cw-container-insights-perf.png)
 
 #### 클라우드 와치와 플로언트비트(FluentBit) 애이전트 설치 확인
-모든 설치 절차가 완료되었다면, 쿠버네티스 *kube-system* 네임스페이스의 모든 포드가 *Ready* 상태인 지 확인해보고, *aws-cloudwatch-metrics*, *aws-for-fluent-bit* 가 존재하는 지 확인합니다.
+모든 설치 절차가 완료되었다면, 쿠버네티스 *amazon-cloudwatch* 네임스페이스의 모든 포드가 *Ready* 상태인 지 확인해보고, *cloudwatch-agent*, *fluent-bit* 가 존재하는 지 확인합니다.
+```
+NAME                                                              READY   STATUS    RESTARTS   AGE
+amazon-cloudwatch-observability-controller-manager-5f84466r6p92   1/1     Running   0          29m
+cloudwatch-agent-8rjmt                                            1/1     Running   0          29m
+cloudwatch-agent-f7rn8                                            1/1     Running   0          29m
+cloudwatch-agent-pdn9h                                            1/1     Running   0          29m
+cloudwatch-agent-zxk7r                                            1/1     Running   0          29m
+fluent-bit-264ws                                                  1/1     Running   0          29m
+fluent-bit-sgj5d                                                  1/1     Running   0          29m
+fluent-bit-vgsgc                                                  1/1     Running   0          29m
+fluent-bit-xhxq8                                                  1/1     Running   0          29m
+```
 
 ### 노드 종료 핸들러(AWS Node Termination Handler)
 [AWS 노드 종료 핸들러](https://github.com/aws/aws-node-termination-handler) EC2 유지보수 이벤트, EC2 스폿 중단, 오토스케일링 스케일 인(Scale-In), 오토스케일링 가용영역 분산배치 재조정, EC2 인스턴스 종료 등과 같이 EC2 인스턴스가 사용 불가능해지는 상황이 발생했을 때 쿠버티네스 관리자가 적절한 대응을 수행할 수 있도록 만드는 프로젝트 입니다. 노드 종료 핸들러는 AWS로부터 쿠버네티스로 전달되는 노드 종료 요청사이를 연결하여 인터럽션(interruption) 알림을 받은 노드가 덜컹거림 없이 부드럽게 진행 중인 작업을 마무리 할수 있도록 합니다. 노드 종료 핸들러는 쿠버네티스 사용자와 API를 사용하여 종료 대상이 되는 노드를 정리하고 수습하는 작업을 수행합니다. 보다 자세한 내용 또는 사용법은 GitHub 페이지에 있습니다.
@@ -385,6 +398,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 
 ## Amazon CloudWatch Container Insights
 - [Amazon CloudWatch Container Insights for Amazon ECS](https://aws.amazon.com/blogs/mt/introducing-container-insights-for-amazon-ecs)
+- [Announcing Container Insights with Enhanced Observability for Amazon EKS](https://aws.amazon.com/blogs/mt/new-container-insights-with-enhanced-observability-for-amazon-eks/)
 
 ## Amazon EKS Add-ons
 - [Metrics and traces collection using Amazon EKS add-ons for AWS Distro for OpenTelemetry (ADOT)](https://aws.amazon.com/blogs/containers/metrics-and-traces-collection-using-amazon-eks-add-ons-for-aws-distro-for-opentelemetry/)
