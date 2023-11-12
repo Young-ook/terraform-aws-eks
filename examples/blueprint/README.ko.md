@@ -290,6 +290,9 @@ kubectl -n spinnaker port-forward svc/spin-deck 9000:9000
 
 ![spin-cluster-mgmt](../../images/spin-cluster-mgmt.png)
 
+### Cloudforet
+[Cloudforet](https://github.com/cloudforet-io) is a multi-cloud and hybrid-cloud management platform. Cloudforet helps you to see your scattered cloud resources over multiple cloud providers at a glence. And it also allows you to analyze your costs easily and optimize resources based on cost data. By using Cloudforet, you can control expenses and prevent overspendings with budget management feature for finops.
+
 ## 컴퓨팅 옵션들
 ### AWS 파게이트(Fargate)
 AWS 파게이트(Fargate)는 컨테이너에 필요에 맞춰 적절한 컴퓨팅 용량을 제공하는 기술입니다. AWS 파게이트와 같이 애플리케이션 구동을 위한 서버에 대한 관리를 자동화 한 것을 서버리스 (Serverless)라고 부릅니다. 파게이트를 사용하면 더 이상 컨테이너를 실행하기 위해 가상 머신 그륩을 프로비저닝, 구성 또는 확장할 필요가 없습니다. 따라서 서버 유형을 선택하거나, 노드 그룹을 확장할 시기를 결정하거나, 클러스터 패킹을 최적화할 필요가 없습니다. 파게이트에서 어떤 포드를 시작할지, 그리고 파게이트 프로파일로 어떻게 실행할지 제어할 수 있습니다. 파게이트에서 실행되는 각 포드는 자체 격리 경계를 가지며 기본 커널, CPU 리소스, 메모리 리소스 또는 탄력적 네트워크 인터페이스를 다른 포드와 공유하지 않습니다. 자세한 내용은 [다음](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html)을 참조하세요.
@@ -410,6 +413,9 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## Chaos Mesh
 - [Simulate Kubernetes Resource Stress Test](https://chaos-mesh.org/docs/simulate-heavy-stress-on-kubernetes/)
 - [Simulate AWS Faults](https://chaos-mesh.org/docs/simulate-aws-chaos/)
+
+## Cloudforet (SpaceONE)
+- [SpaceONE launchpad](https://github.com/cloudforet-io/launchpad)
 
 ## Cluster Autoscaler
 - [Autoscaling](https://docs.aws.amazon.com/eks/latest/userguide/autoscaling.html)
