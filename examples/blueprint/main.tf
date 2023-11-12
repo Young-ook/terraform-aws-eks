@@ -83,7 +83,7 @@ resource "aws_ec2_tag" "karpenter-security-groups" {
 ### eks cluster
 module "eks" {
   source              = "Young-ook/eks/aws"
-  version             = "2.0.0"
+  version             = "2.0.10"
   name                = var.name
   tags                = var.tags
   subnets             = slice(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), 0, 3)
