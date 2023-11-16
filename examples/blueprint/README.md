@@ -295,6 +295,9 @@ Open `localhost:9000` in your favorite browswer. You will see the login page.
 ### Cloudforet
 [Cloudforet](https://github.com/cloudforet-io) is a multi-cloud and hybrid-cloud management platform. Cloudforet helps you to see your scattered cloud resources over multiple cloud providers at a glence. And it also allows you to analyze your costs easily and optimize resources based on cost data. By using Cloudforet, you can control expenses and prevent overspendings with budget management feature for finops.
 
+### Kubecost
+[Kubecost](https://github.com/kubecost) is a monitoring application which provides real-time cost visibility and insights for teams using Kubernetes, helping you continuously reduce your cloud costs. Find out more about what Kubecost can do for you on the [website](https://www.kubecost.com/).
+
 ## Computing options
 ### AWS Fargate (Serverless)
 AWS Fargate is a technology that provides on-demand, right-sized compute capacity for containers. With AWS Fargate, you no longer have to provision, configure, or scale groups of virtual machines to run containers. This removes the need to choose server types, decide when to scale your node groups, or optimize cluster packing. You can control which pods start on Fargate and how they run with Fargate profiles. Each pod running on Fargate has its own isolation boundary and does not share the underlying kernel, CPU resources, memory resources, or elastic network interface with another pod. For more information, please refer [this](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html).

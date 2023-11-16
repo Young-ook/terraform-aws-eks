@@ -120,6 +120,24 @@ To fix this issue, you probably need to downgrade to 1.23.6. Download the *kubec
 curl -LO "https://dl.k8s.io/release/v1.23.6/bin/darwin/amd64/kubectl"
 ```
 
+## Marketplace Subscription
+The first time you try to install the *kubecost* EKS add-on, you might see a *CREATE_FAILED* error message, because kubecost is a third-party application and you might have to pay for it.
+
+```
+Error: waiting for EKS Add-On (eks-rkrdi:kubecost_kubecost) create: unexpected state 'CREATE_FAILED', wanted target 'ACTIVE'. last error: 1 error occurred:
+│ 	* : AddonSubscriptionNeeded: You are currently not subscribed to this add-on. To subscribe, visit the AWS Marketplace console, agree to the seller EULA, select the pricing type if required, then re-install the add-on
+│
+│
+│
+│   with module.kubernetes-addons.module.eks-addons.aws_eks_addon.addon["kubecost_kubecost"],
+│   on .terraform/modules/kubernetes-addons.eks-addons/modules/eks-addons/main.tf line 2, in resource "aws_eks_addon" "addon":
+│    2: resource "aws_eks_addon" "addon" {
+```
+![aws-eks-addon-kubecost-health](./images/aws-eks-addon-kubecost-health.png)
+
+To subscribe, you should visit the AWS Marketplace console, agree to the seller EULA, select the pricing type if required, then re-install the add-on.
+![aws-marketplace-kubecost-eula-agreement](./images/aws-marketplace-kubecost-eula-agreement.png)
+
 # Additional Resources
 ## Amazon EKS
 - [Amazon EKS Best Practices Guides](https://aws.github.io/aws-eks-best-practices/)

@@ -281,7 +281,7 @@ module "prometheus" {
 kubectl -n spinnaker get all
 ```
 
-모든 설정이 문제 없어 보인다면, 다음 단계로 이동해도 좋습니다. 스핀에커 대시보드(spin-deck)에 연결하기 위해서 포트 포워딩을 실행합니다:
+모든 설정이 문제 없어 보인다면, 다음 단계로 이동해도 좋습니다. 대시보드(spin-deck)에 연결하기 위해서 포트 포워딩을 실행합니다:
 ```
 kubectl -n spinnaker port-forward svc/spin-deck 9000:9000
 ```
@@ -292,6 +292,9 @@ kubectl -n spinnaker port-forward svc/spin-deck 9000:9000
 
 ### Cloudforet
 [Cloudforet](https://github.com/cloudforet-io) is a multi-cloud and hybrid-cloud management platform. Cloudforet helps you to see your scattered cloud resources over multiple cloud providers at a glence. And it also allows you to analyze your costs easily and optimize resources based on cost data. By using Cloudforet, you can control expenses and prevent overspendings with budget management feature for finops.
+
+### Kubecost
+[Kubecost](https://github.com/kubecost) 는 클라우드 비용을 지속적으로 절감하는 것을 돕기 위하여 쿠버네티스를 사용하는 팀에게 실시간 비용 가시성과 통찰을 제공하는 애플리케이션입니다. Kubecost 활용에 대한 보다 자세한 정보는 [웹사이트](https://www.kubecost.com/)를 참고하시길 바랍니다.
 
 ## 컴퓨팅 옵션들
 ### AWS 파게이트(Fargate)

@@ -222,5 +222,10 @@ module "eks-addons" {
         format("arn:%s:iam::aws:policy/CloudWatchAgentServerPolicy", module.aws.partition.partition),
       ]
     },
+    {
+      name      = "kubecost_kubecost"
+      namespace = "kubecost"
+      eks_name  = var.eks.cluster.name
+    },
   ]
 }
