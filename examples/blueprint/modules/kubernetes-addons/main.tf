@@ -227,5 +227,9 @@ module "eks-addons" {
       namespace = "kubecost"
       eks_name  = var.eks.cluster.name
     },
+    {
+      name     = "eks-pod-identity-agent"
+      eks_name = var.eks.cluster.name
+    },
   ]
 }
