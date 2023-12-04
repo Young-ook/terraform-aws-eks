@@ -28,7 +28,7 @@ resource "aws_iam_policy" "kpt" {
 ### helm-addons
 module "base" {
   source  = "Young-ook/eks/aws//modules/helm-addons"
-  version = "2.0.3"
+  version = "2.0.10"
   tags    = merge(var.tags, local.default-tags)
   addons = [
     {
@@ -59,7 +59,7 @@ module "base" {
 module "ctl" {
   depends_on = [module.base]
   source     = "Young-ook/eks/aws//modules/helm-addons"
-  version    = "2.0.3"
+  version    = "2.0.10"
   tags       = var.tags
   addons = [
     {
@@ -143,7 +143,7 @@ module "ctl" {
 module "devops" {
   depends_on = [module.eks-addons]
   source     = "Young-ook/eks/aws//modules/helm-addons"
-  version    = "2.0.6"
+  version    = "2.0.10"
   tags       = var.tags
   addons = [
     {
@@ -174,7 +174,7 @@ module "eks-addons" {
   ### the adot-addon requires a cert-manager from helm-addons
   depends_on = [module.ctl]
   source     = "Young-ook/eks/aws//modules/eks-addons"
-  version    = "2.0.3"
+  version    = "2.0.10"
   tags       = var.tags
   addons = [
     {
