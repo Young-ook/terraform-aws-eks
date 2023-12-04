@@ -233,3 +233,22 @@ module "eks-addons" {
     },
   ]
 }
+
+module "apps" {
+  depends_on = [module.eks-addons]
+  source     = "Young-ook/eks/aws//modules/helm-addons"
+  version    = "2.0.6"
+  tags       = var.tags
+  addons = [
+    {
+      ### for more information about the NATS helm chart, please refer to the artifacthub or github.
+      ### artifacthub: https://artifacthub.io/packages/helm/nats/nats
+      ### github: https://github.com/nats-io/k8s/tree/main/helm/charts/nats
+      repository    = "https://nats-io.github.io/k8s/helm/charts/"
+      name          = "nats"
+      chart_name    = "nats"
+      chart_version = "1.1.5"
+      namespace     = "nats"
+    },
+  ]
+}
