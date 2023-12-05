@@ -45,7 +45,7 @@ variable "node_groups" {
 variable "enable_ssm" {
   description = "Allow ssh access using session manager"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "eks_addons" {
