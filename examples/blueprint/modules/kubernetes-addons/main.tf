@@ -231,6 +231,10 @@ module "eks-addons" {
       name     = "eks-pod-identity-agent"
       eks_name = var.eks.cluster.name
     },
+    {
+      name     = "aws-guardduty-agent"
+      eks_name = var.eks.cluster.name
+    },
   ]
 }
 
