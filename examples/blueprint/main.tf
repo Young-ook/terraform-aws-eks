@@ -64,7 +64,7 @@ module "vpc" {
       type    = "Gateway"
     },
     {
-      service             = "guardduty"
+      service             = "guardduty-data"
       type                = "Interface"
       private_dns_enabled = true
     },
