@@ -63,6 +63,11 @@ module "vpc" {
       service = "s3"
       type    = "Gateway"
     },
+    {
+      service             = "guardduty"
+      type                = "Interface"
+      private_dns_enabled = true
+    },
   ]
 }
 
