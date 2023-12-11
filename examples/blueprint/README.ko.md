@@ -439,5 +439,8 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Karpenter Hands-on Lab](https://www.eksworkshop.com/docs/autoscaling/compute/karpenter/)
 - [Migrating from Cluster Autoscaler](https://karpenter.sh/v0.27.3/getting-started/migrating-from-cas/)
 
+## LitmusChaos
+- [Chaos Engineering with LitmusChaos on Amazon EKS](https://aws.amazon.com/blogs/containers/chaos-engineering-with-litmuschaos-on-amazon-eks)
+
 ## Prometheus
 - [Deploy Promethus using Helm](https://www.eksworkshop.com/intermediate/240_monitoring/deploy-prometheus/)
