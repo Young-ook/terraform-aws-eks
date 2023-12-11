@@ -1,14 +1,16 @@
+### security
 variable "namespace" {
-  description = "The namespace where kubernetes service account is"
+  description = "Kubernetes namespace for service account"
   type        = string
+  default     = "default"
 }
 
 variable "serviceaccount" {
-  description = "The name of kubernetes service account"
+  description = "Kubernetes service account name"
   type        = string
+  default     = "default"
 }
 
-### security
 variable "policy_arns" {
   description = "A list of policy ARNs to attach the role"
   type        = list(string)
