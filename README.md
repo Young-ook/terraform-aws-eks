@@ -144,3 +144,6 @@ To subscribe, you should visit the AWS Marketplace console, agree to the seller 
 - [Amazon EKS troubleshooting](https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html)
 - [EKS Workshop](https://www.eksworkshop.com/)
 - [Seamlessly Migrate Workloads from EKS Self-managed node groups to managed node groups](https://aws.amazon.com/blogs/containers/seamlessly-migrate-workloads-from-eks-self-managed-node-group-to-eks-managed-node-groups/)
+
+## Amazon VPC (Virtual Private Cloud)
+- [Amazon VPC Terraform Module](https://github.com/Young-ook/terraform-aws-vpc)
