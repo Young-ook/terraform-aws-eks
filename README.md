@@ -147,3 +147,7 @@ To subscribe, you should visit the AWS Marketplace console, agree to the seller 
 
 ## Amazon VPC (Virtual Private Cloud)
 - [Amazon VPC Terraform Module](https://github.com/Young-ook/terraform-aws-vpc)
+
+## Kubernetes
+### Operator
+- [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
