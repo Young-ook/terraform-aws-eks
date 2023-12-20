@@ -137,6 +137,13 @@ module "ctl" {
       oidc        = var.eks.oidc
       policy_arns = [aws_iam_policy.cas.arn]
     },
+    {
+      repository    = "https://kedacore.github.io/charts"
+      name          = "keda"
+      chart_name    = "keda"
+      chart_version = "2.12.1"
+      namespace     = "keda"
+    },
   ]
 }
 
