@@ -7,7 +7,7 @@ module "aws" {
 resource "aws_iam_role" "pid" {
   for_each = { for k, v in var.identities : k => v }
   name     = module.frigga[each.key].name
-  path     = var.path
+  path     = lookup(each.value, "role_path", local.default_pod_identity_config["role_path"])
   tags     = merge(local.default-tags, { Name = module.frigga[each.key].name }, var.tags)
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
