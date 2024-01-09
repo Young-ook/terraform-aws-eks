@@ -408,6 +408,9 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Amazon CloudWatch Container Insights for Amazon ECS](https://aws.amazon.com/blogs/mt/introducing-container-insights-for-amazon-ecs)
 - [Announcing Container Insights with Enhanced Observability for Amazon EKS](https://aws.amazon.com/blogs/mt/new-container-insights-with-enhanced-observability-for-amazon-eks/)
 
+## Amazon EKS Cluster Access Management Control
+- [A deep dive into simplified Amazon EKS access management controls](https://aws.amazon.com/blogs/containers/a-deep-dive-into-simplified-amazon-eks-access-management-controls/)
+
 ## Amazon EKS Add-ons
 - [Metrics and traces collection using Amazon EKS add-ons for AWS Distro for OpenTelemetry (ADOT)](https://aws.amazon.com/blogs/containers/metrics-and-traces-collection-using-amazon-eks-add-ons-for-aws-distro-for-opentelemetry/)
 - [Amazon EKS Pod Identity simplifies IAM permissions for applications on Amazon EKS clusters](https://aws.amazon.com/blogs/aws/amazon-eks-pod-identity-simplifies-iam-permissions-for-applications-on-amazon-eks-clusters/)
@@ -427,7 +430,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## Cluster Autoscaler
 - [Autoscaling](https://docs.aws.amazon.com/eks/latest/userguide/autoscaling.html)
 
-## IAM Role for Service Accounts
+## IAM Role for Service Accounts (IRSA)
 - [Diving into IAM Roles for Service Accounts](https://aws.amazon.com/blogs/containers/diving-into-iam-roles-for-service-accounts/)
 
 ## Istio
