@@ -5,7 +5,7 @@ This is EKS Blueprint example helps you compose complete EKS clusters that are f
 
 ## Setup
 ### Prerequisites
-This module requires kubectl, kuberentes command line tool. If you don't have the terraform and kubernetes tools in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
+This blueprint requires kubectl, kuberentes command line tool. If you don't have the terraform and kubernetes tools in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
 
 ### Download
 Download this example on your workspace
