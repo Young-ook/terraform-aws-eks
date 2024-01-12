@@ -31,11 +31,12 @@ locals {
 }
 
 module "ci" {
-  for_each = { for proj in local.projects : proj.name => proj }
-  source   = "Young-ook/spinnaker/aws//modules/codebuild"
-  version  = "2.3.6"
-  name     = each.key
-  tags     = var.tags
+  depends_on = [module.s3]
+  for_each   = { for proj in local.projects : proj.name => proj }
+  source     = "Young-ook/spinnaker/aws//modules/codebuild"
+  version    = "3.0.0"
+  name       = each.key
+  tags       = var.tags
   project = {
     source = {
       type      = "GITHUB"
@@ -49,15 +50,17 @@ module "ci" {
       image           = lookup(each.value, "image", "aws/codebuild/standard:4.0")
       privileged_mode = true
       environment_variables = {
-        APP_PATH       = lookup(each.value, "app_path")
-        ARCH           = lookup(each.value, "arch", "amd64")
-        REPOSITORY_URI = module.ecr[lookup(each.value, "repo")].url
+        APP_PATH        = lookup(each.value, "app_path")
+        ARCH            = lookup(each.value, "arch", "amd64")
+        ARTIFACT_BUCKET = module.s3.bucket.id
+        REPOSITORY_URI  = module.ecr[lookup(each.value, "repo")].url
       }
     }
   }
   policy_arns = [
     module.ecr[lookup(each.value, "repo")].policy_arns["read"],
     module.ecr[lookup(each.value, "repo")].policy_arns["write"],
+    module.s3.policy_arns["write"],
   ]
   log = {
     cloudwatch_logs = {
@@ -66,12 +69,21 @@ module "ci" {
   }
 }
 
+### artifact/repository
 module "ecr" {
   for_each     = { for proj in local.projects : proj.repo => proj... }
   source       = "Young-ook/eks/aws//modules/ecr"
   version      = "2.0.3"
   name         = each.key
   scan_on_push = false
+}
+
+### artifact/storage
+module "s3" {
+  source        = "Young-ook/sagemaker/aws//modules/s3"
+  version       = "0.4.7"
+  tags          = var.tags
+  force_destroy = true
 }
 
 module "logs" {
