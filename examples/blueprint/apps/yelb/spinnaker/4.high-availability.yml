@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yelb-ui
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: yelb-ui
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: yelb-ui
+        tier: frontend
+    spec:
+      containers:
+        - name: yelb-ui
+          image: mreferre/yelb-ui:0.7
+          ports:
+            - containerPort: 80
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: "name"
+                operator: In
+                values:
+                - yelb-ui
+            topologyKey: "kubernetes.io/hostname"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yelb-appserver
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: yelb-appserver
+      tier: middletier
+  template:
+    metadata:
+      labels:
+        app: yelb-appserver
+        tier: middletier
+    spec:
+      containers:
+        - name: yelb-appserver
+          image: mreferre/yelb-appserver:0.5
+          ports:
+            - containerPort: 4567
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: "name"
+                operator: In
+                values:
+                - yelb-appserver
+            topologyKey: "kubernetes.io/hostname"
