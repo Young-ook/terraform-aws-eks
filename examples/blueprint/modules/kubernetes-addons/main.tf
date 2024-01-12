@@ -158,6 +158,7 @@ module "devops" {
       name              = "spinnaker"
       chart_name        = "spinnaker"
       namespace         = "spinnaker"
+      serviceaccount    = "default"
       dependency_update = true
       values = {
         "spinnaker.version"  = "1.30.0"
@@ -165,6 +166,7 @@ module "devops" {
         "minio.rootUser"     = "spinnakeradmin"
         "minio.rootPassword" = "spinnakeradmin"
       }
+      oidc = var.eks.oidc
     },
     {
       repository     = "https://charts.chaos-mesh.org"

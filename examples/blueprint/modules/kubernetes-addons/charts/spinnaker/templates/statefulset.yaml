@@ -21,7 +21,6 @@ spec:
 {{ include "spinnaker.standard-labels" . | indent 8 }}
         component: halyard
     spec:
-      serviceAccountName: halyard-sa
       securityContext:
         runAsUser: {{ .Values.securityContext.runAsUser }}
         fsGroup: {{ .Values.securityContext.fsGroup }}
