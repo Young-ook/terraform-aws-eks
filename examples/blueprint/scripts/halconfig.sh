@@ -4,13 +4,12 @@ set -e
 
 CURDIR=`dirname $0`
 HAL_EXEC="kubectl -n spinnaker exec -it cd-spinnaker-halyard-0 --"
-SPIN_VER="1.30"
 
 export AWS_REGION=us-east-1
 export KUBECONFIG=$CURDIR/kubeconfig
 
 function print_usage() {
-  echo "Usage: $0 -k <kubeconfig-path> -a(account) <aws-account-id> -r(region) <aws-region> -s(spinnaker-managed-role) <role-name> -v(version) <spinnaker-version>"
+  echo "Usage: $0 -k <kubeconfig-path> -a(account) <aws-account-id> -r(region) <aws-region> -s(spinnaker-managed-role) <role-name>"
 }
 
 function process_args() {
@@ -19,7 +18,7 @@ function process_args() {
     exit -1
   fi
 
-  while getopts ":a:r:k:s:v:" opt; do
+  while getopts ":a:r:k:s:" opt; do
     case $opt in
       a) AWS_ID="$OPTARG"
       ;;
@@ -28,8 +27,6 @@ function process_args() {
       k) KUBECONFIG="$OPTARG"
       ;;
       s) SPIN_MANAGED_ROLE="$OPTARG"
-      ;;
-      v) SPIN_VER="$OPTARG"
       ;;
       \?)
         >&2 echo "Unrecognized argument '$OPTARG'"
@@ -55,7 +52,6 @@ function setup() {
     --region $AWS_REGION
   $HAL_EXEC hal config artifact s3 enable
 
-  $HAL_EXEC hal config version edit --version $SPIN_VER
   $HAL_EXEC hal deploy apply
 }
 
