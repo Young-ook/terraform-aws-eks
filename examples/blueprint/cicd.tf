@@ -126,3 +126,10 @@ resource "local_file" "localbuild" {
   filename        = "${path.module}/apps/hellojs/localbuild.sh"
   file_permission = "0400"
 }
+
+### role allows a spinnaker to manage an aws resources
+module "spinnaker-managed-aws" {
+  source           = "Young-ook/spinnaker/aws//modules/spinnaker-managed-aws"
+  version          = "3.0.0"
+  trusted_role_arn = [module.kubernetes-addons.spinnaker_role_arn]
+}
