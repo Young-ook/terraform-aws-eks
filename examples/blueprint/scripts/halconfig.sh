@@ -3,13 +3,13 @@
 set -e
 
 CURDIR=`dirname $0`
-HAL_EXEC="kubectl -n spinnaker exec -it cd-spinnaker-halyard-0 --"
+HAL_EXEC="kubectl -n spinnaker exec -it spinnaker-halyard-0 --"
 
 export AWS_REGION=us-east-1
 export KUBECONFIG=$CURDIR/kubeconfig
 
 function print_usage() {
-  echo "Usage: $0 -k <kubeconfig-path> -a(account) <aws-account-id> -r(region) <aws-region> -s(spinnaker-managed-role) <role-name>"
+  echo "Usage: $0 -k <kubeconfig-path> -a(account) <aws-account-id> -r(region) <aws-region> -s(spinnaker-managed-role) <role-arn>"
 }
 
 function process_args() {
