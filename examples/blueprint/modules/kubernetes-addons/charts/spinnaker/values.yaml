@@ -275,10 +275,10 @@ rbac:
 
 serviceAccount:
   # Specifies whether a ServiceAccount should be created
-  create: true
+  create: false
   # The name of the ServiceAccounts to use.
   # If left blank it is auto-generated from the fullname of the release
-  name: spinnaker-sa
+  name: default
   annotations: {}
 
 securityContext:
