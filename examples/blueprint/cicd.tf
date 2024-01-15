@@ -131,5 +131,5 @@ resource "local_file" "localbuild" {
 module "spinnaker-managed-aws" {
   source           = "Young-ook/spinnaker/aws//modules/spinnaker-managed-aws"
   version          = "3.0.0"
-  trusted_role_arn = [module.kubernetes-addons.spinnaker_role_arn]
+  trusted_role_arn = [module.kubernetes-addons.spinnaker.irsa.arn]
 }
