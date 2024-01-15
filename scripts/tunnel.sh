@@ -1,5 +1,10 @@
 #!/bin/bash
-# establish ssh tunnel to access the spinnaker
+# establish ssh tunnel to access kubernetes service
+
+### port-forwarding examples
+### - spinnaker: kubernetes -n spinnaker port-forward svc/spin-deck 8080:9000
+### - chaos-mesh: kubernetes -n chaos-mesh port-forward svc/chaos-dashboard 2333:2333
+
 set -e
 
 CURDIR=`dirname $0`
@@ -45,12 +50,7 @@ function conn() {
     exit -1
   fi
 
-### kubernetes port forwarding examples
-###
-### spinnaker: kubernetes -n spinnaker port-forward svc/spin-deck 8080:9000
-### chaos-mesh: kubernetes -n chaos-mesh port-forward svc/chaos-dashboard 2333:2333
-
-  kubectl -n $NS port-forward svc/$SVC ${LPORT}:${RPORT}
+  kubectl -n $NS port-forward svc/$SVC $LPORT:$RPORT
 }
 
 # main
