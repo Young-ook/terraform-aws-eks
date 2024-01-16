@@ -31,7 +31,7 @@ resource "local_file" "halconfig" {
     aws_id            = local.aws.region
     aws_region        = local.aws.id
     spin_managed_role = module.kubernetes-addons.spinnaker.irsa.arn
-    spin_irsa_cli     = module.kubernetes-addons.spinnaker.irsa.kubecli,
+    spin_irsa_cli     = module.kubernetes-addons.spinnaker.irsa.kubecli
   })
   filename        = "${path.cwd}/scripts/halconfig.sh"
   file_permission = "0700"
