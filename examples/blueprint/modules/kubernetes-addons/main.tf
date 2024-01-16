@@ -1,8 +1,3 @@
-### aws partitions
-module "aws" {
-  source = "Young-ook/spinnaker/aws//modules/aws-partitions"
-}
-
 ### security/policy
 resource "aws_iam_policy" "lbc" {
   name        = "aws-loadbalancer-controller"
