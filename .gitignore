@@ -2,7 +2,6 @@
 **/.terraform/*
 **/.terraform.lock*
 
-
 # .tfstate files
 *.tfstate
 *.tfstate.*
@@ -35,3 +34,6 @@ kubeconfig
 
 # Local .DS_Store
 **/.DS_Store
+
+# local helm chart cache
+**/charts/*.tgz
