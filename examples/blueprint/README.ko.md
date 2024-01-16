@@ -433,6 +433,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 
 ## Istio
 - [Istio Concepts and Examples](https://istio.io/latest/docs/)
+- [Using Istio Traffic Management on Amazon EKS to Enhance User Experience](https://aws.amazon.com/blogs/opensource/using-istio-traffic-management-to-enhance-user-experience/)
 
 ## Karmada
 - [Karmada](https://github.com/karmada-io/karmada)
