@@ -129,6 +129,7 @@ resource "local_file" "localbuild" {
 
 ### role allows a spinnaker to manage an aws resources
 module "spinnaker-managed-aws" {
+  for_each         = (local.spinnaker_enabled ? toset(["enabled"]) : [])
   source           = "Young-ook/spinnaker/aws//modules/spinnaker-managed-aws"
   version          = "3.0.0"
   trusted_role_arn = [module.kubernetes-addons.spinnaker.irsa.arn]

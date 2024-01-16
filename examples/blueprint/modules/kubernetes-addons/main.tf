@@ -152,30 +152,33 @@ module "devops" {
   source     = "Young-ook/eks/aws//modules/helm-addons"
   version    = "2.0.10"
   tags       = var.tags
-  addons = [
-    {
-      repository        = "${path.module}/charts/"
-      name              = "spinnaker"
-      chart_name        = "spinnaker"
-      namespace         = "spinnaker"
-      serviceaccount    = "default"
-      dependency_update = true
-      values = {
-        "spinnaker.version"  = "1.33.0"
-        "halyard.image.tag"  = "1.44.0"
-        "minio.rootUser"     = "spinnakeradmin"
-        "minio.rootPassword" = "spinnakeradmin"
-      }
-      oidc = var.eks.oidc
-    },
-    {
-      repository     = "https://charts.chaos-mesh.org"
-      name           = "chaos-mesh"
-      chart_name     = "chaos-mesh"
-      namespace      = "chaos-mesh"
-      serviceaccount = "chaos-mesh-controller"
-    },
-  ]
+  addons = concat((try(var.features.spinnaker_enabled, false) ?
+    [
+      {
+        repository        = "${path.module}/charts/"
+        name              = "spinnaker"
+        chart_name        = "spinnaker"
+        namespace         = "spinnaker"
+        serviceaccount    = "default"
+        dependency_update = true
+        values = {
+          "spinnaker.version"  = "1.33.0"
+          "halyard.image.tag"  = "1.44.0"
+          "minio.rootUser"     = "spinnakeradmin"
+          "minio.rootPassword" = "spinnakeradmin"
+        }
+        oidc = var.eks.oidc
+      },
+    ] : []),
+    [
+      {
+        repository     = "https://charts.chaos-mesh.org"
+        name           = "chaos-mesh"
+        chart_name     = "chaos-mesh"
+        namespace      = "chaos-mesh"
+        serviceaccount = "chaos-mesh-controller"
+      },
+  ])
 }
 
 ### eks-addons

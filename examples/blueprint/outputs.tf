@@ -26,6 +26,7 @@ locals {
 }
 
 resource "local_file" "halconfig" {
+  for_each = (local.spinnaker_enabled ? toset(["enabled"]) : [])
   content = templatefile("${path.module}/scripts/templates/halconfig.tpl", {
     aws_id            = local.aws.region
     aws_region        = local.aws.id
