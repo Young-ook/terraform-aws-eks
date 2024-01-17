@@ -20,6 +20,21 @@ resource "aws_iam_policy" "kpt" {
   policy      = file("${path.module}/policy.karpenter.json")
 }
 
+resource "aws_iam_policy" "spin" {
+  for_each    = (try(var.features.spinnaker_enabled, false) ? toset(["enabled"]) : [])
+  name        = "spinnaker-assume-role"
+  tags        = merge({ "terraform.io" = "managed" }, var.tags)
+  description = format("Allow spinnaker to manage AWS resources")
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action   = "sts:AssumeRole"
+      Effect   = "Allow"
+      Resource = "*"
+    }]
+  })
+}
+
 ### helm-addons
 module "base" {
   source  = "Young-ook/eks/aws//modules/helm-addons"
@@ -162,7 +177,8 @@ module "devops" {
           "minio.rootUser"     = "spinnakeradmin"
           "minio.rootPassword" = "spinnakeradmin"
         }
-        oidc = var.eks.oidc
+        oidc        = var.eks.oidc
+        policy_arns = [aws_iam_policy.spin["enabled"].arn]
       },
     ] : []),
     [
