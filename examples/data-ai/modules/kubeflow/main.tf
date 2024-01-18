@@ -25,7 +25,7 @@ module "base" {
     {
       repository       = join("/", [var.kubeflow_helm_repo, "common"])
       name             = "istio"
-      chart_name       = "istio-1-14"
+      chart_name       = "istio"
       create_namespace = false
     },
   ]
