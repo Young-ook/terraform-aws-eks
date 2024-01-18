@@ -114,7 +114,5 @@ module "kubernetes-addons" {
   tags       = var.tags
   eks        = module.eks
   vpc        = module.vpc
-  features = {
-    spinnaker_enabled = local.spinnaker_enabled
-  }
+  features   = local.toggles
 }
