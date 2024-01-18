@@ -261,8 +261,9 @@ module "eks-addons" {
   ]
 }
 
-module "apps" {
+module "nats" {
   depends_on = [module.eks-addons]
+  for_each   = (try(var.features.nats_enabled, false) ? toset(["enabled"]) : [])
   source     = "Young-ook/eks/aws//modules/helm-addons"
   version    = "2.0.6"
   tags       = var.tags
