@@ -47,6 +47,24 @@ module "eks" {
   ]
 }
 
+### kubeflow-manifests
+resource "null_resource" "clone" {
+  provisioner "local-exec" {
+    command = "bash scripts/clone.sh -k $KUBEFLOW_RELEASE_VERSION -a $AWS_RELEASE_VERSION"
+    environment = {
+      KUBEFLOW_RELEASE_VERSION = "v1.6.1"
+      AWS_RELEASE_VERSION      = "v1.6.1-aws-b1.0.0"
+    }
+  }
+}
+
+resource "null_resource" "clear" {
+  depends_on = [module.kubeflow]
+  provisioner "local-exec" {
+    command = "rm -rf kubeflow-manifests"
+  }
+}
+
 ### helm-addons
 provider "helm" {
   kubernetes {
@@ -57,7 +75,7 @@ provider "helm" {
 }
 
 module "kubeflow" {
-  depends_on         = [module.ebs-csi]
+  depends_on         = [module.ebs-csi, null_resource.clone]
   source             = "./modules/kubeflow"
   tags               = var.tags
   kubeflow_helm_repo = var.kubeflow_helm_repo
