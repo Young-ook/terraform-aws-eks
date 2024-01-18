@@ -1,7 +1,7 @@
 ### helm-addons
 module "base" {
   source  = "Young-ook/eks/aws//modules/helm-addons"
-  version = "2.0.3"
+  version = "2.0.11"
   tags    = merge(var.tags, local.default-tags)
   addons = [
     {
@@ -34,7 +34,7 @@ module "base" {
 module "utils" {
   depends_on = [module.base]
   source     = "Young-ook/eks/aws//modules/helm-addons"
-  version    = "2.0.3"
+  version    = "2.0.11"
   tags       = merge(var.tags, local.default-tags)
   addons = [
     {
@@ -76,7 +76,7 @@ module "utils" {
 module "apps" {
   depends_on = [module.utils]
   source     = "Young-ook/eks/aws//modules/helm-addons"
-  version    = "2.0.3"
+  version    = "2.0.11"
   tags       = merge(var.tags, local.default-tags)
   addons = [
     {

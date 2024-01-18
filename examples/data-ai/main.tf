@@ -30,7 +30,7 @@ module "vpc" {
 ### eks
 module "eks" {
   source             = "Young-ook/eks/aws"
-  version            = "2.0.3"
+  version            = "2.0.11"
   name               = var.name
   tags               = var.tags
   subnets            = slice(values(module.vpc.subnets["private"]), 0, 3)
@@ -66,7 +66,7 @@ module "kubeflow" {
 module "airflow" {
   depends_on = [module.ebs-csi]
   source     = "Young-ook/eks/aws//modules/helm-addons"
-  version    = "2.0.4"
+  version    = "2.0.11"
   tags       = var.tags
   addons = [
     {
@@ -89,7 +89,7 @@ module "airflow" {
 module "ebs-csi" {
   depends_on = [module.eks]
   source     = "Young-ook/eks/aws//modules/eks-addons"
-  version    = "2.0.4"
+  version    = "2.0.11"
   tags       = var.tags
   addons = [
     {
