@@ -16,10 +16,10 @@ This blueprint requires *yq* which is a lightweight command-line YAML, JSON, and
 Download this example on your workspace
 ```
 git clone https://github.com/Young-ook/terraform-aws-eks
-cd terraform-aws-eks/examples/machinelearning
+cd terraform-aws-eks/examples/data-ai
 ```
 
-Then you are in **mlops** directory under your current workspace. There is an exmaple that shows how to use terraform configurations to create and manage an EKS cluster and Addon utilities on your AWS account. In this example, we will install Kubeflow on Amazon EKS, run a single-node training and inference using TensorFlow.
+Then you are in **data-ai** directory under your current workspace. There is an exmaple that shows how to use terraform configurations to create and manage an EKS cluster and Addon utilities on your AWS account. In this example, we will install Kubeflow on Amazon EKS, run a single-node training and inference using TensorFlow.
 
 And clone the awslabs/kubeflow-manifests and the kubeflow/manifests repositories and check out the release branches of your choosing. Substitute the value for KUBEFLOW_RELEASE_VERSION(e.g. v1.6.1) and AWS_RELEASE_VERSION(e.g. v1.6.1-aws-b1.0.0) with the tag or branch you want to use below. Read more about releases and versioning if you are unsure about what these values should be.
 
@@ -125,6 +125,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 
 ## Kubeflow on EKS
 - [Kubeflow on AWS](https://awslabs.github.io/kubeflow-manifests/docs/about/)
+- [Kubeflow Manifests](https://github.com/awslabs/kubeflow-manifests)
 - [Enabling hybrid ML workflows on Amazon EKS and Amazon SageMaker with one-click Kubeflow on AWS deployment](https://aws.amazon.com/blogs/machine-learning/enabling-hybrid-ml-workflows-on-amazon-eks-and-amazon-sagemaker-with-one-click-kubeflow-on-aws-deployment/)
 
 ## Data Platform
