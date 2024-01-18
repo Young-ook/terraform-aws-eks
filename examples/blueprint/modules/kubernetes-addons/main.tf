@@ -1,8 +1,3 @@
-### aws partitions
-module "aws" {
-  source = "Young-ook/spinnaker/aws//modules/aws-partitions"
-}
-
 ### security/policy
 resource "aws_iam_policy" "lbc" {
   name        = "aws-loadbalancer-controller"
@@ -23,6 +18,21 @@ resource "aws_iam_policy" "kpt" {
   tags        = merge({ "terraform.io" = "managed" }, var.tags)
   description = format("Allow karpenter to manage AWS resources")
   policy      = file("${path.module}/policy.karpenter.json")
+}
+
+resource "aws_iam_policy" "spin" {
+  for_each    = (try(var.features.spinnaker_enabled, false) ? toset(["enabled"]) : [])
+  name        = "spinnaker-assume-role"
+  tags        = merge({ "terraform.io" = "managed" }, var.tags)
+  description = format("Allow spinnaker to manage AWS resources")
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action   = "sts:AssumeRole"
+      Effect   = "Allow"
+      Resource = "*"
+    }]
+  })
 }
 
 ### helm-addons
@@ -152,28 +162,34 @@ module "devops" {
   source     = "Young-ook/eks/aws//modules/helm-addons"
   version    = "2.0.10"
   tags       = var.tags
-  addons = [
-    {
-      repository        = "${path.module}/charts/"
-      name              = "spinnaker"
-      chart_name        = "spinnaker"
-      namespace         = "spinnaker"
-      dependency_update = true
-      values = {
-        "spinnaker.version"  = "1.30.0"
-        "halyard.image.tag"  = "1.44.0"
-        "minio.rootUser"     = "spinnakeradmin"
-        "minio.rootPassword" = "spinnakeradmin"
-      }
-    },
-    {
-      repository     = "https://charts.chaos-mesh.org"
-      name           = "chaos-mesh"
-      chart_name     = "chaos-mesh"
-      namespace      = "chaos-mesh"
-      serviceaccount = "chaos-mesh-controller"
-    },
-  ]
+  addons = concat((try(var.features.spinnaker_enabled, false) ?
+    [
+      {
+        repository        = "${path.module}/charts/"
+        name              = "spinnaker"
+        chart_name        = "spinnaker"
+        namespace         = "spinnaker"
+        serviceaccount    = "default"
+        dependency_update = true
+        values = {
+          "spinnaker.version"  = "1.33.0"
+          "halyard.image.tag"  = "1.44.0"
+          "minio.rootUser"     = "spinnakeradmin"
+          "minio.rootPassword" = "spinnakeradmin"
+        }
+        oidc        = var.eks.oidc
+        policy_arns = [aws_iam_policy.spin["enabled"].arn]
+      },
+    ] : []),
+    [
+      {
+        repository     = "https://charts.chaos-mesh.org"
+        name           = "chaos-mesh"
+        chart_name     = "chaos-mesh"
+        namespace      = "chaos-mesh"
+        serviceaccount = "chaos-mesh-controller"
+      },
+  ])
 }
 
 ### eks-addons
