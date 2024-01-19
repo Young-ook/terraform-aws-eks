@@ -31,6 +31,11 @@ function process_args() {
 }
 
 function clone() {
+  # clean up the existing directory
+  if [ -e kubeflow-manifests ]; then
+    rm -rf kubeflow-manifests
+  fi
+
   # clone the awslabs/kubeflow-manifests
   git clone https://github.com/awslabs/kubeflow-manifests.git && cd kubeflow-manifests
   git checkout $AWS_RELEASE_VERSION
