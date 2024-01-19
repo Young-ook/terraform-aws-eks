@@ -1,4 +1,7 @@
 ### feature toggle
 locals {
-  spinnaker_enabled = false
+  toggles = {
+    spinnaker_enabled = false
+    nats_enabled      = false
+  }
 }
