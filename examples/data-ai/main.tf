@@ -16,7 +16,7 @@ module "aws" {
 ### vpc
 module "vpc" {
   source  = "Young-ook/vpc/aws"
-  version = "1.0.3"
+  version = "1.0.7"
   name    = var.name
   tags    = var.tags
   vpc_config = {
@@ -30,7 +30,7 @@ module "vpc" {
 ### eks
 module "eks" {
   source             = "Young-ook/eks/aws"
-  version            = "2.0.3"
+  version            = "2.0.11"
   name               = var.name
   tags               = var.tags
   subnets            = slice(values(module.vpc.subnets["private"]), 0, 3)
@@ -47,6 +47,24 @@ module "eks" {
   ]
 }
 
+### kubeflow-manifests
+resource "null_resource" "clone" {
+  provisioner "local-exec" {
+    command = "bash scripts/clone.sh -k $KUBEFLOW_RELEASE_VERSION -a $AWS_RELEASE_VERSION"
+    environment = {
+      KUBEFLOW_RELEASE_VERSION = "v1.6.1"
+      AWS_RELEASE_VERSION      = "v1.6.1-aws-b1.0.0"
+    }
+  }
+}
+
+resource "null_resource" "clear" {
+  depends_on = [module.kubeflow]
+  provisioner "local-exec" {
+    command = "rm -rf kubeflow-manifests"
+  }
+}
+
 ### helm-addons
 provider "helm" {
   kubernetes {
@@ -57,7 +75,7 @@ provider "helm" {
 }
 
 module "kubeflow" {
-  depends_on         = [module.ebs-csi]
+  depends_on         = [module.ebs-csi, null_resource.clone]
   source             = "./modules/kubeflow"
   tags               = var.tags
   kubeflow_helm_repo = var.kubeflow_helm_repo
@@ -66,7 +84,7 @@ module "kubeflow" {
 module "airflow" {
   depends_on = [module.ebs-csi]
   source     = "Young-ook/eks/aws//modules/helm-addons"
-  version    = "2.0.4"
+  version    = "2.0.11"
   tags       = var.tags
   addons = [
     {
@@ -89,7 +107,7 @@ module "airflow" {
 module "ebs-csi" {
   depends_on = [module.eks]
   source     = "Young-ook/eks/aws//modules/eks-addons"
-  version    = "2.0.4"
+  version    = "2.0.11"
   tags       = var.tags
   addons = [
     {
