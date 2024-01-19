@@ -60,8 +60,8 @@ resource "null_resource" "clone" {
   provisioner "local-exec" {
     command = "bash scripts/clone.sh -k $KUBEFLOW_RELEASE_VERSION -a $AWS_RELEASE_VERSION"
     environment = {
-      KUBEFLOW_RELEASE_VERSION = "v1.6.1"
-      AWS_RELEASE_VERSION      = "v1.6.1-aws-b1.0.0"
+      KUBEFLOW_RELEASE_VERSION = "v1.7.0"
+      AWS_RELEASE_VERSION      = "v1.7.0-aws-b1.0.3"
     }
   }
 }
