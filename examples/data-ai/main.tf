@@ -75,14 +75,14 @@ provider "helm" {
 }
 
 module "kubeflow" {
-  depends_on         = [module.ebs-csi, null_resource.clone]
+  depends_on         = [module.csi, null_resource.clone]
   source             = "./modules/kubeflow"
   tags               = var.tags
   kubeflow_helm_repo = var.kubeflow_helm_repo
 }
 
 module "airflow" {
-  depends_on = [module.ebs-csi]
+  depends_on = [module.csi]
   source     = "Young-ook/eks/aws//modules/helm-addons"
   version    = "2.0.11"
   tags       = var.tags
@@ -127,7 +127,7 @@ module "s3" {
 }
 
 ### eks-addons
-module "ebs-csi" {
+module "csi" {
   depends_on = [module.eks]
   source     = "Young-ook/eks/aws//modules/eks-addons"
   version    = "2.0.11"
