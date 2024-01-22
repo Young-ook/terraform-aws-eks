@@ -103,33 +103,27 @@ module "airflow" {
   ]
 }
 
-### security/policy
-resource "aws_iam_policy" "mnts3" {
-  name        = "csi-mnt-s3"
-  tags        = merge({ "terraform.io" = "managed" }, var.tags)
-  description = format("Allow CSI driver to access S3 bucket objects")
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid      = "MountpointFullBucketAccess"
-        Action   = ["s3:ListBucket"]
-        Effect   = "Allow"
-        Resource = ["*"]
-      },
-      {
-        Sid = "MountpointFullObjectAccess"
-        Action = [
-          "s3:GetObject",
-          "s3:PutObject",
-          "s3:AbortMultipartUpload",
-          "s3:DeleteObject"
-        ]
-        Effect   = "Allow"
-        Resource = ["*"]
-      },
-    ]
-  })
+### stoage
+module "s3" {
+  source        = "Young-ook/sagemaker/aws//modules/s3"
+  version       = "0.4.7"
+  tags          = var.tags
+  force_destroy = true
+  lifecycle_rules = [
+    {
+      id     = "s3-intelligent-tiering"
+      status = "Enabled"
+      filter = {
+        prefix = ""
+      }
+      transition = [
+        {
+          days          = 0
+          storage_class = "INTELLIGENT_TIERING"
+        },
+      ]
+    },
+  ]
 }
 
 ### eks-addons
@@ -155,7 +149,7 @@ module "ebs-csi" {
       serviceaccount = "s3-csi-driver-sa"
       eks_name       = module.eks.cluster.name
       oidc           = module.eks.oidc
-      policy_arns    = [aws_iam_policy.mnts3.arn]
+      policy_arns    = [module.s3.policy_arns["read"], module.s3.policy_arns["write"]]
     },
   ]
 }
