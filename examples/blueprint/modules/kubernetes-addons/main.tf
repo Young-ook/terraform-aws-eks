@@ -195,8 +195,8 @@ module "devops" {
 
 ### eks-addons
 module "eks-addons" {
-  ### the adot-addon requires a cert-manager from helm-addons
-  depends_on = [module.ctl]
+  ### the adot-addon requires a cert-manager from base helm-addons
+  depends_on = [module.base]
   source     = "Young-ook/eks/aws//modules/eks-addons"
   version    = "2.0.10"
   tags       = var.tags
