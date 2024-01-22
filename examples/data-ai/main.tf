@@ -13,6 +13,13 @@ module "aws" {
   source = "Young-ook/spinnaker/aws//modules/aws-partitions"
 }
 
+locals {
+  aws = {
+    dns    = module.aws.partition.dns_suffix
+    region = module.aws.region.name
+  }
+}
+
 ### vpc
 module "vpc" {
   source  = "Young-ook/vpc/aws"
