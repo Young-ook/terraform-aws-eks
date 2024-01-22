@@ -103,6 +103,35 @@ module "airflow" {
   ]
 }
 
+### security/policy
+resource "aws_iam_policy" "mnts3" {
+  name        = "csi-mnt-s3"
+  tags        = merge({ "terraform.io" = "managed" }, var.tags)
+  description = format("Allow CSI driver to access S3 bucket objects")
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid      = "MountpointFullBucketAccess"
+        Action   = ["s3:ListBucket"]
+        Effect   = "Allow"
+        Resource = ["*"]
+      },
+      {
+        Sid = "MountpointFullObjectAccess"
+        Action = [
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:AbortMultipartUpload",
+          "s3:DeleteObject"
+        ]
+        Effect   = "Allow"
+        Resource = ["*"]
+      },
+    ]
+  })
+}
+
 ### eks-addons
 module "ebs-csi" {
   depends_on = [module.eks]
@@ -119,6 +148,14 @@ module "ebs-csi" {
       policy_arns = [
         format("arn:%s:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy", module.aws.partition.partition),
       ]
+    },
+    {
+      name           = "aws-mountpoint-s3-csi-driver"
+      namespace      = "kube-system"
+      serviceaccount = "s3-csi-driver-sa"
+      eks_name       = module.eks.cluster.name
+      oidc           = module.eks.oidc
+      policy_arns    = [aws_iam_policy.mnts3.arn]
     },
   ]
 }
