@@ -90,6 +90,7 @@ module "kubeflow" {
 
 module "airflow" {
   depends_on = [module.csi]
+  for_each   = (try(local.toggles.airflow_enabled, false) ? toset(["enabled"]) : [])
   source     = "Young-ook/eks/aws//modules/helm-addons"
   version    = "2.0.11"
   tags       = var.tags

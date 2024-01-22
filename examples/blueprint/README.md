@@ -395,18 +395,9 @@ terraform destroy -var-file fixture.tc1.tfvars
 ```
 
 # Additional Resources
-## AWS AppMesh
-- [Learning AWS App Mesh](https://aws.amazon.com/blogs/compute/learning-aws-app-mesh/)
-- [AWS App Mesh Examples](https://github.com/aws/aws-app-mesh-examples)
-- [Getting started with AWS App Mesh and Amazon EKS](https://aws.amazon.com/blogs/containers/getting-started-with-app-mesh-and-eks/)
-
 ## AWS Load Balancer Controller
 - [Kubernetes Ingress with AWS ALB Ingress Controller](https://aws.amazon.com/blogs/opensource/kubernetes-ingress-aws-alb-ingress-controller/a)
 - [AWS Load Balancer Controller](https://github.com/kubernetes-sigs/aws-load-balancer-controller)
-
-## Amazon CloudWatch Container Insights
-- [Amazon CloudWatch Container Insights for Amazon ECS](https://aws.amazon.com/blogs/mt/introducing-container-insights-for-amazon-ecs)
-- [Announcing Container Insights with Enhanced Observability for Amazon EKS](https://aws.amazon.com/blogs/mt/new-container-insights-with-enhanced-observability-for-amazon-eks/)
 
 ## Amazon EKS Cluster Access Management Control
 - [A deep dive into simplified Amazon EKS access management controls](https://aws.amazon.com/blogs/containers/a-deep-dive-into-simplified-amazon-eks-access-management-controls/)
@@ -420,9 +411,13 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Amazon's Arm-based Graviton2 Against AMD and Intel](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd)
 - [Graviton2 Single Threaded Performance](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd/5)
 
-## Chaos Mesh
-- [Simulate Kubernetes Resource Stress Test](https://chaos-mesh.org/docs/simulate-heavy-stress-on-kubernetes/) 
+## Chaos Engineering
+### Chaos Mesh
+- [Simulate Kubernetes Resource Stress Test](https://chaos-mesh.org/docs/simulate-heavy-stress-on-kubernetes/)
 - [Simulate AWS Faults](https://chaos-mesh.org/docs/simulate-aws-chaos/)
+
+### LitmusChaos
+- [Chaos Engineering with LitmusChaos on Amazon EKS](https://aws.amazon.com/blogs/containers/chaos-engineering-with-litmuschaos-on-amazon-eks)
 
 ## Cloudforet (SpaceONE)
 - [SpaceONE launchpad](https://github.com/cloudforet-io/launchpad)
@@ -433,10 +428,6 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## IAM Role for Service Accounts (IRSA)
 - [Diving into IAM Roles for Service Accounts](https://aws.amazon.com/blogs/containers/diving-into-iam-roles-for-service-accounts/)
 
-## Istio
-- [Istio Concepts and Examples](https://istio.io/latest/docs/)
-- [Using Istio Traffic Management on Amazon EKS to Enhance User Experience](https://aws.amazon.com/blogs/opensource/using-istio-traffic-management-to-enhance-user-experience/)
-
 ## Karmada
 - [Karmada](https://github.com/karmada-io/karmada)
 
@@ -445,8 +436,27 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Karpenter Hands-on Lab](https://www.eksworkshop.com/docs/autoscaling/compute/karpenter/)
 - [Migrating from Cluster Autoscaler](https://karpenter.sh/v0.27.3/getting-started/migrating-from-cas/)
 
-## LitmusChaos
-- [Chaos Engineering with LitmusChaos on Amazon EKS](https://aws.amazon.com/blogs/containers/chaos-engineering-with-litmuschaos-on-amazon-eks)
+## Observability
+### Amazon CloudWatch Container Insights
+- [Amazon CloudWatch Container Insights for Amazon ECS](https://aws.amazon.com/blogs/mt/introducing-container-insights-for-amazon-ecs)
+- [Announcing Container Insights with Enhanced Observability for Amazon EKS](https://aws.amazon.com/blogs/mt/new-container-insights-with-enhanced-observability-for-amazon-eks/)
 
-## Prometheus
+### Prometheus
 - [Deploy Promethus using Helm](https://www.eksworkshop.com/intermediate/240_monitoring/deploy-prometheus/)
+
+## Release Engineering
+### Flagger
+- [Flagger](https://flagger.app/)
+
+### Flux
+- [Flux](https://fluxcd.io/flux/)
+
+## Service Mesh
+### AWS AppMesh
+- [Learning AWS App Mesh](https://aws.amazon.com/blogs/compute/learning-aws-app-mesh/)
+- [AWS App Mesh Examples](https://github.com/aws/aws-app-mesh-examples)
+- [Getting started with AWS App Mesh and Amazon EKS](https://aws.amazon.com/blogs/containers/getting-started-with-app-mesh-and-eks/)
+
+### Istio
+- [Istio Concepts and Examples](https://istio.io/latest/docs/)
+- [Using Istio Traffic Management on Amazon EKS to Enhance User Experience](https://aws.amazon.com/blogs/opensource/using-istio-traffic-management-to-enhance-user-experience/)
