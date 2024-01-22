@@ -141,6 +141,7 @@ module "ctl" {
       namespace      = "kube-system"
       serviceaccount = "cluster-autoscaler"
       values = {
+        "image.tag"                 = "v1.27.0"
         "awsRegion"                 = module.aws.region.id
         "autoDiscovery.clusterName" = var.eks.cluster.name
       }
