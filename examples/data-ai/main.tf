@@ -13,6 +13,13 @@ module "aws" {
   source = "Young-ook/spinnaker/aws//modules/aws-partitions"
 }
 
+locals {
+  aws = {
+    dns    = module.aws.partition.dns_suffix
+    region = module.aws.region.name
+  }
+}
+
 ### vpc
 module "vpc" {
   source  = "Young-ook/vpc/aws"
@@ -75,14 +82,14 @@ provider "helm" {
 }
 
 module "kubeflow" {
-  depends_on         = [module.ebs-csi, null_resource.clone]
+  depends_on         = [module.csi, null_resource.clone]
   source             = "./modules/kubeflow"
   tags               = var.tags
   kubeflow_helm_repo = var.kubeflow_helm_repo
 }
 
 module "airflow" {
-  depends_on = [module.ebs-csi]
+  depends_on = [module.csi]
   for_each   = (try(local.toggles.airflow_enabled, false) ? toset(["enabled"]) : [])
   source     = "Young-ook/eks/aws//modules/helm-addons"
   version    = "2.0.11"
@@ -104,8 +111,31 @@ module "airflow" {
   ]
 }
 
+### stoage
+module "s3" {
+  source        = "Young-ook/sagemaker/aws//modules/s3"
+  version       = "0.4.7"
+  tags          = var.tags
+  force_destroy = true
+  lifecycle_rules = [
+    {
+      id     = "s3-intelligent-tiering"
+      status = "Enabled"
+      filter = {
+        prefix = ""
+      }
+      transition = [
+        {
+          days          = 0
+          storage_class = "INTELLIGENT_TIERING"
+        },
+      ]
+    },
+  ]
+}
+
 ### eks-addons
-module "ebs-csi" {
+module "csi" {
   depends_on = [module.eks]
   source     = "Young-ook/eks/aws//modules/eks-addons"
   version    = "2.0.11"
@@ -120,6 +150,14 @@ module "ebs-csi" {
       policy_arns = [
         format("arn:%s:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy", module.aws.partition.partition),
       ]
+    },
+    {
+      name           = "aws-mountpoint-s3-csi-driver"
+      namespace      = "kube-system"
+      serviceaccount = "s3-csi-driver-sa"
+      eks_name       = module.eks.cluster.name
+      oidc           = module.eks.oidc
+      policy_arns    = [module.s3.policy_arns["read"], module.s3.policy_arns["write"]]
     },
   ]
 }
