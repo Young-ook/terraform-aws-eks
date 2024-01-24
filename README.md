@@ -138,6 +138,16 @@ Error: waiting for EKS Add-On (eks-rkrdi:kubecost_kubecost) create: unexpected s
 To subscribe, you should visit the AWS Marketplace console, agree to the seller EULA, select the pricing type if required, then re-install the add-on.
 ![aws-marketplace-kubecost-eula-agreement](./images/aws-marketplace-kubecost-eula-agreement.png)
 
+## Failed to create pod sandbox
+```
+Error while dialing dial tcp 127.0.0.1:50051: connect: connection refused
+```
+This error indicates that the aws-node pod failed to communicate with IPAM because the aws-node pod failed to run on the node. Run the following commands to get information about the pod.
+```
+kubectl -n kube-system describe po aws-node-xxxxx
+```
+A simple solution you can try to fix this error is (re)installing the Amazon VPC CNI (Container Network Interface) EKS addon to your EKS cluster. For more information, please refer to this [post](https://repost.aws/knowledge-center/eks-failed-create-pod-sandbox).
+
 # Additional Resources
 ## Amazon EKS
 - [Amazon EKS Best Practices Guides](https://aws.github.io/aws-eks-best-practices/)

@@ -141,6 +141,7 @@ module "ctl" {
       namespace      = "kube-system"
       serviceaccount = "cluster-autoscaler"
       values = {
+        "image.tag"                 = "v1.27.0"
         "awsRegion"                 = module.aws.region.id
         "autoDiscovery.clusterName" = var.eks.cluster.name
       }
@@ -194,8 +195,8 @@ module "devops" {
 
 ### eks-addons
 module "eks-addons" {
-  ### the adot-addon requires a cert-manager from helm-addons
-  depends_on = [module.ctl]
+  ### the adot-addon requires a cert-manager from base helm-addons
+  depends_on = [module.base]
   source     = "Young-ook/eks/aws//modules/eks-addons"
   version    = "2.0.10"
   tags       = var.tags
