@@ -126,6 +126,9 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## Apache Spark on EKS
 - [SQL-based ETL with Apache Spark on Amazon EKS](https://github.com/awslabs/sql-based-etl-with-apache-spark-on-amazon-eks)
 
+## KServe
+- [KServer](https://github.com/kserve/kserve)
+
 ## Kubeflow on EKS
 - [Kubeflow on AWS](https://awslabs.github.io/kubeflow-manifests/docs/about/)
 - [Kubeflow Manifests](https://github.com/awslabs/kubeflow-manifests)
