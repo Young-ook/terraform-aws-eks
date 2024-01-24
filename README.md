@@ -155,6 +155,7 @@ A simple solution you can try to fix this error is (re)installing the Amazon VPC
 - [EKS Workshop](https://www.eksworkshop.com/)
 - [Seamlessly Migrate Workloads from EKS Self-managed node groups to managed node groups](https://aws.amazon.com/blogs/containers/seamlessly-migrate-workloads-from-eks-self-managed-node-group-to-eks-managed-node-groups/)
 - [Amazon EKS AMI](https://github.com/awslabs/amazon-eks-ami/)
+- [Amazon EKS service quotas](https://docs.aws.amazon.com/eks/latest/userguide/service-quotas.html)
 
 ## Amazon VPC (Virtual Private Cloud)
 - [Amazon VPC Terraform Module](https://github.com/Young-ook/terraform-aws-vpc)
