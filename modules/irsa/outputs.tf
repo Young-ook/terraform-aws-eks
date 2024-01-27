@@ -12,7 +12,7 @@ output "kubecli" {
   description = "The kubernetes configuration file for creating IAM role with service account"
   value = join(" ", [
     format("kubectl -n %s create sa %s", var.namespace, var.serviceaccount),
-    "&&",
+    "||",
     format("kubectl -n %s annotate sa %s %s",
       var.namespace,
       var.serviceaccount,
