@@ -2,8 +2,8 @@
 # establish ssh tunnel to access kubernetes service
 
 ### port-forwarding examples
-### - spinnaker: kubernetes -n spinnaker port-forward svc/spin-deck 8080:9000
-### - chaos-mesh: kubernetes -n chaos-mesh port-forward svc/chaos-dashboard 2333:2333
+### - spinnaker: kubectl -n spinnaker port-forward svc/spin-deck 8080:9000
+### - chaos-mesh: kubectl -n chaos-mesh port-forward svc/chaos-dashboard 2333:2333
 
 set -e
 
@@ -39,22 +39,27 @@ function process_args() {
       ;;
       \?)
         >&2 echo "Unrecognized argument '$OPTARG'"
+        print_usage
+        exit -1
       ;;
     esac
   done
 }
 
-function conn() {
+function validate() {
   if [ ! -e $KUBECONFIG ]; then
     echo "Can't find $KUBECONFIG"
     exit -1
   fi
+}
 
+function conn() {
   kubectl -n $NS port-forward svc/$SVC $LPORT:$RPORT
 }
 
 # main
 process_args "$@"
+validate
 conn
 
 unset KUBECONFIG
