@@ -45,36 +45,3 @@ A set of common selector labels for resources.
 app: {{ include "spinnaker.fullname" . | quote }}
 release: {{ .Release.Name | quote }}
 {{- end -}}
-
-{{/*
-Create comma separated list of namespaces in Kubernetes
-*/}}
-{{- define "nameSpaces" -}}
-{{- join "," .Values.kubeConfig.nameSpaces }}
-{{- end -}}
-
-{{/*
-Create comma separated list of omitted namespaces in Kubernetes
-*/}}
-{{- define "omittedNameSpaces" -}}
-{{- join "," .Values.kubeConfig.omittedNameSpaces }}
-{{- end -}}
-
-{{- define "omittedKinds" -}}
-{{- join "," .Values.kubeConfig.omittedKinds }}
-{{- end -}}
-
-{{- define "k8sKinds" -}}
-{{- join "," .Values.kubeConfig.kinds }}
-{{- end -}}
-
-{{/*
-Create name of kubeconfig file to use when setting up kubernetes provider
-*/}}
-{{- define "spinnaker.kubeconfig" -}}
-{{- if .Values.kubeConfig.encryptedKubeconfig }}
-{{- printf .Values.kubeConfig.encryptedKubeconfig | toString -}}
-{{- else }}
-{{- printf "/opt/kube/%s" .Values.kubeConfig.secretKey  | toString -}}
-{{- end }}
-{{- end }}

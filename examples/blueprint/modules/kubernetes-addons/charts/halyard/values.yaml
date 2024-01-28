@@ -12,38 +12,6 @@ persistence:
 # Define annotations you want to add on halyard pod
 annotations: {}
 
-## Define custom settings for Spinnaker services. Read more for details:
-## https://www.spinnaker.io/reference/halyard/custom/#custom-service-settings
-## You can use it to add annotations for pods, override the image, etc.
-additionalServiceSettings:
-  # deck.yml:
-  #   artifactId: gcr.io/spinnaker-marketplace/deck:2.9.0-20190412012808
-  #   kubernetes:
-  #     podAnnotations:
-  #       iam.amazonaws.com/role: <role_arn>
-  #clouddriver.yml:
-  #  kubernetes:
-  #    serviceAccountName: spinnaker
-
-## Define local configuration for Spinnaker services.
-## The contents of these files would be copies of the configuration normally retrieved from
-## `gs://halconfig/<service-name>`, but instead need to be available locally on the halyard pod to facilitate
-## offline installation.
-## Read more for details:
-## https://www.spinnaker.io/guides/operator/custom-boms/#boms-and-configuration-on-your-filesystem
-## The key for each entry must be the name of the service and a file name separated by the '_' character.
-serviceConfigs: {}
-# clouddriver_clouddriver-ro.yml: |-
-#   ...
-# clouddriver_clouddriver-rw.yml: |-
-#   ...
-# clouddriver_clouddriver.yml: |-
-#   ...
-# deck_settings.json: |-
-#   ...
-# echo_echo.yml: |-
-#   ...
-
 ## Uncomment the following resources definitions to control the cpu and memory
 # resources allocated for the halyard pod
 resources: {}
@@ -73,54 +41,39 @@ securityContext:
   runAsUser: 1000
   fsGroup: 1000
 
-kubeConfig:
-  # Use this when you want to register arbitrary clusters with Spinnaker
-  # Upload your ~/kube/.config to a secret
-  enabled: false
-  # secretName: my-kubeconfig
-  # secretKey: config
-  # Use this when you want to configure halyard to reference a kubeconfig from s3
-  # This allows you to keep your kubeconfig in an encrypted s3 bucket
-  # For more info visit:
-  #   https://www.spinnaker.io/reference/halyard/secrets/s3-secrets/#secrets-in-s3
-  # encryptedKubeconfig: encrypted:s3!r:us-west-2!b:mybucket!f:mykubeconfig
-  # List of contexts from the kubeconfig to make available to Spinnaker
-  contexts:
-  - default
-  deploymentContext: default
-  # Use this to limit the namespaces this kubernetes account will access.
-  # Note, if you use nameSpaces, omittedNameSpaces will not be used.
-  # Note, the casing of the nameSpace variable here.
-  # nameSpaces:
-  # - namespace1
-  # - namespace2
-  omittedNameSpaces:
-  - kube-system
-  - kube-public
-  onlySpinnakerManaged:
-    enabled: false
+## Define custom settings for Spinnaker services. Read more for details:
+## https://www.spinnaker.io/reference/halyard/custom/#custom-service-settings
+## You can use it to add annotations for pods, override the image, etc.
+serviceSettings:
+  # deck.yml:
+  #   artifactId: gcr.io/spinnaker-marketplace/deck:2.9.0-20190412012808
+  #   kubernetes:
+  #     podAnnotations:
+  #       iam.amazonaws.com/role: <role_arn>
+  #clouddriver.yml:
+  #  kubernetes:
+  #    serviceAccountName: spinnaker
 
-  # When false, clouddriver will skip the permission checks for all kubernetes kinds at startup.
-  # This can save a great deal of time during clouddriver startup when you have many kubernetes
-  # accounts configured. This disables the log messages at startup about missing permissions.
-  checkPermissionsOnStartup: true
+## Define local configuration for Spinnaker services.
+## The contents of these files would be copies of the configuration normally retrieved from
+## `gs://halconfig/<service-name>`, but instead need to be available locally on the halyard pod to facilitate
+## offline installation.
+## Read more for details:
+## https://www.spinnaker.io/guides/operator/custom-boms/#boms-and-configuration-on-your-filesystem
+## The key for each entry must be the name of the service and a file name separated by the '_' character.
+serviceConfigs: {}
+# clouddriver_clouddriver-ro.yml: |-
+#   ...
+# clouddriver_clouddriver-rw.yml: |-
+#   ...
+# clouddriver_clouddriver.yml: |-
+#   ...
+# deck_settings.json: |-
+#   ...
+# echo_echo.yml: |-
+#   ...
 
-  # A list of resource kinds this Spinnaker account can deploy to and will cache.
-  # When no kinds are configured, this defaults to ‘all kinds'.
-  # kinds:
-  # -
-
-  # A list of resource kinds this Spinnaker account cannot deploy to or cache.
-  # This can only be set when –kinds is empty or not set.
-  # omittedKinds:
-  # -
-
-  # When true, clouddriver will query manifest status during pipeline executions using live
-  # data rather than the cache. This eliminates all time spent in the “force cache refresh”
-  # task in pipelines, greatly reducing execution time.
-  liveManifestCalls: false
-
-# Change this if youd like to expose Spinnaker outside the cluster
+## Change this if youd like to expose Spinnaker outside the cluster
 ingress:
   enabled: false
   #deck:
@@ -145,16 +98,8 @@ ingress:
   #    hosts:
   #    - domain.com
 
-# spinnakerFeatureFlags is a list of Spinnaker feature flags to enable
-# Ref: https://www.spinnaker.io/reference/halyard/commands/#hal-config-features-edit
-# spinnakerFeatureFlags:
-#   - artifacts
-#   - pipeline-templates
-spinnakerFeatureFlags:
-  - artifacts
-
-# Minio access/secret keys for the in-cluster S3 usage
-# Minio is not exposed publically
+## Minio access/secret keys for the in-cluster S3 usage
+## Minio is not exposed publically
 minio:
   enabled: true
   resources:
@@ -172,17 +117,3 @@ minio:
   persistence:
 # Uncomment if you don't want to create a PVC for minio
     enabled: false
-
-# AWS Simple Storage Service
-s3:
-  enabled: false
-  bucket: "<S3-BUCKET-NAME>"
-  # rootFolder: "front50"
-  # region: "us-east-1"
-  # endpoint: ""
-  # accessKey: ""
-  # secretKey: ""
-  # assumeRole: "<role to assume>"
-  ## Here you can pass extra arguments to configure s3 storage options
-  extraArgs: []
-  #  - "--path-style-access true"

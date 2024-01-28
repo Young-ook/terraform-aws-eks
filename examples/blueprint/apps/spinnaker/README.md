@@ -29,7 +29,6 @@ Use deck (UI) as proxy to route to gate (API):
 hal config security api edit --no-validate --override-base-url /gate
 ```
 
-
 Kubernetes providers:
 ```
 hal config provider kubernetes enable
@@ -58,6 +57,7 @@ hal config ci codebuild account add platform \
     --assume-role {{ SPINNAKER_ASSUMABLE_ROLE }}
 hal config ci codebuild enable
 ```
+
 (Optional) Enable an artifact repository:
 ```
 hal config features edit --artifacts true

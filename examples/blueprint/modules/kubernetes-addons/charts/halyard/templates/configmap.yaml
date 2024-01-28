@@ -41,7 +41,7 @@ metadata:
 
 {{/*
 Render settings for each service by merging predefined defaults with values passed by
-.Values.additionalServiceSettings
+.Values.serviceSettings
 */}}
 {{- $settings := dict -}}
 
@@ -61,8 +61,8 @@ Render settings for each service by merging predefined defaults with values pass
 {{- $_ := set $settings "deck.yml" $deckDefaults -}}
 
 {{- /* Merge dictionaries with passed values */}}
-{{- if .Values.additionalServiceSettings -}}
-{{- $_ := mergeOverwrite $settings .Values.additionalServiceSettings -}}
+{{- if .Values.serviceSettings -}}
+{{- $_ := mergeOverwrite $settings .Values.serviceSettings -}}
 {{- end -}}
 
 {{- /* Convert the content of settings key to YAML string */}}

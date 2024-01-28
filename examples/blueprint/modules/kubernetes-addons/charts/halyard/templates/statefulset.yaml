@@ -82,14 +82,6 @@ spec:
         volumeMounts:
         - name: halyard-home
           mountPath: /home/spinnaker
-        {{- if and .Values.s3.enabled .Values.s3.accessKey .Values.s3.secretKey }}
-        - name: s3-secrets
-          mountPath: /opt/s3
-        {{- end }}
-        {{- if and .Values.kubeConfig.enabled .Values.kubeConfig.secretName }}
-        - name: kube-config
-          mountPath: /opt/kube
-        {{- end }}
         {{- if .Values.env }}
         env:
 {{ toYaml .Values.env | indent 8 }}
@@ -98,16 +90,6 @@ spec:
       {{- if not .Values.persistence.enabled }}
       - name: halyard-home
         emptyDir: {}
-      {{- end }}
-      {{- if and .Values.kubeConfig.enabled .Values.kubeConfig.secretName }}
-      - name: kube-config
-        secret:
-          secretName: {{ .Values.kubeConfig.secretName }}
-      {{- end }}
-      {{- if and .Values.s3.enabled .Values.s3.accessKey .Values.s3.secretKey }}
-      - name: s3-secrets
-        secret:
-          secretName: {{ .Release.Name }}-s3
       {{- end }}
       - name: service-settings
         configMap:
