@@ -1,27 +1,27 @@
 #!/bin/bash
-# configure spinnaker
+# interactive halyard cli for spinnaker management
 set -e
 
 CURDIR=`dirname $0`
+PODNAME=spinnaker-halyard-0
 
 export KUBECONFIG=$CURDIR/kubeconfig
 
 function print_usage() {
-  echo "Usage: $0 -k <kubeconfig-path>"
+  echo "Usage: $0 -k <kubeconfig-path> -p(pod) <halyard-pod-name>"
 }
 
 function process_args() {
-  if [[ $# < 1 ]]; then
-    print_usage
-    exit -1
-  fi
-
-  while getopts ":k:" opt; do
+  while getopts ":k:p:" opt; do
     case $opt in
       k) KUBECONFIG="$OPTARG"
       ;;
+      p) PODNAME="$OPTARG"
+      ;;
       \?)
         >&2 echo "Unrecognized argument '$OPTARG'"
+        print_usage
+        exit -1
       ;;
     esac
   done
@@ -56,10 +56,14 @@ function irsa() {
   ${spin_irsa_cli}
 }
 
+function prompt() {
+  kubectl -n spinnaker exec -it $PODNAME -- bash
+}
+
 # main
 process_args "$@"
 validate
 irsa
-halconfig
+prompt
 
 unset KUBECONFIG
