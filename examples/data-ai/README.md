@@ -120,8 +120,14 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## AWS Trainium
 - [Scaling distributed training with AWS Trainium and Amazon EKS](https://aws.amazon.com/blogs/machine-learning/scaling-distributed-training-with-aws-trainium-and-amazon-eks/)
 
-## Kafka on EKS
+## Apache Kafka on EKS
 - [Deploying and scaling Apache Kafka on Amazon EKS](https://aws.amazon.com/blogs/containers/deploying-and-scaling-apache-kafka-on-amazon-eks/)
+
+## Apache Spark on EKS
+- [SQL-based ETL with Apache Spark on Amazon EKS](https://github.com/awslabs/sql-based-etl-with-apache-spark-on-amazon-eks)
+
+## KServe
+- [KServer](https://github.com/kserve/kserve)
 
 ## Kubeflow on EKS
 - [Kubeflow on AWS](https://awslabs.github.io/kubeflow-manifests/docs/about/)
@@ -131,6 +137,9 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## Data Platform
 - [Building a Modern Data Platform on Amazon EKS](https://youtu.be/7AHuMNqbR7o)
 - [Data on EKS(DoEKS)](https://awslabs.github.io/data-on-eks/docs/introduction/intro)
+
+## Data Science
+- [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/)
 
 ## Mountpoint for Amazon S3 CSI Driver
 - [Mountpoint for Amazon S3 CSI Driver](https://github.com/awslabs/mountpoint-s3-csi-driver)
