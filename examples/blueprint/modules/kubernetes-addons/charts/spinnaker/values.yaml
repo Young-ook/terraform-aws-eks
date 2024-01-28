@@ -270,8 +270,6 @@ s3:
 rbac:
   # Specifies whether RBAC resources should be created
   create: true
-  # Specifies whether PSP resources should be created
-  pspEnabled: false
 
 serviceAccount:
   # Specifies whether a ServiceAccount should be created
