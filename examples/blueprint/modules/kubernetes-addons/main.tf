@@ -168,12 +168,11 @@ module "devops" {
       {
         repository        = "${path.module}/charts/"
         name              = "spinnaker"
-        chart_name        = "spinnaker"
+        chart_name        = "halyard"
         namespace         = "spinnaker"
         serviceaccount    = "default"
         dependency_update = true
         values = {
-          "spinnaker.version"  = "1.33.0"
           "minio.rootUser"     = "spinnakeradmin"
           "minio.rootPassword" = "spinnakeradmin"
         }
