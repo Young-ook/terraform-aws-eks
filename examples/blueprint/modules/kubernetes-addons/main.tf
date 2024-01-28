@@ -174,7 +174,6 @@ module "devops" {
         dependency_update = true
         values = {
           "spinnaker.version"  = "1.33.0"
-          "halyard.image.tag"  = "1.44.0"
           "minio.rootUser"     = "spinnakeradmin"
           "minio.rootPassword" = "spinnakeradmin"
         }
