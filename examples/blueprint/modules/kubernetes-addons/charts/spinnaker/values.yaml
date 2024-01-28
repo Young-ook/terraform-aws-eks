@@ -1,9 +1,9 @@
 spinnaker:
-  version: 1.29.4
+  version: 1.33.0
 halyard:
   image:
     repository: us-docker.pkg.dev/spinnaker-community/docker/halyard
-    tag: stable
+    tag: 1.44.0
     pullSecrets: []
   # Set to false to disable persistence data volume for halyard
   persistence:
