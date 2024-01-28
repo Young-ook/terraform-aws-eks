@@ -434,6 +434,9 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Karpenter Hands-on Lab](https://www.eksworkshop.com/docs/autoscaling/compute/karpenter/)
 - [Migrating from Cluster Autoscaler](https://karpenter.sh/v0.27.3/getting-started/migrating-from-cas/)
 
+## Krew
+- [Krew](https://github.com/kubernetes-sigs/krew)
+
 ## Observability
 ### Amazon CloudWatch Container Insights
 - [Amazon CloudWatch Container Insights for Amazon ECS](https://aws.amazon.com/blogs/mt/introducing-container-insights-for-amazon-ecs)
