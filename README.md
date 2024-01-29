@@ -162,5 +162,6 @@ A simple solution you can try to fix this error is (re)installing the Amazon VPC
 - [Amazon VPC Terraform Module](https://github.com/Young-ook/terraform-aws-vpc)
 
 ## Kubernetes
-### Operator
+- [Kubernetes Blog](https://kubernetes.io/blog/)
 - [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
+- [Allocatable memory and CPU in Kubernetes Nodes](https://learnk8s.io/allocatable-resources)
