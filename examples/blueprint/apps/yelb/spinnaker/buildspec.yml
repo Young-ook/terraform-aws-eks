@@ -1,0 +1,20 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - cd $APP_PATH
+      - $(aws ecr get-login --no-include-email)
+      - echo $TAG
+      - IMAGE_URI="$REPOSITORY_URI:$TAG"
+  build:
+    commands:
+      - echo Build a container image started on `date`
+      - docker build --tag "$IMAGE_URI" .
+  post_build:
+    commands:
+      - docker push "$IMAGE_URI"
+      - echo Uploading to $ARTIFACT_BUCKET
+      - sed -i "s@<APPSERVER_V2_IMAGE_URI>@$IMAGE_URI@g" $APP_PATH/spinnaker/2.app-v2.yml
+      - aws s3 cp --recursive $APP_PATH/spinnaker/ s3://${ARTIFACT_BUCKET}/ --exclude "buildspec.yml"
+artifacts:
+  files: 3-meshed-app-v2.yml

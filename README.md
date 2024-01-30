@@ -159,6 +159,7 @@ A simple solution you can try to fix this error is (re)installing the Amazon VPC
 
 ## Amazon VPC (Virtual Private Cloud)
 - [Amazon VPC Terraform Module](https://github.com/Young-ook/terraform-aws-vpc)
+- [Amazon EKS CNI plugins](https://docs.aws.amazon.com/eks/latest/userguide/alternate-cni-plugins.html)
 
 ## Kubernetes
 ### Operator

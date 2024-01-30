@@ -1,0 +1,61 @@
+apiVersion: appmesh.k8s.aws/v1beta2
+kind: VirtualNode
+metadata:
+  name: yelb-appserver-v2
+spec:
+  awsName: yelb-appserver-virtual-node-v2
+  podSelector:
+    matchLabels:
+      app: yelb-appserver-v2
+  listeners:
+    - portMapping:
+        port: 4567
+        protocol: http
+  serviceDiscovery:
+    dns:
+      hostname: >-
+        yelb-appserver-v2.${#currentStage()['context']['namespaceOverride']}.svc.cluster.local
+  backends:
+    - virtualService:
+       virtualServiceRef:
+          name: yelb-db
+    - virtualService:
+       virtualServiceRef:
+          name: redis-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yelb-appserver-v2
+  labels:
+    app: yelb-appserver-v2
+    tier: middletier
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4567
+  selector:
+    app: yelb-appserver-v2
+    tier: middletier
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yelb-appserver-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yelb-appserver-v2
+      tier: middletier
+  template:
+    metadata:
+      labels:
+        app: yelb-appserver-v2
+        tier: middletier
+    spec:
+      containers:
+        - name: yelb-appserver-v2
+          image: <APPSERVER_V2_IMAGE_URI>
+          ports:
+            - containerPort: 4567

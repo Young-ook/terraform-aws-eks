@@ -454,6 +454,8 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Learning AWS App Mesh](https://aws.amazon.com/blogs/compute/learning-aws-app-mesh/)
 - [AWS App Mesh Examples](https://github.com/aws/aws-app-mesh-examples)
 - [Getting started with AWS App Mesh and Amazon EKS](https://aws.amazon.com/blogs/containers/getting-started-with-app-mesh-and-eks/)
+- [Traffic Encryption in AWS App Mesh across accounts using certificates from AWS Certificate Manager Private CA and AWS Resource Manager](https://aws.amazon.com/blogs/containers/traffic-encryption-app-mesh-across-accounts-certificates/)
+- [How to use ACM Private CA for enabling mTLS in AWS App Mesh](https://aws.amazon.com/blogs/security/how-to-use-acm-private-ca-for-enabling-mtls-in-aws-app-mesh/)
 
 ### Istio
 - [Istio Concepts and Examples](https://istio.io/latest/docs/)
