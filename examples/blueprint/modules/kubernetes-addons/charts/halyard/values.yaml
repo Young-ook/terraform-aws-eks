@@ -1,0 +1,119 @@
+image:
+  repository: us-docker.pkg.dev/spinnaker-community/docker/halyard
+  tag: stable
+  pullSecrets: []
+# Set to false to disable persistence data volume for halyard
+persistence:
+  enabled: false
+# Uncomment to add storage class for the persistence data volume
+# storageClass: <storageclass_name>
+# Provide additional parameters to halyard deploy apply command
+
+# Define annotations you want to add on halyard pod
+annotations: {}
+
+## Uncomment the following resources definitions to control the cpu and memory
+# resources allocated for the halyard pod
+resources: {}
+  # requests:
+  #   memory: "1Gi"
+  #   cpu: "100m"
+  # limits:
+  #   memory: "2Gi"
+  #   cpu: "200m"
+
+# Node labels for pod assignment
+# Ref: https://kubernetes.io/docs/user-guide/node-selection/
+# nodeSelector to provide to each of the Spinnaker components
+nodeSelector: {}
+
+# Node tolerations
+# Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+tolerations: []
+
+serviceAccount:
+  create: false
+  name: default
+  annotations: {}
+
+securityContext:
+  # Specifies permissions to write for user/group
+  runAsUser: 1000
+  fsGroup: 1000
+
+## Define custom settings for Spinnaker services. Read more for details:
+## https://www.spinnaker.io/reference/halyard/custom/#custom-service-settings
+## You can use it to add annotations for pods, override the image, etc.
+serviceSettings:
+  # deck.yml:
+  #   artifactId: gcr.io/spinnaker-marketplace/deck:2.9.0-20190412012808
+  #   kubernetes:
+  #     podAnnotations:
+  #       iam.amazonaws.com/role: <role_arn>
+  #clouddriver.yml:
+  #  kubernetes:
+  #    serviceAccountName: spinnaker
+
+## Define local configuration for Spinnaker services.
+## The contents of these files would be copies of the configuration normally retrieved from
+## `gs://halconfig/<service-name>`, but instead need to be available locally on the halyard pod to facilitate
+## offline installation.
+## Read more for details:
+## https://www.spinnaker.io/guides/operator/custom-boms/#boms-and-configuration-on-your-filesystem
+## The key for each entry must be the name of the service and a file name separated by the '_' character.
+serviceConfigs: {}
+# clouddriver_clouddriver-ro.yml: |-
+#   ...
+# clouddriver_clouddriver-rw.yml: |-
+#   ...
+# clouddriver_clouddriver.yml: |-
+#   ...
+# deck_settings.json: |-
+#   ...
+# echo_echo.yml: |-
+#   ...
+
+## Change this if youd like to expose Spinnaker outside the cluster
+ingress:
+  enabled: false
+  #deck:
+  #  host: spinnaker.example.org
+  #  annotations:
+  #    ingress.kubernetes.io/ssl-redirect: 'true'
+  #    kubernetes.io/ingress.class: nginx
+  #    kubernetes.io/tls-acme: "true"
+  #  tls:
+  #  - secretName: -tls
+  #    hosts:
+  #    - domain.com
+
+  #gate:
+  #  host: gate.spinnaker.example.org
+  #  annotations:
+  #    ingress.kubernetes.io/ssl-redirect: 'true'
+  #    kubernetes.io/ingress.class: nginx
+  #    kubernetes.io/tls-acme: "true"
+  #  tls:
+  #  - secretName: -tls
+  #    hosts:
+  #    - domain.com
+
+## Minio access/secret keys for the in-cluster S3 usage
+## Minio is not exposed publically
+minio:
+  enabled: true
+  resources:
+    requests:
+      memory: 512Mi
+  accessKey: spinnakeradmin
+  secretKey: spinnakeradmin
+  defaultBucket:
+    enabled: true
+    name: "spinnaker"
+  nodeSelector: {}
+# Use an single replica for deveopment or test
+  replicas: 1
+  mode: standalone
+  persistence:
+# Uncomment if you don't want to create a PVC for minio
+    enabled: false

@@ -112,9 +112,9 @@ module "ctl" {
       }
       oidc = var.eks.oidc
       policy_arns = [
-        format("arn:%s:iam::aws:policy/AWSAppMeshEnvoyAccess", module.aws.partition.partition),
-        format("arn:%s:iam::aws:policy/AWSCloudMapFullAccess", module.aws.partition.partition),
-        format("arn:%s:iam::aws:policy/AWSXRayDaemonWriteAccess", module.aws.partition.partition),
+        format("arn:%s:iam::aws:policy/AWSAppMeshEnvoyAccess", local.aws.partition),
+        format("arn:%s:iam::aws:policy/AWSCloudMapFullAccess", local.aws.partition),
+        format("arn:%s:iam::aws:policy/AWSXRayDaemonWriteAccess", local.aws.partition),
       ]
     },
     {
@@ -219,7 +219,7 @@ module "eks-addons" {
       eks_name       = var.eks.cluster.name
       oidc           = var.eks.oidc
       policy_arns = [
-        format("arn:%s:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy", module.aws.partition.partition),
+        format("arn:%s:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy", local.aws.partition),
       ]
     },
     {
@@ -229,9 +229,9 @@ module "eks-addons" {
       eks_name       = var.eks.cluster.name
       oidc           = var.eks.oidc
       policy_arns = [
-        format("arn:%s:iam::aws:policy/AmazonPrometheusRemoteWriteAccess", module.aws.partition.partition),
-        format("arn:%s:iam::aws:policy/AWSXrayWriteOnlyAccess", module.aws.partition.partition),
-        format("arn:%s:iam::aws:policy/CloudWatchAgentServerPolicy", module.aws.partition.partition),
+        format("arn:%s:iam::aws:policy/AmazonPrometheusRemoteWriteAccess", local.aws.partition),
+        format("arn:%s:iam::aws:policy/AWSXrayWriteOnlyAccess", local.aws.partition),
+        format("arn:%s:iam::aws:policy/CloudWatchAgentServerPolicy", local.aws.partition),
       ]
     },
     {
@@ -241,8 +241,8 @@ module "eks-addons" {
       eks_name       = var.eks.cluster.name
       oidc           = var.eks.oidc
       policy_arns = [
-        format("arn:%s:iam::aws:policy/AWSXrayWriteOnlyAccess", module.aws.partition.partition),
-        format("arn:%s:iam::aws:policy/CloudWatchAgentServerPolicy", module.aws.partition.partition),
+        format("arn:%s:iam::aws:policy/AWSXrayWriteOnlyAccess", local.aws.partition),
+        format("arn:%s:iam::aws:policy/CloudWatchAgentServerPolicy", local.aws.partition),
       ]
     },
     {

@@ -1,0 +1,61 @@
+### Currently, the halyard does not support to deploy spinnaker microservices
+### with custom kubernetes service account.
+{{- if .Values.serviceAccount.create }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  {{- if .Values.serviceAccount.name }}
+  name: {{ .Values.serviceAccount.name }}
+  {{- else }}
+  name: {{ template "spinnaker.fullname" . }}
+  {{- end }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+  {{- if .Values.serviceAccount.annotations }}
+  annotations:
+{{ toYaml .Values.serviceAccount.annotations | indent 4 }}
+  {{- end }}
+{{- end }}
+
+### In the case of a local cluster Spinnaker needs
+### to be able to deploy to all namespaces in the cluster.
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  {{- if .Values.serviceAccount.name }}
+  name: {{ .Values.serviceAccount.name }}
+  {{- else }}
+  name: {{ template "spinnaker.fullname" . }}
+  {{- end }}
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- namespace: {{ .Release.Namespace }}
+  kind: ServiceAccount
+  name: default  ### Clouddriver does not currently allow config of its service account.
+
+###
+### Halyard
+###
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: halyard
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+subjects:
+- kind: ServiceAccount
+  namespace: {{ .Release.Namespace }}
+  name: default  ### Halyard also needs the same IRSA for applying configuration changes.

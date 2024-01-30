@@ -1,0 +1,65 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+{{- if .Values.ingress.deck.annotations }}
+  annotations:
+{{ toYaml .Values.ingress.deck.annotations | indent 4 }}
+{{- end }}
+  name: spin-deck
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+spec:
+  rules:
+  - host: {{ .Values.ingress.deck.host | quote }}
+    http:
+      paths:
+      {{- if index $.Values.ingress.deck "annotations" }}
+      {{- if eq (index $.Values.ingress.deck.annotations "kubernetes.io/ingress.class" | default "") "alb" }}
+      - path: /*
+      {{- else }}{{/* Has annotations but ingress class is not "gce" nor "alb" */}}
+      - path: /
+      {{- end }}
+      {{- else}}{{/* Has no annotations */}}
+      - path: /
+      {{- end }}
+        backend:
+          serviceName: spin-deck
+          servicePort: 9000
+{{- if .Values.ingress.deck.tls }}
+  tls:
+{{ toYaml .Values.ingress.deck.tls | indent 4 }}
+{{- end -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+{{- if .Values.ingress.gate.annotations }}
+  annotations:
+{{ toYaml .Values.ingress.gate.annotations | indent 4 }}
+{{- end }}
+  name: spin-gate
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+spec:
+  rules:
+  - host: {{ .Values.ingress.gate.host | quote }}
+    http:
+      paths:
+      {{- if index $.Values.ingress.gate "annotations" }}
+      {{- if eq (index $.Values.ingress.gate.annotations "kubernetes.io/ingress.class" | default "") "alb" }}
+      - path: /*
+      {{- else }}{{/* Has annotations but ingress class is not "gce" nor "alb" */}}
+      - path: /
+      {{- end }}
+      {{- else}}{{/* Has no annotations */}}
+      - path: /
+      {{- end }}
+        backend:
+          serviceName: spin-gate
+          servicePort: 8084
+{{- if .Values.ingress.gate.tls }}
+  tls:
+{{ toYaml .Values.ingress.gate.tls | indent 4 }}
+{{- end }}
+{{- end }}

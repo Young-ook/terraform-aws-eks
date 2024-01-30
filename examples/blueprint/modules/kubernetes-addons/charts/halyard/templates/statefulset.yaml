@@ -1,0 +1,125 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-halyard
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+    component: halyard
+spec:
+  ports:
+  - port: 8064
+    name: daemon
+  clusterIP: None
+  selector:
+    app: halyard
+    component: halyard
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-halyard
+  labels:
+{{ include "spinnaker.standard-labels" . | indent 4 }}
+spec:
+  serviceName: {{ .Release.Name }}-halyard
+  replicas: 1
+  selector:
+    matchLabels:
+{{ include "spinnaker.standard-selector-labels" . | indent 6 }}
+      component: halyard
+  template:
+    metadata:
+      annotations:
+      {{- if .Values.annotations }}
+{{ toYaml .Values.annotations | indent 8 }}
+      {{- end }}
+      labels:
+{{ include "spinnaker.standard-labels" . | indent 8 }}
+        component: halyard
+    spec:
+      securityContext:
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        fsGroup: {{ .Values.securityContext.fsGroup }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+    {{- end }}
+      initContainers:
+      - name: create-halyard-local
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        command:
+        - bash
+        - /tmp/initscript/init.sh
+        volumeMounts:
+        - name: halyard-initscript
+          mountPath: /tmp/initscript
+        - name: halyard-home
+          mountPath: /tmp/spinnaker
+        - name: service-settings
+          mountPath: /tmp/service-settings
+        {{- if .Values.serviceConfigs }}
+        - name: service-configs
+          mountPath: /tmp/service-configs
+        {{- end }}
+        {{- if .Values.env }}
+        env:
+{{ toYaml .Values.env | indent 8 }}
+        {{- end }}
+      containers:
+      - name: halyard
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        ports:
+        - containerPort: 8064
+          name: daemon
+        {{- if .Values.resources }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+        {{- end }}
+        volumeMounts:
+        - name: halyard-home
+          mountPath: /home/spinnaker
+        {{- if .Values.env }}
+        env:
+{{ toYaml .Values.env | indent 8 }}
+        {{- end }}
+      volumes:
+      {{- if not .Values.persistence.enabled }}
+      - name: halyard-home
+        emptyDir: {}
+      {{- end }}
+      - name: service-settings
+        configMap:
+          name: {{ .Release.Name }}-halyard-service-settings
+      {{- if .Values.serviceConfigs }}
+      - name: service-configs
+        configMap:
+          name: {{ .Release.Name }}-halyard-service-configs
+      {{- end }}
+      - name: halyard-initscript
+        configMap:
+          name: {{ .Release.Name }}-halyard
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+        {{- end}}
+      {{- end}}
+{{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: halyard-home
+      labels:
+{{ include "spinnaker.standard-labels-base" . | indent 8 }}
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      {{- with .Values.persistence.storageClass }}
+      storageClassName: {{ . }}
+      {{- end }}
+      resources:
+        requests:
+          storage: 10Gi
+{{- end }}

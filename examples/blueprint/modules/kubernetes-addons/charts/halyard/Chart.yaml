@@ -1,0 +1,10 @@
+apiVersion: v2
+name: halyard
+description: Halyard a spinnaker management cli
+type: application
+version: 1.0.0
+dependencies:
+- name: minio
+  version: 5.0.9
+  repository: https://charts.min.io/
+  condition: minio.enabled
