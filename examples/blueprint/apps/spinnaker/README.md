@@ -110,3 +110,6 @@ hal deploy clean
 # Additional Resources
 ## Terraform Modules
 - [Terraform Module: Spinnaker](https://github.com/Young-ook/terraform-aws-spinnaker)
+
+## [MinIO](https://min.io/)
+- [MinIO Client](https://github.com/minio/mc)
