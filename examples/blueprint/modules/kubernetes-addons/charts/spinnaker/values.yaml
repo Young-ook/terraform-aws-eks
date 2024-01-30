@@ -244,7 +244,7 @@ minio:
   secretKey: spinnakeradmin
   defaultBucket:
     enabled: true
-    name: "spinnaker"
+    name: spinnaker
   nodeSelector: {}
 # Use an single replica for deveopment or test
   replicas: 1
@@ -266,10 +266,6 @@ s3:
   ## Here you can pass extra arguments to configure s3 storage options
   extraArgs: []
   #  - "--path-style-access true"
-
-rbac:
-  # Specifies whether RBAC resources should be created
-  create: true
 
 serviceAccount:
   # Specifies whether a ServiceAccount should be created

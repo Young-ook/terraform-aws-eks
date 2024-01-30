@@ -39,7 +39,6 @@ subjects:
 # In the case of a local cluster Spinnaker needs
 # to be able to deploy to all namespaces in the cluster.
 {{- if not .Values.kubeConfig.enabled }}
-{{- if .Values.rbac.create }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -56,5 +55,4 @@ subjects:
   kind: ServiceAccount
   # Clouddriver does not currently allow config of its service account.
   name: default
-{{- end }}
 {{- end }}
