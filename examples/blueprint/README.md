@@ -407,17 +407,14 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Amazon EKS Pod Identity simplifies IAM permissions for applications on Amazon EKS clusters](https://aws.amazon.com/blogs/aws/amazon-eks-pod-identity-simplifies-iam-permissions-for-applications-on-amazon-eks-clusters/)
 - [Amazon GuardDuty Now Supports Amazon EKS Runtime Monitoring](https://aws.amazon.com/blogs/aws/amazon-guardduty-now-supports-amazon-eks-runtime-monitoring/)
 
+## AWS Fargate
+- [AWS Fargate for Amazon EKS now supports Amazon EFS](https://aws.amazon.com/blogs/aws/new-aws-fargate-for-amazon-eks-now-supports-amazon-efs/)
+- [Saving money a pod at a time with EKS, Fargate, and AWS Compute Savings Plans](https://aws.amazon.com/blogs/containers/saving-money-pod-at-time-with-eks-fargate-and-aws-compute-savings-plans/)
+
 ## AWS Graviton
 - [Amazon's Arm-based Graviton2 Against AMD and Intel](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd)
 - [Graviton2 Single Threaded Performance](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd/5)
-
-## Chaos Engineering
-### Chaos Mesh
-- [Simulate Kubernetes Resource Stress Test](https://chaos-mesh.org/docs/simulate-heavy-stress-on-kubernetes/)
-- [Simulate AWS Faults](https://chaos-mesh.org/docs/simulate-aws-chaos/)
-
-### LitmusChaos
-- [Chaos Engineering with LitmusChaos on Amazon EKS](https://aws.amazon.com/blogs/containers/chaos-engineering-with-litmuschaos-on-amazon-eks)
+- [Creating multi-architecture Docker images to support Graviton2 using AWS CodeBuild and AWS CodePipeline](https://aws.amazon.com/ko/blogs/devops/creating-multi-architecture-docker-images-to-support-graviton2-using-aws-codebuild-and-aws-codepipeline/)
 
 ## Cloudforet (SpaceONE)
 - [SpaceONE launchpad](https://github.com/cloudforet-io/launchpad)
@@ -436,20 +433,23 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Karpenter Hands-on Lab](https://www.eksworkshop.com/docs/autoscaling/compute/karpenter/)
 - [Migrating from Cluster Autoscaler](https://karpenter.sh/v0.27.3/getting-started/migrating-from-cas/)
 
-## Observability
-### Amazon CloudWatch Container Insights
+## Krew
+- [Krew](https://github.com/kubernetes-sigs/krew)
+
+## Reliability Engineering
+### Fault Injection Test
+- [Simulate Kubernetes Resource Stress Test](https://chaos-mesh.org/docs/simulate-heavy-stress-on-kubernetes/)
+- [Simulate AWS Faults](https://chaos-mesh.org/docs/simulate-aws-chaos/)
+- [Chaos Engineering with LitmusChaos on Amazon EKS](https://aws.amazon.com/blogs/containers/chaos-engineering-with-litmuschaos-on-amazon-eks)
+
+### Continuous Delivery
+- [Flagger](https://flagger.app/)
+- [Flux](https://fluxcd.io/flux/)
+
+### Observability
 - [Amazon CloudWatch Container Insights for Amazon ECS](https://aws.amazon.com/blogs/mt/introducing-container-insights-for-amazon-ecs)
 - [Announcing Container Insights with Enhanced Observability for Amazon EKS](https://aws.amazon.com/blogs/mt/new-container-insights-with-enhanced-observability-for-amazon-eks/)
-
-### Prometheus
 - [Deploy Promethus using Helm](https://www.eksworkshop.com/intermediate/240_monitoring/deploy-prometheus/)
-
-## Release Engineering
-### Flagger
-- [Flagger](https://flagger.app/)
-
-### Flux
-- [Flux](https://fluxcd.io/flux/)
 
 ## Service Mesh
 ### AWS AppMesh
@@ -462,3 +462,6 @@ terraform destroy -var-file fixture.tc1.tfvars
 ### Istio
 - [Istio Concepts and Examples](https://istio.io/latest/docs/)
 - [Using Istio Traffic Management on Amazon EKS to Enhance User Experience](https://aws.amazon.com/blogs/opensource/using-istio-traffic-management-to-enhance-user-experience/)
+
+### eBPF
+- [eBPF - The Future of Networking & Security](https://cilium.io/blog/2020/11/10/ebpf-future-of-networking/)
