@@ -185,6 +185,10 @@ resource "aws_launch_template" "ng" {
     }
   }
 
+  metadata_options {
+    http_tokens = "required"
+  }
+
   network_interfaces {
     security_groups       = [aws_eks_cluster.cp.vpc_config.0.cluster_security_group_id]
     delete_on_termination = true
@@ -316,6 +320,10 @@ resource "aws_launch_template" "mng" {
       volume_type           = "gp2"
       delete_on_termination = true
     }
+  }
+
+  metadata_options {
+    http_tokens = "required"
   }
 
   tag_specifications {
