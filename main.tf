@@ -135,7 +135,7 @@ data "aws_ami" "eks" {
   }
 }
 
-data "template_cloudinit_config" "ng" {
+data "cloudinit_config" "ng" {
   for_each      = { for ng in var.node_groups : ng.name => ng }
   base64_encode = true
   gzip          = false
@@ -166,10 +166,10 @@ resource "aws_launch_template" "ng" {
   instance_type = lookup(each.value, "instance_type", local.default_eks_config.instance_type)
   user_data = (
     length(regexall("^AL2", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
-    data.template_cloudinit_config.ng[each.key].rendered :
+    data.cloudinit_config.ng[each.key].rendered :
     length(regexall("^BOTTLEROCKET", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
     base64encode(local.bottlerocket_userdata) :
-    data.template_cloudinit_config.ng[each.key].rendered
+    data.cloudinit_config.ng[each.key].rendered
   )
 
   iam_instance_profile {
@@ -282,7 +282,7 @@ resource "aws_autoscaling_group" "ng" {
 
 # Render a multi-part cloud-init config making use of the part
 # above, and other source files
-data "template_cloudinit_config" "mng" {
+data "cloudinit_config" "mng" {
   for_each      = { for ng in var.managed_node_groups : ng.name => ng }
   base64_encode = true
   gzip          = false
@@ -303,10 +303,10 @@ resource "aws_launch_template" "mng" {
   tags     = merge(local.default-tags, local.eks-tag, var.tags, lookup(each.value, "tags", {}))
   user_data = (
     length(regexall("^AL2", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
-    data.template_cloudinit_config.mng[each.key].rendered :
+    data.cloudinit_config.mng[each.key].rendered :
     length(regexall("^BOTTLEROCKET", lookup(each.value, "ami_type", local.default_eks_config.ami_type))) > 0 ?
     base64encode(local.bottlerocket_userdata) :
-    data.template_cloudinit_config.mng[each.key].rendered
+    data.cloudinit_config.mng[each.key].rendered
   )
 
   block_device_mappings {
