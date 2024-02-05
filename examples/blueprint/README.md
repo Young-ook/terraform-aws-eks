@@ -420,19 +420,18 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## Cloudforet (SpaceONE)
 - [SpaceONE launchpad](https://github.com/cloudforet-io/launchpad)
 
-## Cluster Autoscaler
+## Cluster Management
 - [Autoscaling](https://docs.aws.amazon.com/eks/latest/userguide/autoscaling.html)
+- [Seamlessly Migrate Workloads from EKS Self-managed node groups to managed node groups](https://aws.amazon.com/blogs/containers/seamlessly-migrate-workloads-from-eks-self-managed-node-group-to-eks-managed-node-groups/)
+- [Introducing Karpenter](https://aws.amazon.com/blogs/aws/introducing-karpenter-an-open-source-high-performance-kubernetes-cluster-autoscaler/)
+- [Karpenter Hands-on Lab](https://www.eksworkshop.com/docs/autoscaling/compute/karpenter/)
+- [Migrating from Cluster Autoscaler](https://karpenter.sh/v0.27.3/getting-started/migrating-from-cas/)
 
 ## IAM Role for Service Accounts (IRSA)
 - [Diving into IAM Roles for Service Accounts](https://aws.amazon.com/blogs/containers/diving-into-iam-roles-for-service-accounts/)
 
 ## Karmada
 - [Karmada](https://github.com/karmada-io/karmada)
-
-## Karpenter
-- [Introducing Karpenter](https://aws.amazon.com/blogs/aws/introducing-karpenter-an-open-source-high-performance-kubernetes-cluster-autoscaler/)
-- [Karpenter Hands-on Lab](https://www.eksworkshop.com/docs/autoscaling/compute/karpenter/)
-- [Migrating from Cluster Autoscaler](https://karpenter.sh/v0.27.3/getting-started/migrating-from-cas/)
 
 ## Krew
 - [Krew](https://github.com/kubernetes-sigs/krew)
