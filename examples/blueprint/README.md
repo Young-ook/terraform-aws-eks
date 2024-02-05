@@ -410,6 +410,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## AWS Fargate
 - [AWS Fargate for Amazon EKS now supports Amazon EFS](https://aws.amazon.com/blogs/aws/new-aws-fargate-for-amazon-eks-now-supports-amazon-efs/)
 - [Saving money a pod at a time with EKS, Fargate, and AWS Compute Savings Plans](https://aws.amazon.com/blogs/containers/saving-money-pod-at-time-with-eks-fargate-and-aws-compute-savings-plans/)
+- [Autoscaling EKS on Fargate with custom metrics](https://aws.amazon.com/blogs/containers/autoscaling-eks-on-fargate-with-custom-metrics/)
 
 ## AWS Graviton
 - [Amazon's Arm-based Graviton2 Against AMD and Intel](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd)
@@ -450,6 +451,12 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Amazon CloudWatch Container Insights for Amazon ECS](https://aws.amazon.com/blogs/mt/introducing-container-insights-for-amazon-ecs)
 - [Announcing Container Insights with Enhanced Observability for Amazon EKS](https://aws.amazon.com/blogs/mt/new-container-insights-with-enhanced-observability-for-amazon-eks/)
 - [Deploy Promethus using Helm](https://www.eksworkshop.com/intermediate/240_monitoring/deploy-prometheus/)
+- [Amazon EKS Control Plane Metrics with Prometheus](https://aws.amazon.com/blogs/opensource/amazon-eks-control-plane-metrics-prometheus/)
+- [Implementing CloudWatch-centric observability for Kubernetes-native developers in Amazon Elastic Kubernetes Service](https://aws.amazon.com/blogs/opensource/implementing-cloudwatch-centric-observability-for-kubernetes-native-developers-in-amazon-elastic-kubernetes-service/)
+- [Fluent Bit Integration in CloudWatch Container Insights for EKS](https://aws.amazon.com/blogs/containers/fluent-bit-integration-in-cloudwatch-container-insights-for-eks/)
+- [How to capture application logs when using Amazon EKS on AWS Fargate](https://aws.amazon.com/blogs/containers/how-to-capture-application-logs-when-using-amazon-eks-on-aws-fargate/)
+- [Metrics and traces collection using Amazon EKS add-ons for AWS Distro for OpenTelemetry](https://aws.amazon.com/blogs/containers/metrics-and-traces-collection-using-amazon-eks-add-ons-for-aws-distro-for-opentelemetry/)
+- [Introducing Amazon CloudWatch Container Insights for Amazon EKS Fargate using AWS Distro for OpenTelemetry](https://aws.amazon.com/blogs/containers/introducing-amazon-cloudwatch-container-insights-for-amazon-eks-fargate-using-aws-distro-for-opentelemetry/)
 
 ## Service Mesh
 ### AWS AppMesh
