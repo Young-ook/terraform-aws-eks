@@ -109,7 +109,7 @@ minio:
   secretKey: spinnakeradmin
   defaultBucket:
     enabled: true
-    name: "spinnaker"
+    name: spinnaker
   nodeSelector: {}
 # Use an single replica for deveopment or test
   replicas: 1
