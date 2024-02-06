@@ -414,6 +414,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Amazon's Arm-based Graviton2 Against AMD and Intel](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd)
 - [Graviton2 Single Threaded Performance](https://www.anandtech.com/show/15578/cloud-clash-amazon-graviton2-arm-against-intel-and-amd/5)
 - [Creating multi-architecture Docker images to support Graviton2 using AWS CodeBuild and AWS CodePipeline](https://aws.amazon.com/ko/blogs/devops/creating-multi-architecture-docker-images-to-support-graviton2-using-aws-codebuild-and-aws-codepipeline/)
+- [Getting started with Bottlerocket on AWS Graviton2](https://aws.amazon.com/blogs/opensource/getting-started-with-bottlerocket-on-aws-graviton2/)
 
 ## Cloudforet (SpaceONE)
 - [SpaceONE launchpad](https://github.com/cloudforet-io/launchpad)
@@ -424,6 +425,8 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Introducing Karpenter](https://aws.amazon.com/blogs/aws/introducing-karpenter-an-open-source-high-performance-kubernetes-cluster-autoscaler/)
 - [Karpenter Hands-on Lab](https://www.eksworkshop.com/docs/autoscaling/compute/karpenter/)
 - [Migrating from Cluster Autoscaler](https://karpenter.sh/v0.27.3/getting-started/migrating-from-cas/)
+- [Catching up with Managed Node Groups in Amazon EKS](https://aws.amazon.com/blogs/containers/catching-up-with-managed-node-groups-in-amazon-eks/)
+- [Amazon EKS now supports provisioning and managing EC2 Spot Instances in managed node groups](https://aws.amazon.com/blogs/containers/amazon-eks-now-supports-provisioning-and-managing-ec2-spot-instances-in-managed-node-groups/)
 
 ## IAM Role for Service Accounts (IRSA)
 - [Diving into IAM Roles for Service Accounts](https://aws.amazon.com/blogs/containers/diving-into-iam-roles-for-service-accounts/)
@@ -462,6 +465,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Getting started with AWS App Mesh and Amazon EKS](https://aws.amazon.com/blogs/containers/getting-started-with-app-mesh-and-eks/)
 - [Traffic Encryption in AWS App Mesh across accounts using certificates from AWS Certificate Manager Private CA and AWS Resource Manager](https://aws.amazon.com/blogs/containers/traffic-encryption-app-mesh-across-accounts-certificates/)
 - [How to use ACM Private CA for enabling mTLS in AWS App Mesh](https://aws.amazon.com/blogs/security/how-to-use-acm-private-ca-for-enabling-mtls-in-aws-app-mesh/)
+- [Running microservices in Amazon EKS with AWS App Mesh and Kong](https://aws.amazon.com/blogs/containers/running-microservices-in-amazon-eks-with-aws-app-mesh-and-kong/)
 
 ### Istio
 - [Istio Concepts and Examples](https://istio.io/latest/docs/)
