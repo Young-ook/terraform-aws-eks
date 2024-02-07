@@ -1,21 +1,21 @@
 ### security/policy
 resource "aws_iam_policy" "lbc" {
   name        = "aws-loadbalancer-controller"
-  tags        = merge({ "terraform.io" = "managed" }, var.tags)
+  tags        = merge(local.default-tags, var.tags)
   description = format("Allow aws-load-balancer-controller to manage AWS resources")
   policy      = file("${path.module}/policy.aws-loadbalancer-controller.json")
 }
 
 resource "aws_iam_policy" "cas" {
   name        = "cluster-autoscaler"
-  tags        = merge({ "terraform.io" = "managed" }, var.tags)
+  tags        = merge(local.default-tags, var.tags)
   description = format("Allow cluster-autoscaler to manage AWS resources")
   policy      = file("${path.module}/policy.cluster-autoscaler.json")
 }
 
 resource "aws_iam_policy" "kpt" {
   name        = "karpenter"
-  tags        = merge({ "terraform.io" = "managed" }, var.tags)
+  tags        = merge(local.default-tags, var.tags)
   description = format("Allow karpenter to manage AWS resources")
   policy      = file("${path.module}/policy.karpenter.json")
 }
@@ -23,7 +23,7 @@ resource "aws_iam_policy" "kpt" {
 resource "aws_iam_policy" "spin" {
   for_each    = (try(var.features.spinnaker_enabled, false) ? toset(["enabled"]) : [])
   name        = "spinnaker-assume-role"
-  tags        = merge({ "terraform.io" = "managed" }, var.tags)
+  tags        = merge(local.default-tags, var.tags)
   description = format("Allow spinnaker to manage AWS resources")
   policy = jsonencode({
     Version = "2012-10-17"
@@ -39,7 +39,7 @@ resource "aws_iam_policy" "spin" {
 module "base" {
   source  = "Young-ook/eks/aws//modules/helm-addons"
   version = "2.0.10"
-  tags    = merge(var.tags, local.default-tags)
+  tags    = merge(local.default-tags, var.tags)
   addons = [
     {
       ### for more details, https://cert-manager.io/docs/installation/helm/
@@ -70,7 +70,7 @@ module "ctl" {
   depends_on = [module.base]
   source     = "Young-ook/eks/aws//modules/helm-addons"
   version    = "2.0.10"
-  tags       = var.tags
+  tags       = merge(local.default-tags, var.tags)
   addons = [
     {
       ### You can disable the mutator webhook feature by setting the helm chart value enableServiceMutatorWebhook to false.
@@ -162,7 +162,7 @@ module "devops" {
   depends_on = [module.eks-addons]
   source     = "Young-ook/eks/aws//modules/helm-addons"
   version    = "2.0.10"
-  tags       = var.tags
+  tags       = merge(local.default-tags, var.tags)
   addons = concat((try(var.features.spinnaker_enabled, false) ?
     [
       {
@@ -198,7 +198,7 @@ module "eks-addons" {
   depends_on = [module.base]
   source     = "Young-ook/eks/aws//modules/eks-addons"
   version    = "2.0.10"
-  tags       = var.tags
+  tags       = merge(local.default-tags, var.tags)
   addons = [
     {
       name     = "vpc-cni"
@@ -266,7 +266,7 @@ module "nats" {
   for_each   = (try(var.features.nats_enabled, false) ? toset(["enabled"]) : [])
   source     = "Young-ook/eks/aws//modules/helm-addons"
   version    = "2.0.6"
-  tags       = var.tags
+  tags       = merge(local.default-tags, var.tags)
   addons = [
     {
       ### for more information about the NATS helm chart, please refer to the artifacthub or github.
