@@ -38,7 +38,7 @@ resource "aws_iam_policy" "spin" {
 ### helm-addons
 module "base" {
   source  = "Young-ook/eks/aws//modules/helm-addons"
-  version = "2.0.10"
+  version = "2.0.11"
   tags    = merge(local.default-tags, var.tags)
   addons = [
     {
@@ -69,7 +69,7 @@ module "base" {
 module "ctl" {
   depends_on = [module.base]
   source     = "Young-ook/eks/aws//modules/helm-addons"
-  version    = "2.0.10"
+  version    = "2.0.11"
   tags       = merge(local.default-tags, var.tags)
   addons = [
     {
@@ -161,7 +161,7 @@ module "ctl" {
 module "devops" {
   depends_on = [module.eks-addons]
   source     = "Young-ook/eks/aws//modules/helm-addons"
-  version    = "2.0.10"
+  version    = "2.0.11"
   tags       = merge(local.default-tags, var.tags)
   addons = concat((try(var.features.spinnaker_enabled, false) ?
     [
@@ -197,7 +197,7 @@ module "eks-addons" {
   ### the adot-addon requires a cert-manager from base helm-addons
   depends_on = [module.base]
   source     = "Young-ook/eks/aws//modules/eks-addons"
-  version    = "2.0.10"
+  version    = "2.0.11"
   tags       = merge(local.default-tags, var.tags)
   addons = [
     {
@@ -265,7 +265,7 @@ module "nats" {
   depends_on = [module.eks-addons]
   for_each   = (try(var.features.nats_enabled, false) ? toset(["enabled"]) : [])
   source     = "Young-ook/eks/aws//modules/helm-addons"
-  version    = "2.0.6"
+  version    = "2.0.11"
   tags       = merge(local.default-tags, var.tags)
   addons = [
     {
