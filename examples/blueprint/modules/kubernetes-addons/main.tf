@@ -280,3 +280,35 @@ module "nats" {
     },
   ]
 }
+
+module "istio" {
+  source  = "Young-ook/eks/aws//modules/helm-addons"
+  version = "2.0.11"
+  tags    = merge(local.default-tags, var.tags)
+  addons = [
+    {
+      repository = "https://istio-release.storage.googleapis.com/charts"
+      name       = "istio-base"
+      chart_name = "base"
+      namespace  = "istio-system"
+      values = {
+        defaultRevision = "default"
+      }
+    },
+    {
+      repository = "https://istio-release.storage.googleapis.com/charts"
+      name       = "istiod"
+      chart_name = "istiod"
+      namespace  = "istio-system"
+    },
+    {
+      repository = "https://kiali.org/helm-charts"
+      name       = "kiali-server"
+      chart_name = "kiali-server"
+      namespace  = "istio-system"
+      values = {
+        "auth.strategy" = "anonymous"
+      }
+    },
+  ]
+}
