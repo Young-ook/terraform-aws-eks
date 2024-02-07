@@ -282,9 +282,11 @@ module "nats" {
 }
 
 module "istio" {
-  source  = "Young-ook/eks/aws//modules/helm-addons"
-  version = "2.0.11"
-  tags    = merge(local.default-tags, var.tags)
+  depends_on = [module.base]
+  for_each   = (try(var.features.istio_enabled, false) ? toset(["enabled"]) : [])
+  source     = "Young-ook/eks/aws//modules/helm-addons"
+  version    = "2.0.11"
+  tags       = merge(local.default-tags, var.tags)
   addons = [
     {
       repository = "https://istio-release.storage.googleapis.com/charts"
