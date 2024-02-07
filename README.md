@@ -153,10 +153,10 @@ A simple solution you can try to fix this error is (re)installing the Amazon VPC
 - [Amazon EKS Best Practices Guides](https://aws.github.io/aws-eks-best-practices/)
 - [Amazon EKS troubleshooting](https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html)
 - [EKS Workshop](https://www.eksworkshop.com/)
-- [Seamlessly Migrate Workloads from EKS Self-managed node groups to managed node groups](https://aws.amazon.com/blogs/containers/seamlessly-migrate-workloads-from-eks-self-managed-node-group-to-eks-managed-node-groups/)
 - [De-mystifying cluster networking for Amazon EKS worker nodes](https://aws.amazon.com/blogs/containers/de-mystifying-cluster-networking-for-amazon-eks-worker-nodes/)
 - [Amazon EKS AMI](https://github.com/awslabs/amazon-eks-ami/)
 - [Amazon EKS service quotas](https://docs.aws.amazon.com/eks/latest/userguide/service-quotas.html)
+- [Multi-tenant design considerations for Amazon EKS clusters](https://aws.amazon.com/blogs/containers/multi-tenant-design-considerations-for-amazon-eks-clusters/)
 
 ## Amazon VPC (Virtual Private Cloud)
 - [Amazon VPC Terraform Module](https://github.com/Young-ook/terraform-aws-vpc)

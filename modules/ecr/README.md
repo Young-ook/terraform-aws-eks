@@ -46,3 +46,6 @@ To improve the security of network between AWS managed container registry and cu
 ![aws-ecr-vpc-endpoints](../../images/aws-ecr-vpc-endpoints.png)
 
 Here is example to apply custom policies on the VPC endpoints for more specific traffic control. Please read this [blog](https://aws.amazon.com/blogs/containers/using-vpc-endpoint-policies-to-control-amazon-ecr-access/), if you want to know how to do.
+
+# Additional Resources
+- [Automating image compliance for Amazon ECS and Amazon EKS using Amazon Elastic Container Registry (ECR) and AWS Security Hub](https://aws.amazon.com/blogs/containers/automating-image-compliance-for-amazon-eks-using-amazon-elastic-container-registry-and-aws-security-hub/)
