@@ -312,5 +312,13 @@ module "istio" {
         "auth.strategy" = "anonymous"
       }
     },
+    {
+      repository     = "https://prometheus-community.github.io/helm-charts"
+      name           = "prometheus"
+      chart_name     = "prometheus"
+      namespace      = "istio-system"
+      serviceaccount = "prometheus"
+      values         = {}
+    },
   ]
 }
