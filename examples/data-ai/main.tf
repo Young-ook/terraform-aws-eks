@@ -45,7 +45,7 @@ module "eks" {
   kubernetes_version = var.kubernetes_version
   managed_node_groups = [
     {
-      name          = "kubeflow"
+      name          = "ml"
       min_size      = 1
       max_size      = 9
       desired_size  = 6
@@ -56,6 +56,7 @@ module "eks" {
 
 ### kubeflow-manifests
 resource "null_resource" "clone" {
+  for_each = (try(local.toggles.kubeflow_enabled, false) ? toset(["kubeflow"]) : [])
   provisioner "local-exec" {
     command = "bash scripts/clone.sh -k $KUBEFLOW_RELEASE_VERSION -a $AWS_RELEASE_VERSION"
     environment = {
@@ -66,7 +67,8 @@ resource "null_resource" "clone" {
 }
 
 resource "null_resource" "clear" {
-  depends_on = [module.kubeflow]
+  depends_on = [module.kubeflow, null_resource.clone]
+  for_each   = (try(local.toggles.kubeflow_enabled, false) ? toset(["kubeflow"]) : [])
   provisioner "local-exec" {
     command = "rm -rf kubeflow-manifests"
   }
@@ -83,6 +85,7 @@ provider "helm" {
 
 module "kubeflow" {
   depends_on         = [module.csi, null_resource.clone]
+  for_each           = (try(local.toggles.kubeflow_enabled, false) ? toset(["enabled"]) : [])
   source             = "./modules/kubeflow"
   tags               = var.tags
   kubeflow_helm_repo = var.kubeflow_helm_repo
