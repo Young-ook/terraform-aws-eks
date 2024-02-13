@@ -27,7 +27,7 @@ output "instance_profile" {
   value = {
     node_groups         = local.node_groups_enabled ? aws_iam_instance_profile.ng["enabled"] : null
     managed_node_groups = local.managed_node_groups_enabled ? aws_iam_instance_profile.ng["enabled"] : null
-    fargate             = null
+    fargate             = local.fargate_enabled ? aws_iam_role.fargate["enabled"] : null
   }
 }
 
