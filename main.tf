@@ -10,7 +10,7 @@ locals {
 ## control plane (cp)
 # security/policy
 resource "aws_iam_role" "cp" {
-  name = format("%s-cp", local.name)
+  name = join("-", [local.name, "cp"])
   tags = merge(local.default-tags, var.tags)
   assume_role_policy = jsonencode({
     Statement = [{
@@ -30,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "eks-cluster" {
 }
 
 resource "aws_eks_cluster" "cp" {
-  name     = format("%s", local.name)
+  name     = local.name
   role_arn = aws_iam_role.cp.arn
   version  = var.kubernetes_version
   tags     = merge(local.default-tags, var.tags)
