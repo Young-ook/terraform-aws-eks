@@ -471,6 +471,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Istio Concepts and Examples](https://istio.io/latest/docs/)
 - [Using Istio Traffic Management on Amazon EKS to Enhance User Experience](https://aws.amazon.com/blogs/opensource/using-istio-traffic-management-to-enhance-user-experience/)
 - [Istio Samples](https://github.com/istio/istio/tree/master/samples)
+- [Microservices Demo](https://github.com/GoogleCloudPlatform/microservices-demo)
 
 ### eBPF
 - [eBPF - The Future of Networking & Security](https://cilium.io/blog/2020/11/10/ebpf-future-of-networking/)
