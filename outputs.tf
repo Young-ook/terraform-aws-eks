@@ -16,17 +16,17 @@ output "cluster" {
 output "role" {
   description = "The generated role of the EKS node group"
   value = {
-    node_groups         = local.node_groups_enabled ? aws_iam_role.ng.0 : null
-    managed_node_groups = local.managed_node_groups_enabled ? aws_iam_role.ng.0 : null
-    fargate             = local.fargate_enabled ? aws_iam_role.fargate.0 : null
+    node_groups         = local.node_groups_enabled ? aws_iam_role.ng["enabled"] : null
+    managed_node_groups = local.managed_node_groups_enabled ? aws_iam_role.ng["enabled"] : null
+    fargate             = local.fargate_enabled ? aws_iam_role.fargate["enabled"] : null
   }
 }
 
 output "instance_profile" {
   description = "The generated instance profile of the EKS node group"
   value = {
-    node_groups         = local.node_groups_enabled ? aws_iam_instance_profile.ng.0 : null
-    managed_node_groups = local.managed_node_groups_enabled ? aws_iam_instance_profile.ng.0 : null
+    node_groups         = local.node_groups_enabled ? aws_iam_instance_profile.ng["enabled"] : null
+    managed_node_groups = local.managed_node_groups_enabled ? aws_iam_instance_profile.ng["enabled"] : null
     fargate             = null
   }
 }
