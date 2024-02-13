@@ -5,5 +5,11 @@ fargate_profiles = [
     namespace = "default"
   },
 ]
-managed_node_groups = []
-node_groups         = []
+managed_node_groups = [
+  {
+    name          = "system"
+    desired_size  = 2
+    instance_type = "t3.2xlarge"
+  },
+]
+node_groups = []
