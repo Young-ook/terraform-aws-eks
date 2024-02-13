@@ -179,8 +179,8 @@ resource "aws_launch_template" "ng" {
   block_device_mappings {
     device_name = "/dev/xvda"
     ebs {
-      volume_size           = lookup(each.value, "disk_size", "20")
-      volume_type           = "gp2"
+      volume_size           = lookup(each.value, "volume_size", local.default_eks_config.volume_size)
+      volume_type           = lookup(each.value, "volume_type", local.default_eks_config.volume_type)
       delete_on_termination = true
     }
   }
@@ -316,8 +316,8 @@ resource "aws_launch_template" "mng" {
   block_device_mappings {
     device_name = "/dev/xvda"
     ebs {
-      volume_size           = lookup(each.value, "disk_size", "20")
-      volume_type           = "gp2"
+      volume_size           = lookup(each.value, "volume_size", local.default_eks_config.volume_size)
+      volume_type           = lookup(each.value, "volume_type", local.default_eks_config.volume_type)
       delete_on_termination = true
     }
   }

@@ -9,6 +9,8 @@ locals {
     ami_type      = "AL2_x86_64"
     instance_type = "t3.medium"
     capacity_type = null # allowed values: ON_DEMAND, SPOT, and default is null
+    volume_size   = 20
+    volume_type   = "gp3"
   }
   default_bottlerocket_config = {
     admin_container_enabled      = false

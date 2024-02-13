@@ -16,5 +16,6 @@ node_groups = [
     max_size      = 3
     desired_size  = 1
     instance_type = "t3.xlarge"
+    volume_type   = "gp3"
   },
 ]
