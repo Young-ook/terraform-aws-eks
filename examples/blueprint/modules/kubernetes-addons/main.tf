@@ -127,9 +127,11 @@ module "ctl" {
       namespace      = "karpenter"
       serviceaccount = "karpenter"
       values = {
-        "settings.aws.clusterName"            = var.eks.cluster.name
-        "settings.aws.clusterEndpoint"        = var.eks.cluster.control_plane.endpoint
-        "settings.aws.defaultInstanceProfile" = var.eks.instance_profile.node_groups == null ? var.eks.instance_profile.managed_node_groups.arn : var.eks.instance_profile.node_groups.arn
+        "settings.aws.clusterName"     = var.eks.cluster.name
+        "settings.aws.clusterEndpoint" = var.eks.cluster.control_plane.endpoint
+        "settings.aws.defaultInstanceProfile" = (var.eks.features.managed_node_groups_enabled ?
+          var.eks.instance_profile.managed_node_groups.arn : var.eks.instance_profile.node_groups.arn
+        )
       }
       oidc        = var.eks.oidc
       policy_arns = [aws_iam_policy.kpt.arn]
@@ -189,7 +191,8 @@ module "devops" {
         namespace      = "chaos-mesh"
         serviceaccount = "chaos-mesh-controller"
       },
-  ])
+    ]
+  )
 }
 
 ### eks-addons
