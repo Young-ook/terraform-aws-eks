@@ -27,7 +27,7 @@ variable "kubernetes_version" {
 }
 
 variable "fargate_profiles" {
-  description = "Amazon Fargate for EKS profiles"
+  description = "AWS Fargate for EKS profiles"
   default     = []
 }
 
