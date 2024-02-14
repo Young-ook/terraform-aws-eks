@@ -448,13 +448,13 @@ provider "kubernetes" {
 }
 
 resource "time_sleep" "wait" {
-  count           = ((local.managed_node_groups_enabled || local.fargate_enabled) ? 0 : (local.node_groups_enabled ? 1 : 0))
+  for_each        = local.node_groups_enabled && !(local.managed_node_groups_enabled || local.fargate_enabled) ? toset(["ng"]) : []
   create_duration = var.wait
   depends_on      = [aws_eks_cluster.cp, ]
 }
 
 resource "kubernetes_config_map" "aws-auth" {
-  count      = ((local.managed_node_groups_enabled || local.fargate_enabled) ? 0 : (local.node_groups_enabled ? 1 : 0))
+  for_each   = local.node_groups_enabled && !(local.managed_node_groups_enabled || local.fargate_enabled) ? toset(["ng"]) : []
   depends_on = [time_sleep.wait]
   metadata {
     name      = "aws-auth"
