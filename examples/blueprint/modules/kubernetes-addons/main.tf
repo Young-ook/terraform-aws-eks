@@ -37,9 +37,10 @@ resource "aws_iam_policy" "spin" {
 
 ### helm-addons
 module "base" {
-  source  = "Young-ook/eks/aws//modules/helm-addons"
-  version = "2.0.11"
-  tags    = merge(local.default-tags, var.tags)
+  depends_on = [module.eks-addons]
+  source     = "Young-ook/eks/aws//modules/helm-addons"
+  version    = "2.0.11"
+  tags       = merge(local.default-tags, var.tags)
   addons = [
     {
       ### for more details, https://cert-manager.io/docs/installation/helm/
@@ -161,7 +162,7 @@ module "ctl" {
 }
 
 module "devops" {
-  depends_on = [module.eks-addons]
+  depends_on = [module.base]
   source     = "Young-ook/eks/aws//modules/helm-addons"
   version    = "2.0.11"
   tags       = merge(local.default-tags, var.tags)
@@ -197,11 +198,9 @@ module "devops" {
 
 ### eks-addons
 module "eks-addons" {
-  ### the adot-addon requires a cert-manager from base helm-addons
-  depends_on = [module.base]
-  source     = "Young-ook/eks/aws//modules/eks-addons"
-  version    = "2.0.11"
-  tags       = merge(local.default-tags, var.tags)
+  source  = "Young-ook/eks/aws//modules/eks-addons"
+  version = "2.0.11"
+  tags    = merge(local.default-tags, var.tags)
   addons = [
     {
       name     = "vpc-cni"
@@ -225,6 +224,16 @@ module "eks-addons" {
         format("arn:%s:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy", local.aws.partition),
       ]
     },
+  ]
+}
+
+module "eks-addons-extra" {
+  ### the adot-addon requires a cert-manager from base helm-addons
+  depends_on = [module.base]
+  source     = "Young-ook/eks/aws//modules/eks-addons"
+  version    = "2.0.11"
+  tags       = merge(local.default-tags, var.tags)
+  addons = [
     {
       name           = "adot"
       namespace      = "default"
@@ -265,7 +274,7 @@ module "eks-addons" {
 }
 
 module "nats" {
-  depends_on = [module.eks-addons]
+  depends_on = [module.base]
   for_each   = (try(var.features.nats_enabled, false) ? toset(["enabled"]) : [])
   source     = "Young-ook/eks/aws//modules/helm-addons"
   version    = "2.0.11"
