@@ -73,7 +73,7 @@ module "vpc" {
 
 ### karpenter discovery tags
 resource "aws_ec2_tag" "karpenter-subnets" {
-  for_each    = toset(slice(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]), 0, 3))
+  for_each    = toset(values(module.vpc.subnets[var.use_default_vpc ? "public" : "private"]))
   resource_id = each.value
   key         = "karpenter.sh/discovery"
   value       = module.eks.cluster.name

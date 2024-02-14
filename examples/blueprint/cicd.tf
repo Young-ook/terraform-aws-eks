@@ -88,7 +88,7 @@ module "s3" {
 
 module "logs" {
   source  = "Young-ook/eventbridge/aws//modules/logs"
-  version = "0.0.6"
+  version = "0.0.14"
   for_each = { for log in [
     {
       type = "codebuild"

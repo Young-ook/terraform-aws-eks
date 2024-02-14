@@ -10,7 +10,7 @@ locals {
 ## control plane (cp)
 # security/policy
 resource "aws_iam_role" "cp" {
-  name = format("%s-cp", local.name)
+  name = join("-", [local.name, "cp"])
   tags = merge(local.default-tags, var.tags)
   assume_role_policy = jsonencode({
     Statement = [{
@@ -30,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "eks-cluster" {
 }
 
 resource "aws_eks_cluster" "cp" {
-  name     = format("%s", local.name)
+  name     = local.name
   role_arn = aws_iam_role.cp.arn
   version  = var.kubernetes_version
   tags     = merge(local.default-tags, var.tags)
@@ -49,10 +49,11 @@ resource "aws_eks_cluster" "cp" {
 ## node groups (ng)
 # security/policy
 resource "aws_iam_role" "ng" {
-  count = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
-  name  = format("%s-ng", local.name)
-  tags  = merge(local.default-tags, var.tags)
+  for_each = local.node_groups_enabled || local.managed_node_groups_enabled ? toset(["enabled"]) : []
+  name     = join("-", [local.name, "ng"])
+  tags     = merge(local.default-tags, var.tags)
   assume_role_policy = jsonencode({
+    Version = "2012-10-17"
     Statement = [{
       Action = "sts:AssumeRole"
       Effect = "Allow"
@@ -60,44 +61,43 @@ resource "aws_iam_role" "ng" {
         Service = [format("ec2.%s", module.aws.partition.dns_suffix)]
       }
     }]
-    Version = "2012-10-17"
   })
 }
 
 resource "aws_iam_instance_profile" "ng" {
-  count = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
-  name  = format("%s-ng", local.name)
-  role  = aws_iam_role.ng.0.name
+  for_each = local.node_groups_enabled || local.managed_node_groups_enabled ? toset(["enabled"]) : []
+  name     = join("-", [local.name, "ng"])
+  role     = aws_iam_role.ng["enabled"].name
 }
 
 resource "aws_iam_role_policy_attachment" "eks-ng" {
-  count      = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
+  for_each   = local.node_groups_enabled || local.managed_node_groups_enabled ? toset(["enabled"]) : []
   policy_arn = format("arn:%s:iam::aws:policy/AmazonEKSWorkerNodePolicy", module.aws.partition.partition)
-  role       = aws_iam_role.ng.0.name
+  role       = aws_iam_role.ng["enabled"].name
 }
 
 resource "aws_iam_role_policy_attachment" "eks-cni" {
-  count      = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
+  for_each   = local.node_groups_enabled || local.managed_node_groups_enabled ? toset(["enabled"]) : []
   policy_arn = format("arn:%s:iam::aws:policy/AmazonEKS_CNI_Policy", module.aws.partition.partition)
-  role       = aws_iam_role.ng.0.name
+  role       = aws_iam_role.ng["enabled"].name
 }
 
 resource "aws_iam_role_policy_attachment" "ecr-read" {
-  count      = local.node_groups_enabled || local.managed_node_groups_enabled ? 1 : 0
+  for_each   = local.node_groups_enabled || local.managed_node_groups_enabled ? toset(["enabled"]) : []
   policy_arn = format("arn:%s:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly", module.aws.partition.partition)
-  role       = aws_iam_role.ng.0.name
+  role       = aws_iam_role.ng["enabled"].name
 }
 
 resource "aws_iam_role_policy_attachment" "ssm-managed" {
-  count      = (local.node_groups_enabled || local.managed_node_groups_enabled) && var.enable_ssm ? 1 : 0
+  for_each   = (local.node_groups_enabled || local.managed_node_groups_enabled) && var.enable_ssm ? toset(["enabled"]) : []
   policy_arn = format("arn:%s:iam::aws:policy/AmazonSSMManagedInstanceCore", module.aws.partition.partition)
-  role       = aws_iam_role.ng.0.name
+  role       = aws_iam_role.ng["enabled"].name
 }
 
 resource "aws_iam_role_policy_attachment" "ng-extra" {
   for_each   = (local.node_groups_enabled || local.managed_node_groups_enabled) ? { for k, v in var.policy_arns : k => v } : {}
   policy_arn = each.value
-  role       = aws_iam_role.ng.0.name
+  role       = aws_iam_role.ng["enabled"].name
 }
 
 ## bottlerocket
@@ -173,7 +173,7 @@ resource "aws_launch_template" "ng" {
   )
 
   iam_instance_profile {
-    arn = aws_iam_instance_profile.ng.0.arn
+    arn = aws_iam_instance_profile.ng["enabled"].arn
   }
 
   block_device_mappings {
@@ -341,7 +341,7 @@ resource "aws_eks_node_group" "ng" {
   for_each        = { for ng in var.managed_node_groups : ng.name => ng }
   cluster_name    = aws_eks_cluster.cp.name
   node_group_name = each.key
-  node_role_arn   = aws_iam_role.ng.0.arn
+  node_role_arn   = aws_iam_role.ng["enabled"].arn
   subnet_ids      = var.subnets
   ami_type        = lookup(each.value, "ami_type", local.default_eks_config.ami_type)
   capacity_type   = lookup(each.value, "capacity_type", local.default_eks_config.capacity_type)
@@ -378,9 +378,9 @@ resource "aws_eks_node_group" "ng" {
 ## fargate
 # security/policy
 resource "aws_iam_role" "fargate" {
-  count = local.fargate_enabled ? 1 : 0
-  name  = format("%s-fargate", local.name)
-  tags  = merge(local.default-tags, var.tags)
+  for_each = local.fargate_enabled ? toset(["enabled"]) : []
+  name     = join("-", [local.name, "fargate"])
+  tags     = merge(local.default-tags, var.tags)
   assume_role_policy = jsonencode({
     Statement = [{
       Action = "sts:AssumeRole"
@@ -396,20 +396,20 @@ resource "aws_iam_role" "fargate" {
 resource "aws_iam_role_policy_attachment" "eks-fargate" {
   count      = local.fargate_enabled ? 1 : 0
   policy_arn = format("arn:%s:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy", module.aws.partition.partition)
-  role       = aws_iam_role.fargate.0.name
+  role       = aws_iam_role.fargate["enabled"].name
 }
 
 resource "aws_iam_role_policy_attachment" "fargate-extra" {
   for_each   = local.fargate_enabled ? { for k, v in var.policy_arns : k => v } : {}
   policy_arn = each.value
-  role       = aws_iam_role.fargate.0.name
+  role       = aws_iam_role.fargate["enabled"].name
 }
 
 resource "aws_eks_fargate_profile" "fargate" {
   for_each               = { for ng in var.fargate_profiles : ng.name => ng }
   cluster_name           = aws_eks_cluster.cp.name
   fargate_profile_name   = each.key
-  pod_execution_role_arn = aws_iam_role.fargate.0.arn
+  pod_execution_role_arn = aws_iam_role.fargate["enabled"].arn
   subnet_ids             = var.subnets
   tags                   = merge(local.default-tags, var.tags, lookup(each.value, "tags", {}))
 
@@ -448,13 +448,13 @@ provider "kubernetes" {
 }
 
 resource "time_sleep" "wait" {
-  count           = ((local.managed_node_groups_enabled || local.fargate_enabled) ? 0 : (local.node_groups_enabled ? 1 : 0))
+  for_each        = local.node_groups_enabled && !(local.managed_node_groups_enabled || local.fargate_enabled) ? toset(["ng"]) : []
   create_duration = var.wait
   depends_on      = [aws_eks_cluster.cp, ]
 }
 
 resource "kubernetes_config_map" "aws-auth" {
-  count      = ((local.managed_node_groups_enabled || local.fargate_enabled) ? 0 : (local.node_groups_enabled ? 1 : 0))
+  for_each   = local.node_groups_enabled && !(local.managed_node_groups_enabled || local.fargate_enabled) ? toset(["ng"]) : []
   depends_on = [time_sleep.wait]
   metadata {
     name      = "aws-auth"
@@ -464,7 +464,7 @@ resource "kubernetes_config_map" "aws-auth" {
   data = {
     mapRoles = yamlencode(
       [{
-        rolearn  = element(compact(aws_iam_role.ng.*.arn), 0)
+        rolearn  = aws_iam_role.ng["enabled"].arn
         username = "system:node:{{EC2PrivateDNSName}}"
         groups   = ["system:bootstrappers", "system:nodes"]
       }],
