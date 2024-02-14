@@ -8,7 +8,7 @@ fargate_profiles = [
 managed_node_groups = [
   {
     name          = "system"
-    desired_size  = 1
+    desired_size  = 3
     instance_type = "m6i.xlarge"
   },
 ]
