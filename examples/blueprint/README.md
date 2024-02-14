@@ -16,11 +16,17 @@ cd terraform-aws-eks/examples/blueprint
 
 Then you are in **blueprint** directory under your current workspace. There is an exmaple that shows how to use terraform configurations to create and manage an EKS cluster and Addon utilities on your AWS account. Please make sure that you have installed the terraform and kubectl in your workspace before moving to the next step.
 
-Run terraform:
+Run terraform command to build a VPC:
 ```
 terraform init
+terraform apply -target module.vpc
+```
+
+You can now create an EKS cluster in the VPC you created in the previous step. Run Terraform:
+```
 terraform apply
 ```
+
 Also you can use the *-var-file* option for customized paramters when you run the terraform plan/apply command.
 ```
 terraform plan -var-file fixture.tc1.tfvars
