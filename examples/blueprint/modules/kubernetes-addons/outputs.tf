@@ -8,7 +8,7 @@ output "spinnaker" {
 }
 
 resource "local_file" "halconfig" {
-  for_each = (var.features.spinnaker_enabled ? toset(["enabled"]) : [])
+  for_each = (try(var.features.spinnaker_enabled, false) ? toset(["enabled"]) : [])
   content = templatefile("${path.module}/scripts/templates/halconfig.tpl", {
     aws_id            = local.aws.id
     aws_region        = local.aws.region
