@@ -37,7 +37,7 @@ module "vpc" {
 ### eks
 module "eks" {
   source             = "Young-ook/eks/aws"
-  version            = "2.0.11"
+  version            = "2.1.0"
   name               = var.name
   tags               = var.tags
   subnets            = slice(values(module.vpc.subnets["private"]), 0, 3)
