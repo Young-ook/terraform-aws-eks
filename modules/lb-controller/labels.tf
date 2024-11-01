@@ -2,7 +2,7 @@ resource "random_string" "lbc-suffix" {
   length  = 5
   upper   = false
   lower   = true
-  number  = false
+  numeric = false
   special = false
 }
 

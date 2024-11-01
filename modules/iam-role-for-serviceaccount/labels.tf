@@ -2,7 +2,7 @@ resource "random_string" "irsa-suffix" {
   length  = 12
   upper   = false
   lower   = true
-  number  = true
+  numeric = true
   special = false
 }
 
