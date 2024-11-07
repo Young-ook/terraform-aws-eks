@@ -432,6 +432,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [Seamlessly Migrate Workloads from EKS Self-managed node groups to managed node groups](https://aws.amazon.com/blogs/containers/seamlessly-migrate-workloads-from-eks-self-managed-node-group-to-eks-managed-node-groups/)
 - [Introducing Karpenter](https://aws.amazon.com/blogs/aws/introducing-karpenter-an-open-source-high-performance-kubernetes-cluster-autoscaler/)
 - [Karpenter Hands-on Lab](https://www.eksworkshop.com/docs/autoscaling/compute/karpenter/)
+- [Karpenter Blueprints](https://github.com/aws-samples/karpenter-blueprints)
 - [Migrating from Cluster Autoscaler](https://karpenter.sh/v0.27.3/getting-started/migrating-from-cas/)
 - [Catching up with Managed Node Groups in Amazon EKS](https://aws.amazon.com/blogs/containers/catching-up-with-managed-node-groups-in-amazon-eks/)
 - [Amazon EKS now supports provisioning and managing EC2 Spot Instances in managed node groups](https://aws.amazon.com/blogs/containers/amazon-eks-now-supports-provisioning-and-managing-ec2-spot-instances-in-managed-node-groups/)
