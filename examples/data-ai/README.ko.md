@@ -146,6 +146,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 
 ## Data Science
 - [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/)
+- [Data on WSL(Windows Subsystem for Linux)](https://github.com/Young-ook/data-lab-on-wsl)
 
 ## Mountpoint for Amazon S3 CSI Driver
 - [Mountpoint for Amazon S3 CSI Driver](https://github.com/awslabs/mountpoint-s3-csi-driver)
