@@ -1,28 +1,27 @@
 [[English](README.md)] [[한국어](README.ko.md)]
 
-# Data on EKS Blueprint
-## Machine Learning
-Machine learning is a part of artificial intelligence (AI) and computer science which focuses on the use of data and algorithms to imitate the way that humans learn, gradually improving its accuracy. Machine learning is an important component of the growing field of data science. Through the use of statistical methods, algorithms are trained to make classifications or predictions, and to uncover key insights in data mining projects. These insights subsequently drive decision making within applications and businesses, ideally impacting key growth metrics. As big data continues to expand and grow, the market demand for data scientists will increase. They will be required to help identify the most relevant business questions and the data to answer them. Machine learning algorithms are typically created using frameworks that accelerate solution development, such as TensorFlow and PyTorch.
+# Data on EKS 블루프린트(Blueprint)
+## 기계 학습(Machine Learning)
+머신 러닝은 인공지능(Artificial Intelligence, AI)의 한 부분으로 데이터와 알고리즘을 사용하여 인간이 학습하는 방식을 모방하여 점진적으로 정확도를 향상시키는 데 초점을 둔 컴퓨터 과학의 한 분야 입니다. 머신 러닝은 성장하는 데이터 과학 분야에서 중요한 구성 요소이며, 통계적 방법을 사용하여 분류 또는 예측을 하고 데이터 마이닝 프로젝트를 통해 핵심 통찰을 발견하도록 알고리즘을 훈련 시킵니다. 이러한 통찰력은 이후 애플리케이션과 비즈니스 내에서 의사 결정을 내리고 주요 성장 지표에 이상적으로 영향을 끼치게 됩니다. 빅 데이터가 계속 확장되고 성장함에 따라 데이터 과학자에 대한 시장의 수요도 증가할 것이며, 데이터 과학자들은 가장 관련성이 높은 비즈니스 질문과 그에 대한 답을 찾기 위한 데이터를 식별하는 데 도움을 주어야 할 것입니다. 머신 러닝 알고리즘은 일반적으로 TensorFlow 및 PyTorch와 같이 솔루션 개발을 가속화하는 프레임워크를 사용하여 만듭니다.
 
-## Setup
-### Prerequisites
-This blueprint requires *yq* which is a lightweight command-line YAML, JSON, and XML processor. We will use *yq* to update the settings in the kubeflow configuration file. To install *yq*, follow the [installation guide](https://github.com/mikefarah/yq#install) before you begin. And this module requires also, [kustomize](https://kustomize.io/) for installing kubeflow using manifests. Kustomize is a simple tool lets you customize raw, template-free YAML files for multiple purposes, leaving the original YAML untouched and usable as is. Please follow the [installation guide](https://kubectl.docs.kubernetes.io/installation/kustomize/binaries/) from the official website before moving to the next steps. And make sure you have installed terraform amd kubectl in your environment if you don't have the terraform and kubernetes tools. Go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
+## 설치
+### 필수요소
+이 예제에서는 YAML, JSON, XML을 다루기 위한 가벼운 명령줄 도구인 *yq* 이 필요합니다. 쿠브플로우(Kubeflow)의 설정 파일을 변경하기 위해서 *yq* 를 사용할 것입니다. 예제를 시작하기 전에, [설치 안내서](https://github.com/mikefarah/yq#install)의 내용을 참고해서 *yq* 를 설치 하시기 바랍니다. 그리고, 이 모듈은 매니페스트(Manifest)를 사용해서 쿠브플로우를 설치하기 위해 [kustomize](https://kustomize.io/)를 사용합니다.  Kustomize는 템플릿에서 자유로운 원시 YAML 파일을 여러 용도에 맞게 사용자 지정할 수 있는 간단한 도구로, 원본 YAML을 그대로 유지하여 사용할 수 있습니다. 다음 단계로 이동하기 전에 공식 웹사이트의 [설치 안내서](https://kubectl.docs.kubernetes.io/installation/kustomize/binaries/)를 따르시길 바랍니다. 그리고 Terraform 및 Kubernetes 도구가 없는 경우, 이 리포지토리의 메인 [페이지](https://github.com/Young-ook/terraform-aws-eks)의 안내를 따라 설치하시길 바랍니다.
 
 * yq
 * kubectl
 * terraform
 
-### Download
-Download this example on your workspace
+### 내려받기
+여러 분의 작업 환경에 예제를 내려받기 합니다.
 ```
 git clone https://github.com/Young-ook/terraform-aws-eks
 cd terraform-aws-eks/examples/data-ai
 ```
 
-Then you are in **data-ai** directory under your current workspace. There is an exmaple that shows how to use terraform configurations to create and manage an EKS cluster and Addon utilities on your AWS account. In this example, we will install Kubeflow on Amazon EKS, run a single-node training and inference using TensorFlow.
+작업이 끝나면 **data-ai** 디렉토리를 볼 수 있습니다. 여기에는 테라폼 구성을 사용하여 AWS 계정에서 EKS 클러스터와 애드온 유틸리티를 생성하고 관리하는 예제가 있습니다. 이 예제에서는 Amazon EKS에 Kubeflow를 설치하고, 단일 노드 학습과 TensorFlow를 사용한 추론을 실행할 것입니다.
 
-And clone the awslabs/kubeflow-manifests and the kubeflow/manifests repositories and check out the release branches of your choosing. Substitute the value for KUBEFLOW_RELEASE_VERSION(e.g. v1.6.1) and AWS_RELEASE_VERSION(e.g. v1.6.1-aws-b1.0.0) with the tag or branch you want to use below. Read more about releases and versioning if you are unsure about what these values should be.
-
+이제 awslabs/kubeflow-manifests와 kubeflow/manifests 리포지토리를 복제하고 릴리즈 브랜치를 확인 합니다. 아래에 사용하려는 태그 또는 브랜치를 KUBEFLOW_RELEASE_VERSION(예: v1.6.1) 및 AWS_RELEASE_VERSION(예: v1.6.1-aws-b1.0.0)의 값으로 대체 합니다. 어떤 값을 선택해야 할 지 확실하지 않은 경우 릴리스 및 버전에 대해 자세히 읽어보시길 바랍니다.
 ```
 export KUBEFLOW_RELEASE_VERSION=v1.6.1
 export AWS_RELEASE_VERSION=v1.6.1-aws-b1.0.0
@@ -31,7 +30,7 @@ git checkout ${AWS_RELEASE_VERSION}
 git clone --branch ${KUBEFLOW_RELEASE_VERSION} https://github.com/kubeflow/manifests.git upstream && cd -
 ```
 
-Run terraform:
+테라폼을 실행합니다:
 ```
 terraform init
 terraform apply
@@ -42,9 +41,8 @@ terraform plan -var-file fixture.tc1.tfvars
 terraform apply -var-file fixture.tc1.tfvars
 ```
 
-### Update kubeconfig
-We need to get kubernetes config file for access the cluster that we've made using terraform. After terraform apply, you will see the bash command on the outputs. For more details, please refer to the [user guide](https://github.com/Young-ook/terraform-aws-eks#generate-kubernetes-config).
-
+### 쿠버네티스 환경설정
+테라폼을 이용해서 생성한 클러스터에 접속하기 위해서는 쿠버네티스 설정 파일을 받아야 합니다. 테라폼 실행이 끝나면 설정 파일을 내려받을 수 있는 스크립트가 출력됩니다. 보다 자세한 내용은, 다음의 [사용자 안내](https://github.com/Young-ook/terraform-aws-eks#generate-kubernetes-config)를 참고하시기 바랍니다.
 
 ## Kubernetes Utilities
 ### Apache 에어플로우(Airflow)

@@ -13,7 +13,7 @@ This blueprint requires *yq* which is a lightweight command-line YAML, JSON, and
 * terraform
 
 ### Download
-Download this example on your workspace
+Download this example on your workspace.
 ```
 git clone https://github.com/Young-ook/terraform-aws-eks
 cd terraform-aws-eks/examples/data-ai
