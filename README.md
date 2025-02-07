@@ -150,7 +150,7 @@ A simple solution you can try to fix this error is (re)installing the Amazon VPC
 
 # Additional Resources
 ## Amazon EKS
-- [Amazon EKS Best Practices Guides](https://aws.github.io/aws-eks-best-practices/)
+- [Amazon EKS Best Practices Guides](https://docs.aws.amazon.com/eks/latest/best-practices/introduction.html)
 - [Amazon EKS troubleshooting](https://docs.aws.amazon.com/eks/latest/userguide/troubleshooting.html)
 - [EKS Workshop](https://www.eksworkshop.com/)
 - [De-mystifying cluster networking for Amazon EKS worker nodes](https://aws.amazon.com/blogs/containers/de-mystifying-cluster-networking-for-amazon-eks-worker-nodes/)
