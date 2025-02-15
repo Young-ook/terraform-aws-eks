@@ -118,34 +118,18 @@ terraform destroy -var-file fixture.tc1.tfvars
 ## AWS Trainium
 - [Scaling distributed training with AWS Trainium and Amazon EKS](https://aws.amazon.com/blogs/machine-learning/scaling-distributed-training-with-aws-trainium-and-amazon-eks/)
 
-## Apache Airflow
-- [Amazon MWAA for Analytics Workshop](https://catalog.us-east-1.prod.workshops.aws/workshops/795e88bb-17e2-498f-82d1-2104f4824168/en-US)
-
-## Apache Kafka on EKS
-- [Deploying and scaling Apache Kafka on Amazon EKS](https://aws.amazon.com/blogs/containers/deploying-and-scaling-apache-kafka-on-amazon-eks/)
-
-## Apache Spark on EKS
-- [SQL-based ETL with Apache Spark on Amazon EKS](https://github.com/awslabs/sql-based-etl-with-apache-spark-on-amazon-eks)
-
-## KNative
-- [KNative](https://github.com/knative)
-
-## KServe
-- [KServer](https://github.com/kserve)
-
-## Kubeflow on EKS
-- [Kubeflow on AWS](https://awslabs.github.io/kubeflow-manifests/docs/about/)
-- [Kubeflow Manifests](https://github.com/awslabs/kubeflow-manifests)
-- [Enabling hybrid ML workflows on Amazon EKS and Amazon SageMaker with one-click Kubeflow on AWS deployment](https://aws.amazon.com/blogs/machine-learning/enabling-hybrid-ml-workflows-on-amazon-eks-and-amazon-sagemaker-with-one-click-kubeflow-on-aws-deployment/)
-
-## Data Platform
+## Analytics on EKS
 - [Building a Modern Data Platform on Amazon EKS](https://youtu.be/7AHuMNqbR7o)
 - [Data on EKS(DoEKS)](https://awslabs.github.io/data-on-eks/docs/introduction/intro)
+- [SQL-based ETL with Apache Spark on Amazon EKS](https://github.com/awslabs/sql-based-etl-with-apache-spark-on-amazon-eks)
+- [Working with Mountpoint for Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mountpoint.html)
 
-## Data Science
-- [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/)
+## JupyterLab
 - [Data on WSL(Windows Subsystem for Linux)](https://github.com/Young-ook/data-lab-on-wsl)
 
-## Mountpoint for Amazon S3 CSI Driver
-- [Mountpoint for Amazon S3 CSI Driver](https://github.com/awslabs/mountpoint-s3-csi-driver)
-- [Working with Mountpoint for Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mountpoint.html)
+## Kubeflow
+- [Kubeflow on AWS](https://awslabs.github.io/kubeflow-manifests/docs/about/)
+- [Kubeflow Manifests](https://github.com/awslabs/kubeflow-manifests)
+- [KNative](https://github.com/knative)
+- [KServer](https://github.com/kserve)
+- [Enabling hybrid ML workflows on Amazon EKS and Amazon SageMaker with one-click Kubeflow on AWS deployment](https://aws.amazon.com/blogs/machine-learning/enabling-hybrid-ml-workflows-on-amazon-eks-and-amazon-sagemaker-with-one-click-kubeflow-on-aws-deployment/)
