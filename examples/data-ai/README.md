@@ -126,12 +126,7 @@ terraform destroy -var-file fixture.tc1.tfvars
 - [SQL-based ETL with Apache Spark on Amazon EKS](https://github.com/awslabs/sql-based-etl-with-apache-spark-on-amazon-eks)
 - [Working with Mountpoint for Amazon S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mountpoint.html)
 
-## JupyterLab
-- [Data on WSL(Windows Subsystem for Linux)](https://github.com/Young-ook/data-lab-on-wsl)
-
 ## Kubeflow
 - [Kubeflow on AWS](https://awslabs.github.io/kubeflow-manifests/docs/about/)
 - [Kubeflow Manifests](https://github.com/awslabs/kubeflow-manifests)
-- [KNative](https://github.com/knative)
-- [KServer](https://github.com/kserve)
 - [Enabling hybrid ML workflows on Amazon EKS and Amazon SageMaker with one-click Kubeflow on AWS deployment](https://aws.amazon.com/blogs/machine-learning/enabling-hybrid-ml-workflows-on-amazon-eks-and-amazon-sagemaker-with-one-click-kubeflow-on-aws-deployment/)
