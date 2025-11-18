@@ -6,7 +6,7 @@ Machine learning is a part of artificial intelligence (AI) and computer science 
 
 > [!NOTE]
 > For more examples of platform, distributed system, machine learning, analytics, please refer to the resources below:
-> - [Analytics on AWS](https://github.com/Young-ook/terraform-aws-emr/tree/main/examples/blueprint)
+> - [Analytics on AWS](https://github.com/Young-ook/terraform-aws-s3/tree/main/examples/blueprint)
 > - [Container Lab](https://github.com/Young-ook/container-lab)
 > - [Data Lab](https://github.com/Young-ook/data-lab)
 

@@ -6,7 +6,7 @@
 
 > [!NOTE]
 > 플래폼, 분산 시스템, 기계 학습, 분석 등에 대한 추가 예제가 필요하다면, 아래의 내용을 참고해 주시길 바랍니다.
-> - [Analytics on AWS](https://github.com/Young-ook/terraform-aws-emr/tree/main/examples/blueprint)
+> - [Analytics on AWS](https://github.com/Young-ook/terraform-aws-s3/tree/main/examples/blueprint)
 > - [Container Lab](https://github.com/Young-ook/container-lab)
 > - [Data Lab](https://github.com/Young-ook/data-lab)
 
