@@ -4,6 +4,12 @@
 EKS 블루프린트는 쿠버네티스 워크로드를 배포하고 운영하기 위해 필요한 소프트웨어를 자동으로 설정하는 과정을 돕는 예제입니다. EKS 블루프린트를 활용하면, 여러 분이 원하는 설정의 EKS 실행환경을 인프라스트럭처 코드(Infrastructure as Code, IaC)의 템플릿/청사진 형태로 만들 수 있습니다.
 한 번 블루프린트를 설정했다면, 여러 분은 젠킨스(Jenkins) 또는 코드파이프라인(CodePipeline)과 같은 자동화 도구를 활용하여 필요에 따라 여러 AWS 계정 또는 리전에 EKS 클러스터를 찍어낼 수 있습니다. 또한 여러 분은 EKS 블루프린트를 활용하여 널리 알려진 오픈소스 도구인 프로메테우스(Prometheus), 카펜터(Karpenter), 엔진엑스(Nginx), 트래픽(Traefik), AWS 로드발란서 컨트롤러 (AWS Load Balancer Controller), 플루언트 비트(Fluent Bit), 케다(KEDA), 아르고씨디(ArgoCD) 등을 추가 구성 요소 (Add-ons)로 포함하여 EKS 클러스터를 쉽게 구축할 수 있습니다. 그리고 EKS 블루프린트는 여러 분이 동일한 클러스터를 여러 팀에게 제공해야 하는 워크로드를 운영해야 할 때 필요한 보안관련 사항들을 쉽게 구축하는 것을 도와줍니다.
 
+> [!NOTE]
+> 플래폼, 분산 시스템, 기계 학습, 분석 등에 대한 추가 예제가 필요하다면, 아래의 내용을 참고해 주시길 바랍니다.
+> - [Analytics on AWS](https://github.com/Young-ook/terraform-aws-emr/tree/main/examples/blueprint)
+> - [Container Lab](https://github.com/Young-ook/container-lab)
+> - [Data Lab](https://github.com/Young-ook/data-lab)
+
 ## 설치
 ### 필수요소
 이 예제에서는 쿠브쿠틀(kubectl, 쿠버네티스 명령줄 도구)가 필요합니다. 만약, 테라폼(terraform)과 쿠브쿠틀(kubectl)이 여러 분의 환경에 없다면, 메인 [페이지](https://github.com/Young-ook/terraform-aws-eks#README.md)의 안내에 따라 설치하시기 바랍니다.

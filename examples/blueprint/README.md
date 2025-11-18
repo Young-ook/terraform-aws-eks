@@ -3,6 +3,12 @@
 # EKS Blueprint
 This is EKS Blueprint example helps you compose complete EKS clusters that are fully bootstrapped with the operational software that is needed to deploy and operate workloads. With this EKS Blueprint example, you describe the configuration for the desired state of your EKS environment, such as the control plane, worker nodes, and Kubernetes add-ons, as an Infrastructure as Code (IaC) template/blueprint. Once a blueprint is configured, you can use it to stamp out consistent environments across multiple AWS accounts and Regions using your automation workflow tool, such as Jenkins, CodePipeline. Also, you can use EKS Blueprint to easily bootstrap an EKS cluster with Amazon EKS add-ons as well as a wide range of popular open-source add-ons, including Prometheus, Karpenter, Nginx, Traefik, AWS Load Balancer Controller, Fluent Bit, Keda, ArgoCD, and more. EKS Blueprint also helps you implement relevant security controls needed to operate workloads from multiple teams in the same cluster.
 
+> [!NOTE]
+> For more examples of platform, distributed system, machine learning, analytics, please refer to the resources below:
+> - [Analytics on AWS](https://github.com/Young-ook/terraform-aws-emr/tree/main/examples/blueprint)
+> - [Container Lab](https://github.com/Young-ook/container-lab)
+> - [Data Lab](https://github.com/Young-ook/data-lab)
+
 ## Setup
 ### Prerequisites
 This blueprint requires kubectl, kuberentes command line tool. If you don't have the terraform and kubernetes tools in your environment, go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.
