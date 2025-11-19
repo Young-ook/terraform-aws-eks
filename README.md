@@ -10,10 +10,7 @@
 ## Examples
 - [Amazon EKS Blueprint](https://github.com/Young-ook/terraform-aws-eks/tree/main/examples/blueprint)
 - [Amazon VPC Network](https://github.com/Young-ook/terraform-aws-ec2/tree/main/examples/network)
-- [Analytics on AWS](https://github.com/Young-ook/terraform-aws-emr/tree/main/examples/blueprint)
-- [Container Lab](https://github.com/Young-ook/container-lab)
-- [Data Lab](https://github.com/Young-ook/data-lab)
-- [Data on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/blob/main/examples/data-ai)
+- [Data on Amazon EKS](https://github.com/Young-ook/terraform-aws-eks/tree/main/examples/data-ai)
 
 ## Getting started
 ### AWS CLI

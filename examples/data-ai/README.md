@@ -4,6 +4,12 @@
 ## Machine Learning
 Machine learning is a part of artificial intelligence (AI) and computer science which focuses on the use of data and algorithms to imitate the way that humans learn, gradually improving its accuracy. Machine learning is an important component of the growing field of data science. Through the use of statistical methods, algorithms are trained to make classifications or predictions, and to uncover key insights in data mining projects. These insights subsequently drive decision making within applications and businesses, ideally impacting key growth metrics. As big data continues to expand and grow, the market demand for data scientists will increase. They will be required to help identify the most relevant business questions and the data to answer them. Machine learning algorithms are typically created using frameworks that accelerate solution development, such as TensorFlow and PyTorch.
 
+> [!NOTE]
+> For more examples of platform, distributed system, machine learning, analytics, please refer to the resources below:
+> - [Analytics on AWS](https://github.com/Young-ook/terraform-aws-s3/tree/main/examples/blueprint)
+> - [Container Lab](https://github.com/Young-ook/container-lab)
+> - [Data Lab](https://github.com/Young-ook/data-lab)
+
 ## Setup
 ### Prerequisites
 This blueprint requires *yq* which is a lightweight command-line YAML, JSON, and XML processor. We will use *yq* to update the settings in the kubeflow configuration file. To install *yq*, follow the [installation guide](https://github.com/mikefarah/yq#install) before you begin. And this module requires also, [kustomize](https://kustomize.io/) for installing kubeflow using manifests. Kustomize is a simple tool lets you customize raw, template-free YAML files for multiple purposes, leaving the original YAML untouched and usable as is. Please follow the [installation guide](https://kubectl.docs.kubernetes.io/installation/kustomize/binaries/) from the official website before moving to the next steps. And make sure you have installed terraform amd kubectl in your environment if you don't have the terraform and kubernetes tools. Go to the main [page](https://github.com/Young-ook/terraform-aws-eks) of this repository and follow the installation instructions.

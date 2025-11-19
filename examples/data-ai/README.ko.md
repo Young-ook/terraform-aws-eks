@@ -4,6 +4,12 @@
 ## 기계 학습(Machine Learning)
 머신 러닝은 인공지능(Artificial Intelligence, AI)의 한 부분으로 데이터와 알고리즘을 사용하여 인간이 학습하는 방식을 모방하여 점진적으로 정확도를 향상시키는 데 초점을 둔 컴퓨터 과학의 한 분야 입니다. 머신 러닝은 성장하는 데이터 과학 분야에서 중요한 구성 요소이며, 통계적 방법을 사용하여 분류 또는 예측을 하고 데이터 마이닝 프로젝트를 통해 핵심 통찰을 발견하도록 알고리즘을 훈련 시킵니다. 이러한 통찰력은 이후 애플리케이션과 비즈니스 내에서 의사 결정을 내리고 주요 성장 지표에 이상적으로 영향을 끼치게 됩니다. 빅 데이터가 계속 확장되고 성장함에 따라 데이터 과학자에 대한 시장의 수요도 증가할 것이며, 데이터 과학자들은 가장 관련성이 높은 비즈니스 질문과 그에 대한 답을 찾기 위한 데이터를 식별하는 데 도움을 주어야 할 것입니다. 머신 러닝 알고리즘은 일반적으로 TensorFlow 및 PyTorch와 같이 솔루션 개발을 가속화하는 프레임워크를 사용하여 만듭니다.
 
+> [!NOTE]
+> 플래폼, 분산 시스템, 기계 학습, 분석 등에 대한 추가 예제가 필요하다면, 아래의 내용을 참고해 주시길 바랍니다.
+> - [Analytics on AWS](https://github.com/Young-ook/terraform-aws-s3/tree/main/examples/blueprint)
+> - [Container Lab](https://github.com/Young-ook/container-lab)
+> - [Data Lab](https://github.com/Young-ook/data-lab)
+
 ## 설치
 ### 필수요소
 이 예제에서는 YAML, JSON, XML을 다루기 위한 가벼운 명령줄 도구인 *yq* 이 필요합니다. 쿠브플로우(Kubeflow)의 설정 파일을 변경하기 위해서 *yq* 를 사용할 것입니다. 예제를 시작하기 전에, [설치 안내서](https://github.com/mikefarah/yq#install)의 내용을 참고해서 *yq* 를 설치 하시기 바랍니다. 그리고, 이 모듈은 매니페스트(Manifest)를 사용해서 쿠브플로우를 설치하기 위해 [kustomize](https://kustomize.io/)를 사용합니다.  Kustomize는 템플릿에서 자유로운 원시 YAML 파일을 여러 용도에 맞게 사용자 지정할 수 있는 간단한 도구로, 원본 YAML을 그대로 유지하여 사용할 수 있습니다. 다음 단계로 이동하기 전에 공식 웹사이트의 [설치 안내서](https://kubectl.docs.kubernetes.io/installation/kustomize/binaries/)를 따르시길 바랍니다. 그리고 Terraform 및 Kubernetes 도구가 없는 경우, 이 리포지토리의 메인 [페이지](https://github.com/Young-ook/terraform-aws-eks)의 안내를 따라 설치하시길 바랍니다.
